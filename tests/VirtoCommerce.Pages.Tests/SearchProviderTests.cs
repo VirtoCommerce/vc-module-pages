@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
+using VirtoCommerce.Pages.Core.Models;
 using VirtoCommerce.Pages.Data.Search;
 using VirtoCommerce.SearchModule.Core.Services;
 using VirtoCommerce.SearchModule.Data.SearchPhraseParsing;
@@ -14,7 +15,27 @@ public abstract class SearchProviderTests : SearchProviderTestsBase
     public const string DocumentType = "item";
 
     [Fact]
-    public virtual async Task CanAddAndRemoveDocuments()
+    public virtual async Task CanAddDocuments()
+    {
+        var provider = GetSearchProvider();
+        var service = GetSearchService(provider);
+
+        // Delete index
+        await provider.DeleteIndexAsync(DocumentType);
+
+        // Create index and add pages
+        var pages = GetPages();
+
+        var response = await service.IndexDocument(pages.ToArray());
+
+        Assert.NotNull(response);
+        Assert.NotNull(response.Items);
+        Assert.Equal(pages.Count, response.Items.Count);
+        Assert.All(response.Items, i => Assert.True(i.Succeeded));
+    }
+
+    [Fact]
+    public virtual async Task CanSearchDocuments()
     {
         var provider = GetSearchProvider();
         var service = GetSearchService(provider);
@@ -32,24 +53,44 @@ public abstract class SearchProviderTests : SearchProviderTestsBase
         Assert.Equal(pages.Count, response.Items.Count);
         Assert.All(response.Items, i => Assert.True(i.Succeeded));
 
-        //// Update index with new fields and add more documents
-        //var secondaryDocuments = GetSecondaryDocuments();
+        // Search
+        var searchCriteria = new PageDocumentSearchCriteria
+        {
+            SearchPhrase = "page",
+            Skip = 0,
+            Take = 10
+        };
 
-        //response = await provider.IndexAsync(DocumentType, secondaryDocuments);
+        var searchResponse = await service.SearchAsync(searchCriteria);
 
-        //Assert.NotNull(response);
-        //Assert.NotNull(response.Items);
-        //Assert.Equal(secondaryDocuments.Count, response.Items.Count);
-        //Assert.All(response.Items, i => Assert.True(i.Succeeded));
+        Assert.NotNull(searchResponse);
+        Assert.NotNull(searchResponse.Results);
+        Assert.NotEmpty(searchResponse.Results);
+        // Assert.All(searchResponse.Results, r => Assert.Equal(DocumentType, r.));
+    }
 
-        //// Remove some documents
-        //response = await provider.RemoveAsync(DocumentType,
-        //    new[] { new IndexDocument("Item-7"), new IndexDocument("Item-8") });
+    [Fact]
+    public virtual async Task CanRemoveDocuments()
+    {
+        var provider = GetSearchProvider();
+        var service = GetSearchService(provider);
 
-        //Assert.NotNull(response);
-        //Assert.NotNull(response.Items);
-        //Assert.Equal(2, response.Items.Count);
-        //Assert.All(response.Items, i => Assert.True(i.Succeeded));
+        // Delete index
+        await provider.DeleteIndexAsync(DocumentType);
+
+        // Create index and add pages
+        var pages = GetPages();
+
+        var response = await service.IndexDocument(pages.ToArray());
+
+        Assert.NotNull(response);
+        Assert.NotNull(response.Items);
+        Assert.Equal(pages.Count, response.Items.Count);
+        Assert.All(response.Items, i => Assert.True(i.Succeeded));
+
+        // todo: remove documents
+
+
     }
 
     private PageDocumentSearchService GetSearchService(ISearchProvider provider)
