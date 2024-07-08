@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+  <id>VirtoCommerce.Pages</id>
+  <version>3.800.0</version>
+  <version-tag></version-tag>
+
+  <platformVersion>3.825.0</platformVersion>
+  <dependencies>
+    <dependency id="VirtoCommerce.ExperienceApi" version="3.800.0" />
+  </dependencies>
+
+  <title>VirtoCommerce Pages module</title>
+  <description>VirtoCommerce Pages module</description>
+
+  <authors>
+    <author>Basil Kotov</author>
+  </authors>
+  <owners>
+    <owner>VirtoCommerce</owner>
+  </owners>
+
+  <projectUrl>https://github.com/VirtoCommerce/vc-module-pages</projectUrl>
+  <iconUrl>Modules/$(VirtoCommerce.Pages)/Content/logo.png</iconUrl>
+  <requireLicenseAcceptance>false</requireLicenseAcceptance>
+
+  <assemblyFile>VirtoCommerce.Pages.Web.dll</assemblyFile>
+  <moduleType>VirtoCommerce.Pages.Web.Module, VirtoCommerce.Pages.Web</moduleType>
+
+  <releaseNotes>First version.</releaseNotes>
+  <copyright>Copyright © 2024 VirtoCommerce. All rights reserved</copyright>
+  <tags>extension module</tags>
+  <useFullTypeNameInSwagger>false</useFullTypeNameInSwagger>
+</module>

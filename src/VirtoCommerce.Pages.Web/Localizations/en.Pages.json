@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "Pages:create": "Create Pages related data",
+    "Pages:read": "View Pages related data",
+    "Pages:update": "Update Pages related data",
+    "Pages:delete": "Delete Pages related data"
+  }
+}

@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- Project is a test project -->
+    <SonarQubeTestProject>true</SonarQubeTestProject>
+    <UserSecretsId>df261636-736f-470a-8d0a-afa962f435a5</UserSecretsId>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+    <PackageReference Include="Moq" Version="4.20.70" />
+    <PackageReference Include="VirtoCommerce.ElasticSearch8.Data" Version="3.806.0" />
+    <PackageReference Include="VirtoCommerce.SearchModule.Data" Version="3.802.0" />
+    <PackageReference Include="xunit" Version="2.8.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="FluentAssertions" Version="6.12.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.4.3" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.4.3" />
+    <PackageReference Include="Xunit.DependencyInjection" Version="9.3.0" />
+    <PackageReference Include="xunit.runner.console" Version="2.8.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\VirtoCommerce.Pages.Core\VirtoCommerce.Pages.Core.csproj" />
+    <ProjectReference Include="..\..\src\VirtoCommerce.Pages.Data\VirtoCommerce.Pages.Data.csproj" />
+    <ProjectReference Include="..\..\src\VirtoCommerce.Pages.Web\VirtoCommerce.Pages.Web.csproj" />
+  </ItemGroup>
+</Project>
