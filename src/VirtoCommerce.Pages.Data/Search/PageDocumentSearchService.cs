@@ -9,7 +9,8 @@ using VirtoCommerce.SearchModule.Core.Services;
 
 namespace VirtoCommerce.Pages.Data.Search;
 
-public class PageDocumentSearchService(ISearchProvider searchProvider, PagesSearchRequestBuilder requestBuilder) : IPageDocumentSearchService
+public class PageDocumentSearchService(ISearchProvider searchProvider, PagesSearchRequestBuilder requestBuilder)
+    : IPageDocumentSearchService
 {
     public virtual async Task<PageDocumentSearchResult> SearchAsync(PageDocumentSearchCriteria criteria, bool clone = true)
     {
@@ -19,14 +20,14 @@ public class PageDocumentSearchService(ISearchProvider searchProvider, PagesSear
         return result;
     }
 
-    public virtual async Task<IndexingResult> IndexDocument(PageDocument[] documents)
+    public virtual async Task<IndexingResult> IndexDocuments(PageDocument[] documents)
     {
         var indexDocuments = documents.Select(x => x.ToIndexDocument()).ToList();
         var result = await searchProvider.IndexAsync(ModuleConstants.PageDocumentType, indexDocuments);
         return result;
     }
 
-    public virtual async Task<IndexingResult> RemoveDocument(string[] documentIds)
+    public virtual async Task<IndexingResult> RemoveDocuments(string[] documentIds)
     {
         var documents = documentIds.Select(x => new IndexDocument(x)).ToArray();
         var result = await searchProvider.RemoveAsync(ModuleConstants.PageDocumentType, documents);

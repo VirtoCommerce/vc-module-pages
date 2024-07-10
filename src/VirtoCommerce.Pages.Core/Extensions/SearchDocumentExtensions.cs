@@ -25,24 +25,24 @@ public static class SearchDocumentExtensions
         var result = new PageDocument
         {
             Id = document.Id,
-            OuterId = (string)document.GetValueSafe("outerId"),
-            StoreId = (string)document.GetValueSafe("storeId"),
-            CultureName = (string)document.GetValueSafe("cultureName"),
+            OuterId = (string)document.GetValueSafe("outerid"),
+            StoreId = (string)document.GetValueSafe("storeid"),
+            CultureName = (string)document.GetValueSafe("culturename"),
             Permalink = (string)document.GetValueSafe("permalink"),
             Title = (string)document.GetValueSafe("title"),
             Description = (string)document.GetValueSafe("description"),
             Content = (string)document.GetValueSafe("content"),
-            CreatedBy = (string)document.GetValueSafe("createdBy"),
-            CreatedDate = document.GetValueSafe("createdDate").ToDateTime()!.Value,
-            ModifiedBy = (string)document.GetValueSafe("modifiedBy"),
-            ModifiedDate = document.GetValueSafe("modifiedDate").ToDateTime(),
+            CreatedBy = (string)document.GetValueSafe("createdby"),
+            CreatedDate = document.GetValueSafe("createddate").ToDateTime()!.Value,
+            ModifiedBy = (string)document.GetValueSafe("modifiedby"),
+            ModifiedDate = document.GetValueSafe("modifieddate").ToDateTime(),
             Source = (string)document.GetValueSafe("source"),
-            MimeType = (string)document.GetValueSafe("mimeType"),
+            MimeType = (string)document.GetValueSafe("mimetype"),
             Status = (PageDocumentStatus)Enum.Parse(typeof(PageDocumentStatus), (string)document.GetValueSafe("status")),
             Visibility = (PageDocumentVisibility)Enum.Parse(typeof(PageDocumentVisibility), (string)document.GetValueSafe("visibility")),
-            UserGroups = (string)document.GetValueSafe("userGroups"),
-            StartDate = document.GetValueSafe("startDate").ToDateTime(),
-            EndDate = document.GetValueSafe("endDate").ToDateTime(),
+            UserGroups = (string)document.GetValueSafe("usergroups"),
+            StartDate = document.GetValueSafe("startdate").ToDateTime(),
+            EndDate = document.GetValueSafe("enddate").ToDateTime(),
         };
 
         if (result.UserGroups == "__any")
@@ -65,9 +65,9 @@ public static class SearchDocumentExtensions
         result.AddFilterableStringAndContentString(nameof(document.StoreId), document.StoreId);
         result.AddFilterableStringAndContentString(nameof(document.CultureName), document.CultureName ?? "__any");
         result.AddFilterableStringAndContentString(nameof(document.Permalink), document.Permalink.Permalink());
-        result.AddContentString(document.Title);
-        result.AddContentString(document.Description);
-        result.AddContentString(document.Content);
+        result.AddFilterableStringAndContentString(nameof(document.Title), document.Title);
+        result.AddFilterableStringAndContentString(nameof(document.Description), document.Description);
+        result.AddFilterableStringAndContentString(nameof(document.Content), document.Content);
         result.AddFilterableStringAndContentString(nameof(document.CreatedBy), document.CreatedBy);
         result.AddFilterableStringAndContentString(nameof(document.CreatedDate), document.CreatedDate.ToDateString());
         result.AddFilterableStringAndContentString(nameof(document.ModifiedBy), document.ModifiedBy);

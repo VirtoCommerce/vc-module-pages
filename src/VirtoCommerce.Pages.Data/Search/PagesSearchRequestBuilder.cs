@@ -56,7 +56,22 @@ namespace VirtoCommerce.Pages.Data.Search
 
             if (!string.IsNullOrEmpty(criteria.StoreId))
             {
-                result.Add(CreateTermFilter("StoreId", criteria.StoreId));
+                result.Add(CreateTermFilter(nameof(PageDocument.StoreId), criteria.StoreId));
+            }
+
+            if (!string.IsNullOrEmpty(criteria.Permalink))
+            {
+                result.Add(CreateTermFilter(nameof(PageDocument.Permalink), criteria.Permalink));
+            }
+
+            if (criteria.Visibility.HasValue)
+            {
+                result.Add(CreateTermFilter(nameof(PageDocument.Visibility), criteria.Visibility.Value.ToString()));
+            }
+
+            if (criteria.Status.HasValue)
+            {
+                result.Add(CreateTermFilter(nameof(PageDocument.Status), criteria.Status.Value.ToString()));
             }
 
             result.Add(AddLanguageFilter(criteria));
