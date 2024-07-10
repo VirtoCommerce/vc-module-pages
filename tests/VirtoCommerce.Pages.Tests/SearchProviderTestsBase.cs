@@ -39,7 +39,7 @@ public abstract class SearchProviderTestsBase
                     Status = PageDocumentStatus.Published,
                     Visibility = PageDocumentVisibility.Public,
                     UserGroups = null,
-                    StartDate = null,
+                    StartDate = new DateTime(2024, 7, 10),
                     EndDate = null,
                 },
                 new ()
