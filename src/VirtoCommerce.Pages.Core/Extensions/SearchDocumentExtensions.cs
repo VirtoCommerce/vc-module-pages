@@ -39,14 +39,24 @@ public static class SearchDocumentExtensions
             MimeType = (string)document.GetValueSafe("mimetype"),
             Status = (PageDocumentStatus)Enum.Parse(typeof(PageDocumentStatus), (string)document.GetValueSafe("status")),
             Visibility = (PageDocumentVisibility)Enum.Parse(typeof(PageDocumentVisibility), (string)document.GetValueSafe("visibility")),
-            UserGroups = (string)document.GetValueSafe("usergroups"),
+            UserGroups = ((object[])document.GetValueSafe("usergroups")).Cast<string>().ToArray(),
             StartDate = (DateTime?)document.GetValueSafe("startdate"),
             EndDate = (DateTime?)document.GetValueSafe("enddate"),
         };
 
-        if (result.UserGroups == "__any")
+        if (result.StartDate == DateTime.MinValue)
         {
-            result.UserGroups = null;
+            result.StartDate = null;
+        }
+
+        if (result.EndDate == DateTime.MaxValue)
+        {
+            result.EndDate = null;
+        }
+
+        if (result.UserGroups != null && result.UserGroups.Length == 1 && result.UserGroups[0] == "__any")
+        {
+            result.UserGroups = [];
         }
 
         if (result.CultureName == "__any")
@@ -80,20 +90,14 @@ public static class SearchDocumentExtensions
         result.AddFilterableStringAndContentString(nameof(document.Status), document.Status.ToString());
         result.AddFilterableStringAndContentString(nameof(document.Visibility), document.Visibility.ToString());
 
-        var userGroups = !document.UserGroups.IsNullOrEmpty()
+        var userGroups = document.UserGroups != null && document.UserGroups.Any()
             ? document.UserGroups
-            : "__any";
-        result.AddFilterableStringAndContentString(nameof(document.UserGroups), userGroups);
+            : ["__any"];
+        result.AddFilterableCollectionAndContentString(nameof(document.UserGroups), userGroups);
 
-        if (document.StartDate.HasValue)
-        {
-            result.AddFilterableDateTime(nameof(document.StartDate), document.StartDate);
-        }
+        result.AddFilterableDateTime(nameof(document.StartDate), document.StartDate ?? DateTime.MinValue);
+        result.AddFilterableDateTime(nameof(document.EndDate), document.EndDate ?? DateTime.MaxValue);
 
-        if (document.EndDate.HasValue)
-        {
-            result.AddFilterableDateTime(nameof(document.EndDate), document.EndDate);
-        }
         return result;
     }
 

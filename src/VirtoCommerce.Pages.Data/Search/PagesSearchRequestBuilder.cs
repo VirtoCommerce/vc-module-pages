@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,14 +8,17 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.SearchModule.Core.Extensions;
 using VirtoCommerce.SearchModule.Core.Model;
 using VirtoCommerce.SearchModule.Core.Services;
+using VirtoCommerce.StoreModule.Core.Services;
 
 namespace VirtoCommerce.Pages.Data.Search
 {
-    public class PagesSearchRequestBuilder(ISearchPhraseParser searchPhraseParser) : ISearchRequestBuilder
+    public class PagesSearchRequestBuilder(
+        ISearchPhraseParser searchPhraseParser,
+        IStoreService storeService) : ISearchRequestBuilder
     {
         public virtual string DocumentType => ModuleConstants.PageDocumentType;
 
-        public virtual Task<SearchRequest> BuildRequestAsync(SearchCriteriaBase criteria)
+        public virtual async Task<SearchRequest> BuildRequestAsync(SearchCriteriaBase criteria)
         {
             SearchRequest result = null;
 
@@ -22,12 +26,12 @@ namespace VirtoCommerce.Pages.Data.Search
             {
                 // GetFilters() modifies Keyword
                 searchCriteria = searchCriteria.CloneTyped();
-                var filters = GetFilters(searchCriteria);
+                var filters = await GetFilters(searchCriteria);
 
                 result = new SearchRequest
                 {
                     SearchKeywords = searchCriteria.Keyword,
-                    SearchFields = new[] { IndexDocumentExtensions.ContentFieldName },
+                    SearchFields = [IndexDocumentExtensions.ContentFieldName],
                     Filter = filters.And(),
                     Sorting = GetSorting(searchCriteria),
                     Skip = criteria.Skip,
@@ -35,10 +39,10 @@ namespace VirtoCommerce.Pages.Data.Search
                 };
             }
 
-            return Task.FromResult(result);
+            return result;
         }
 
-        protected virtual IList<IFilter> GetFilters(PageDocumentSearchCriteria criteria)
+        protected virtual async Task<IList<IFilter>> GetFilters(PageDocumentSearchCriteria criteria)
         {
             var result = new List<IFilter>();
 
@@ -64,39 +68,61 @@ namespace VirtoCommerce.Pages.Data.Search
                 result.Add(CreateTermFilter(nameof(PageDocument.Permalink), criteria.Permalink));
             }
 
-            if (criteria.Visibility.HasValue)
+            if (criteria.Visibility == PageDocumentVisibility.Public)
             {
-                result.Add(CreateTermFilter(nameof(PageDocument.Visibility), criteria.Visibility.Value.ToString()));
+                result.Add(CreateTermFilter(nameof(PageDocument.Visibility), PageDocumentVisibility.Public.ToString()));
             }
 
-            if (criteria.Status.HasValue)
-            {
-                result.Add(CreateTermFilter(nameof(PageDocument.Status), criteria.Status.Value.ToString()));
-            }
+            result.Add(CreateTermFilter(nameof(PageDocument.Status), criteria.Status.ToString()));
 
-            result.Add(AddLanguageFilter(criteria));
+            await AddLanguageFilter(criteria, result);
+            AddDateFilter(criteria, result);
+            AddUserGroups(criteria, result);
 
-            //if (!string.IsNullOrEmpty(criteria.FolderUrl))
-            //{
-            //    result.Add(CreateTermFilter("FolderUrl", criteria.FolderUrl));
-            //}
-            //if (!string.IsNullOrEmpty(criteria.ContentType))
-            //{
-            //    result.Add(CreateTermFilter("ContentType", criteria.ContentType));
-            //}
             return result;
         }
 
-        private IFilter AddLanguageFilter(PageDocumentSearchCriteria criteria)
+        private void AddUserGroups(PageDocumentSearchCriteria criteria, List<IFilter> result)
         {
-            var cultureFilter = CreateTermFilter("CultureName", "__any");
+            var userGroups = criteria.UserGroups ?? [];
+            var filter = new TermFilter
+            {
+                FieldName = nameof(PageDocument.UserGroups),
+                Values =
+                [
+                    "__any",
+                    ..userGroups
+                ]
+            };
+            result.Add(filter);
+        }
+
+        private void AddDateFilter(PageDocumentSearchCriteria criteria, List<IFilter> result)
+        {
+            var date = criteria.CertainDate ?? DateTime.UtcNow;
+            var dateFilter = CreateDateFilter(nameof(PageDocument.StartDate), date, true)
+                .And(CreateDateFilter(nameof(PageDocument.EndDate), date, false));
+            result.Add(dateFilter);
+        }
+
+        private async Task AddLanguageFilter(PageDocumentSearchCriteria criteria, List<IFilter> filter)
+        {
+            var cultureFilter = CreateTermFilter(nameof(PageDocument.CultureName), "__any");
 
             if (!criteria.LanguageCode.IsNullOrEmpty())
             {
-                cultureFilter = cultureFilter.Or(CreateTermFilter("CultureName", criteria.LanguageCode));
+                cultureFilter = cultureFilter.Or(CreateTermFilter(nameof(PageDocument.CultureName), criteria.LanguageCode));
             }
-
-            return cultureFilter;
+            else
+            {
+                var store = await storeService.GetByIdAsync(criteria.StoreId);
+                var storeLanguage = store?.DefaultLanguage;
+                if (!storeLanguage.IsNullOrEmpty())
+                {
+                    cultureFilter = cultureFilter.Or(CreateTermFilter(nameof(PageDocument.CultureName), storeLanguage));
+                }
+            }
+            filter.Add(cultureFilter);
         }
 
         protected virtual IList<SortingField> GetSorting(PageDocumentSearchCriteria criteria)
@@ -119,6 +145,24 @@ namespace VirtoCommerce.Pages.Data.Search
             {
                 FieldName = fieldName,
                 Values = new[] { value },
+            };
+        }
+
+        protected static IFilter CreateDateFilter(string fieldName, DateTime date, bool isLess)
+        {
+            return new RangeFilter
+            {
+                FieldName = fieldName,
+                Values =
+                [
+                    new RangeFilterValue
+                    {
+                        IncludeLower = true,
+                        IncludeUpper = true,
+                        Lower = isLess ? null : date.ToString("O"),
+                        Upper = isLess ? date.ToString("O") : null
+                    }
+                ]
             };
         }
     }

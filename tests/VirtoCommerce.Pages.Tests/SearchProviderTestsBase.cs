@@ -1,13 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Moq;
 using VirtoCommerce.Pages.Core.Models;
-using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Settings;
-using VirtoCommerce.SearchModule.Core.Extensions;
-using VirtoCommerce.SearchModule.Core.Model;
 using VirtoCommerce.SearchModule.Core.Services;
 
 namespace VirtoCommerce.Pages.Tests;
@@ -16,7 +12,7 @@ public abstract class SearchProviderTestsBase
 {
     protected abstract ISearchProvider GetSearchProvider();
 
-    protected virtual IList<PageDocument> GetPages()
+    protected virtual IList<PageDocument> GetPagesSet1()
     {
         return new List<PageDocument>
             {
@@ -38,7 +34,7 @@ public abstract class SearchProviderTestsBase
                     MimeType = null,
                     Status = PageDocumentStatus.Published,
                     Visibility = PageDocumentVisibility.Public,
-                    UserGroups = null,
+                    UserGroups = [],
                     StartDate = new DateTime(2024, 7, 10),
                     EndDate = null,
                 },
@@ -58,9 +54,9 @@ public abstract class SearchProviderTestsBase
                     ModifiedDate = null,
                     Source = null,
                     MimeType = null,
-                    Status = PageDocumentStatus.Unpublished,
+                    Status = PageDocumentStatus.Published,
                     Visibility = PageDocumentVisibility.Public,
-                    UserGroups = null,
+                    UserGroups = [],
                     StartDate = null,
                     EndDate = null,
                 },
@@ -80,171 +76,176 @@ public abstract class SearchProviderTestsBase
                     ModifiedDate = null,
                     Source = null,
                     MimeType = null,
-                    Status = PageDocumentStatus.Unpublished,
+                    Status = PageDocumentStatus.Published,
                     Visibility = PageDocumentVisibility.Public,
-                    UserGroups = null,
+                    UserGroups = [ "customers", "registered" ],
                     StartDate = null,
                     EndDate = null,
                 }
             };
     }
 
-    protected virtual IList<IndexDocument> GetSecondaryDocuments()
+    protected virtual IList<PageDocument> GetPagesSet2()
     {
-        return new List<IndexDocument>
+        return new List<PageDocument>
             {
-                CreateDocument(
-                    id: "Item-6",
-                    name: "Blue Shirt",
-                    color: "Blue",
-                    date: "2017-04-23T15:24:31.180Z",
-                    size: 10,
-                    location: "0,50",
-                    name2: "Blue Shirt 2",
-                    date2: DateTime.UtcNow,
-                    new TestDocumentPrice("USD", "default", 23.12m)),
-
-                // The following documents will be deleted by the create and delete test
-                CreateDocument(
-                    id: "Item-7",
-                    name: "Blue Shirt",
-                    color: "Blue",
-                    date: "2017-04-23T15:24:31.180Z",
-                    size: 10,
-                    location: "0,50",
-                    name2: "Blue Shirt 2",
-                    date2: DateTime.UtcNow,
-                    new TestDocumentPrice("USD", "default", 23.12m)),
-
-                CreateDocument(
-                    id: "Item-8",
-                    name: "Blue Shirt",
-                    color: "Blue",
-                    date: "2017-04-23T15:24:31.180Z",
-                    size: 10,
-                    location: "0,50",
-                    name2: "Blue Shirt 2",
-                    date2: DateTime.UtcNow,
-                    new TestDocumentPrice("USD", "default", 23.12m)),
+                new ()
+                {
+                    Id = "1",
+                    OuterId = "o1",
+                    StoreId = "store1",
+                    CultureName = null,
+                    Permalink = "/test-page",
+                    Title = "test page",
+                    Description = "description",
+                    Content = "<p>Test page</p>",
+                    CreatedBy = "admin",
+                    CreatedDate = new DateTime(2024, 7, 3),
+                    ModifiedBy = null,
+                    ModifiedDate = null,
+                    Source = null,
+                    MimeType = null,
+                    Status = PageDocumentStatus.Published,
+                    Visibility = PageDocumentVisibility.Public,
+                    UserGroups = [],
+                    StartDate = new DateTime(2024, 7, 10),
+                    EndDate = null,
+                },
+                new ()
+                {
+                    Id = "2",
+                    OuterId = "o2",
+                    StoreId = "store1",
+                    CultureName = null,
+                    Permalink = "/test-page",
+                    Title = "test page",
+                    Description = "description",
+                    Content = "# Test page",
+                    CreatedBy = "admin",
+                    CreatedDate = new DateTime(2024, 7, 3),
+                    ModifiedBy = null,
+                    ModifiedDate = null,
+                    Source = null,
+                    MimeType = null,
+                    Status = PageDocumentStatus.Draft,
+                    Visibility = PageDocumentVisibility.Public,
+                    UserGroups = [],
+                    StartDate = null,
+                    EndDate = null,
+                },
+                new ()
+                {
+                    Id = "3",
+                    OuterId = "o3",
+                    StoreId = "store1",
+                    CultureName = null,
+                    Permalink = "/test-page",
+                    Title = "test page",
+                    Description = "description",
+                    Content = "# Test page",
+                    CreatedBy = "admin",
+                    CreatedDate = new DateTime(2024, 7, 3),
+                    ModifiedBy = null,
+                    ModifiedDate = null,
+                    Source = null,
+                    MimeType = null,
+                    Status = PageDocumentStatus.Published,
+                    Visibility = PageDocumentVisibility.Public,
+                    UserGroups = [],
+                    StartDate = new DateTime(2024, 07, 10),
+                    EndDate = new DateTime(2024, 07, 11),
+                },
+                new ()
+                {
+                    Id = "4",
+                    OuterId = "o4",
+                    StoreId = "store1",
+                    CultureName = null,
+                    Permalink = "/test-page",
+                    Title = "test page",
+                    Description = "description",
+                    Content = "# Test page",
+                    CreatedBy = "admin",
+                    CreatedDate = new DateTime(2024, 7, 3),
+                    ModifiedBy = null,
+                    ModifiedDate = null,
+                    Source = null,
+                    MimeType = null,
+                    Status = PageDocumentStatus.Published,
+                    Visibility = PageDocumentVisibility.Public,
+                    UserGroups = [],
+                    StartDate = null,
+                    EndDate = new DateTime(2024, 07, 11),
+                },
+                new ()
+                {
+                    Id = "4",
+                    OuterId = "o4",
+                    StoreId = "store1",
+                    CultureName = null,
+                    Permalink = "/test-page",
+                    Title = "test page",
+                    Description = "description",
+                    Content = "# Test page",
+                    CreatedBy = "admin",
+                    CreatedDate = new DateTime(2024, 7, 3),
+                    ModifiedBy = null,
+                    ModifiedDate = null,
+                    Source = null,
+                    MimeType = null,
+                    Status = PageDocumentStatus.Published,
+                    Visibility = PageDocumentVisibility.Public,
+                    UserGroups = ["admin", "useradmin"],
+                    StartDate = null,
+                    EndDate = null,
+                },
+                new ()
+                {
+                    Id = "5",
+                    OuterId = "o5",
+                    StoreId = "store1",
+                    CultureName = null,
+                    Permalink = "/test-page",
+                    Title = "test page",
+                    Description = "description",
+                    Content = "# Test page",
+                    CreatedBy = "admin",
+                    CreatedDate = new DateTime(2024, 7, 3),
+                    ModifiedBy = null,
+                    ModifiedDate = null,
+                    Source = null,
+                    MimeType = null,
+                    Status = PageDocumentStatus.Draft,
+                    Visibility = PageDocumentVisibility.Private,
+                    UserGroups = [],
+                    StartDate = null,
+                    EndDate = null,
+                },
+                new ()
+                {
+                    Id = "6",
+                    OuterId = "o6",
+                    StoreId = "store2",
+                    CultureName = null,
+                    Permalink = "/testpage",
+                    Title = "test page",
+                    Description = "description",
+                    Content = "# Test page",
+                    CreatedBy = "admin",
+                    CreatedDate = new DateTime(2024, 7, 3),
+                    ModifiedBy = null,
+                    ModifiedDate = null,
+                    Source = null,
+                    MimeType = null,
+                    Status = PageDocumentStatus.Unpublished,
+                    Visibility = PageDocumentVisibility.Private,
+                    UserGroups = ["admin", "customer"],
+                    StartDate = null,
+                    EndDate = null,
+                }
             };
     }
 
-    protected virtual IndexDocument CreateDocument(
-        string id,
-        string name,
-        string color,
-        string date,
-        int size,
-        string location,
-        string name2,
-        DateTime? date2,
-        params TestDocumentPrice[] prices)
-    {
-        var doc = new IndexDocument(id);
-
-        doc.AddFilterableStringAndContentString("Name", name);
-        doc.AddFilterableStringAndContentString("Color", color);
-
-        doc.AddFilterableString("Code", id);
-        doc.AddFilterableInteger("Size", size);
-        doc.AddFilterableDateTime("Date", DateTime.Parse(date));
-        doc.Add(new IndexDocumentField("Location", GeoPoint.TryParse(location), IndexDocumentFieldValueType.GeoPoint) { IsRetrievable = true, IsFilterable = true });
-
-        doc.AddFilterableCollection("Catalog", "Goods");
-        doc.AddFilterableCollection("Catalog", "Stuff");
-
-        doc.Add(new IndexDocumentField("NumericCollection", size, IndexDocumentFieldValueType.Integer) { IsRetrievable = true, IsFilterable = true, IsCollection = true });
-        doc.Add(new IndexDocumentField("NumericCollection", 10, IndexDocumentFieldValueType.Integer) { IsRetrievable = true, IsFilterable = true, IsCollection = true });
-        doc.Add(new IndexDocumentField("NumericCollection", 20, IndexDocumentFieldValueType.Integer) { IsRetrievable = true, IsFilterable = true, IsCollection = true });
-
-        doc.AddFilterableCollection("Is", "Priced");
-        doc.AddFilterableCollection("Is", color);
-        doc.AddFilterableCollection("Is", id);
-
-        doc.Add(new IndexDocumentField("StoredField", "This value should not be processed in any way, it is just stored in the index.", IndexDocumentFieldValueType.String) { IsRetrievable = true });
-
-        foreach (var price in prices)
-        {
-            doc.Add(new IndexDocumentField($"Price_{price.Currency}_{price.Pricelist}", price.Amount, IndexDocumentFieldValueType.Decimal) { IsRetrievable = true, IsFilterable = true, IsCollection = true });
-            doc.Add(new IndexDocumentField($"Price_{price.Currency}", price.Amount, IndexDocumentFieldValueType.Decimal) { IsRetrievable = true, IsFilterable = true, IsCollection = true });
-        }
-
-        doc.AddFilterableBoolean("HasMultiplePrices", prices.Length > 1);
-
-        // Adds extra fields to test mapping updates for indexer
-        if (name2 != null)
-        {
-            doc.AddFilterableString("Name 2", name2);
-        }
-
-        if (date2 != null)
-        {
-            doc.AddFilterableDateTime("Date (2)", date2.Value);
-        }
-
-        //doc.Add(new IndexDocumentField("__obj", obj) { IsRetrievable = true, IsFilterable = true });
-
-        return doc;
-    }
-
-    protected virtual IFilter CreateRangeFilter(string fieldName, string lower, string upper, bool includeLower, bool includeUpper)
-    {
-        return new RangeFilter
-        {
-            FieldName = fieldName,
-            Values = new[]
-            {
-                    new RangeFilterValue
-                    {
-                        Lower = lower,
-                        Upper = upper,
-                        IncludeLower = includeLower,
-                        IncludeUpper = includeUpper,
-                    }
-                },
-        };
-    }
-
-    protected virtual long GetAggregationValuesCount(SearchResponse response, string aggregationId)
-    {
-        var aggregation = GetAggregation(response, aggregationId);
-        var result = aggregation?.Values?.Count ?? 0;
-        return result;
-    }
-
-    protected virtual long GetAggregationValueCount(SearchResponse response, string aggregationId, string valueId)
-    {
-        var aggregation = GetAggregation(response, aggregationId);
-        var result = GetAggregationValueCount(aggregation, valueId);
-        return result;
-    }
-
-    protected virtual AggregationResponse GetAggregation(SearchResponse response, string aggregationId)
-    {
-        AggregationResponse result = null;
-
-        if (response?.Aggregations?.Count > 0)
-        {
-            result = response.Aggregations.SingleOrDefault(a => a.Id.EqualsInvariant(aggregationId));
-        }
-
-        return result;
-    }
-
-    protected virtual long GetAggregationValueCount(AggregationResponse aggregation, string valueId)
-    {
-        long? result = null;
-
-        if (aggregation?.Values?.Count > 0)
-        {
-            result = aggregation.Values
-                .Where(v => v.Id == valueId)
-                .Select(facet => facet.Count)
-                .SingleOrDefault();
-        }
-
-        return result ?? 0;
-    }
 
     protected virtual ISettingsManager GetSettingsManager()
     {
@@ -268,77 +269,4 @@ public abstract class SearchProviderTestsBase
         Task<T> GetValueAsync<T>(string name, T defaultValue);
     }
 
-    public class TestDocumentPrice
-    {
-        public TestDocumentPrice(string currency, string pricelist, decimal amount)
-        {
-            Currency = currency;
-            Pricelist = pricelist;
-            Amount = amount;
-        }
-
-        public string Currency;
-        public string Pricelist;
-        public decimal Amount;
-    }
-
-    public class TestObjectValue : IEntity
-    {
-        public TestObjectValue(object value, string valueType)
-            : this()
-        {
-            AddProperty(value, valueType);
-        }
-
-        public TestObjectValue()
-        {
-            Id = Guid.NewGuid().ToString();
-            var ids = new[] { Id };
-            StringArray = ids;
-            StringList = ids;
-        }
-
-        public Property AddProperty(object value, string valueType)
-        {
-            var propValue = new PropertyValue { Value = value, ValueType = valueType };
-            var values = new[] { propValue };
-            var property = new Property
-            {
-                Array = values,
-                List = values,
-                ValueInProperty = propValue,
-                Value = value
-            };
-
-            TestProperties.Add(property);
-
-            return property;
-        }
-
-        public IList<Property> TestProperties { get; set; } = new List<Property>();
-        public string Id { get; set; }
-        public string[] StringArray { get; set; }
-        public IList<string> StringList { get; set; }
-        public PropertyValue Value { get; set; }
-    }
-
-    public class Property : IEntity
-    {
-        public string[] Ids { get; set; }
-        public PropertyValue[] Array { get; set; }
-        public IList<PropertyValue> List { get; set; } = new List<PropertyValue>();
-        public PropertyValue ValueInProperty { get; set; }
-        public string ValueType { get; set; }
-        public bool IsActive { get; set; }
-        public string Id { get; set; }
-        public object Value { get; set; }
-    }
-
-    public class PropertyValue : IEntity
-    {
-        public object Value { get; set; }
-        public string ValueType { get; set; }
-        public bool IsActive { get; set; }
-        public string Id { get; set; }
-    }
 }
