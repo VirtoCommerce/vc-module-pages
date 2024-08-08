@@ -45,7 +45,7 @@ public static class BuilderIOExtensions
             StoreId = storeId,
             CultureName = cultureName,
             EndDate = value.StartDate,
-            StartDate = value.EndDate,
+            StartDate = value.EndDate == DateTime.MinValue ? DateTime.MaxValue : value.EndDate,
             // UserGroups = 
         };
     }
