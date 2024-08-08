@@ -14,10 +14,10 @@ namespace VirtoCommerce.Pages.Data.Handlers
                 switch (message.Operation)
                 {
                     case PageOperation.Delete:
-                        await searchService.RemoveDocuments([message.Page.Id]);
+                        await searchService.RemoveDocument([message.Page.Id]);
                         break;
                     default:
-                        await searchService.IndexDocuments([message.Page]);
+                        await searchService.IndexDocument([message.Page]);
                         break;
                 }
             }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using VirtoCommerce.Pages.Core.BuilderIO.Converters;
 
@@ -12,7 +13,11 @@ public class BuilderIOPage
 
     [JsonConverter(typeof(UnixMillisecondsConverter))]
     public DateTime CreatedDate { get; set; }
-    public PageModel Data { get; set; }
+    [JsonConverter(typeof(UnixMillisecondsConverter))]
+    public DateTime StartDate { get; set; }
+    [JsonConverter(typeof(UnixMillisecondsConverter))]
+    public DateTime EndDate { get; set; }
+    public Dictionary<string, object> Data { get; set; }
 
     [JsonConverter(typeof(UnixMillisecondsConverter))]
     public DateTime? FirstPublished { get; set; }
