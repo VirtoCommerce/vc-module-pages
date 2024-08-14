@@ -24,7 +24,7 @@ public class PageDocument : IEntity, IAuditable
     public string Content { get; set; }
     public PageDocumentVisibility Visibility { get; set; }
 
-    public string UserGroups { get; set; }
+    public string[] UserGroups { get; set; }
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
 

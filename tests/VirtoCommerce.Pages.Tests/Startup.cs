@@ -8,7 +8,7 @@ class Startup
     public static void ConfigureHost(IHostBuilder hostBuilder)
     {
         var configuration = new ConfigurationBuilder()
-            .AddUserSecrets<ElasticSearch8Tests>()
+            .AddUserSecrets<ElasticSearchTests>()
             .AddEnvironmentVariables()
             .Build();
 

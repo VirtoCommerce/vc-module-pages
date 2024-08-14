@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using System.Linq;
 using VirtoCommerce.Pages.Core.Models;
 using VirtoCommerce.Platform.Core.Common;
@@ -25,29 +24,39 @@ public static class SearchDocumentExtensions
         var result = new PageDocument
         {
             Id = document.Id,
-            OuterId = (string)document.GetValueSafe("outerId"),
-            StoreId = (string)document.GetValueSafe("storeId"),
-            CultureName = (string)document.GetValueSafe("cultureName"),
+            OuterId = (string)document.GetValueSafe("outerid"),
+            StoreId = (string)document.GetValueSafe("storeid"),
+            CultureName = (string)document.GetValueSafe("culturename"),
             Permalink = (string)document.GetValueSafe("permalink"),
             Title = (string)document.GetValueSafe("title"),
             Description = (string)document.GetValueSafe("description"),
             Content = (string)document.GetValueSafe("content"),
-            CreatedBy = (string)document.GetValueSafe("createdBy"),
-            CreatedDate = document.GetValueSafe("createdDate").ToDateTime()!.Value,
-            ModifiedBy = (string)document.GetValueSafe("modifiedBy"),
-            ModifiedDate = document.GetValueSafe("modifiedDate").ToDateTime(),
+            CreatedBy = (string)document.GetValueSafe("createdby"),
+            CreatedDate = (DateTime)document.GetValueSafe("createddate"),
+            ModifiedBy = (string)document.GetValueSafe("modifiedby"),
+            ModifiedDate = (DateTime?)document.GetValueSafe("modifieddate"),
             Source = (string)document.GetValueSafe("source"),
-            MimeType = (string)document.GetValueSafe("mimeType"),
+            MimeType = (string)document.GetValueSafe("mimetype"),
             Status = (PageDocumentStatus)Enum.Parse(typeof(PageDocumentStatus), (string)document.GetValueSafe("status")),
             Visibility = (PageDocumentVisibility)Enum.Parse(typeof(PageDocumentVisibility), (string)document.GetValueSafe("visibility")),
-            UserGroups = (string)document.GetValueSafe("userGroups"),
-            StartDate = document.GetValueSafe("startDate").ToDateTime(),
-            EndDate = document.GetValueSafe("endDate").ToDateTime(),
+            UserGroups = ((object[])document.GetValueSafe("usergroups")).Cast<string>().ToArray(),
+            StartDate = (DateTime?)document.GetValueSafe("startdate"),
+            EndDate = (DateTime?)document.GetValueSafe("enddate"),
         };
 
-        if (result.UserGroups == "__any")
+        if (result.StartDate == DateTime.MinValue)
         {
-            result.UserGroups = null;
+            result.StartDate = null;
+        }
+
+        if (result.EndDate == DateTime.MaxValue)
+        {
+            result.EndDate = null;
+        }
+
+        if (result.UserGroups != null && result.UserGroups.Length == 1 && result.UserGroups[0] == "__any")
+        {
+            result.UserGroups = [];
         }
 
         if (result.CultureName == "__any")
@@ -65,15 +74,15 @@ public static class SearchDocumentExtensions
         result.AddFilterableStringAndContentString(nameof(document.StoreId), document.StoreId);
         result.AddFilterableStringAndContentString(nameof(document.CultureName), document.CultureName ?? "__any");
         result.AddFilterableStringAndContentString(nameof(document.Permalink), document.Permalink.Permalink());
-        result.AddContentString(document.Title);
-        result.AddContentString(document.Description);
-        result.AddContentString(document.Content);
+        result.AddRetrievableAndSearchableString(nameof(document.Title), document.Title);
+        result.AddRetrievableAndSearchableString(nameof(document.Description), document.Description);
+        result.AddRetrievableAndSearchableString(nameof(document.Content), document.Content);
         result.AddFilterableStringAndContentString(nameof(document.CreatedBy), document.CreatedBy);
-        result.AddFilterableStringAndContentString(nameof(document.CreatedDate), document.CreatedDate.ToDateString());
+        result.AddFilterableDateTime(nameof(document.CreatedDate), document.CreatedDate);
         result.AddFilterableStringAndContentString(nameof(document.ModifiedBy), document.ModifiedBy);
         if (document.ModifiedDate.HasValue)
         {
-            result.AddFilterableStringAndContentString(nameof(document.ModifiedDate), document.ModifiedDate.Value.ToDateString());
+            result.AddFilterableDateTime(nameof(document.ModifiedDate), document.ModifiedDate.Value);
         }
 
         result.AddFilterableStringAndContentString(nameof(document.Source), document.Source);
@@ -81,20 +90,14 @@ public static class SearchDocumentExtensions
         result.AddFilterableStringAndContentString(nameof(document.Status), document.Status.ToString());
         result.AddFilterableStringAndContentString(nameof(document.Visibility), document.Visibility.ToString());
 
-        var userGroups = !document.UserGroups.IsNullOrEmpty()
+        var userGroups = document.UserGroups != null && document.UserGroups.Any()
             ? document.UserGroups
-            : "__any";
-        result.AddFilterableStringAndContentString(nameof(document.UserGroups), userGroups);
+            : ["__any"];
+        result.AddFilterableCollectionAndContentString(nameof(document.UserGroups), userGroups);
 
-        if (document.StartDate.HasValue)
-        {
-            result.AddFilterableStringAndContentString(nameof(document.StartDate), document.StartDate.Value.ToDateString());
-        }
+        result.AddFilterableDateTime(nameof(document.StartDate), document.StartDate ?? DateTime.MinValue);
+        result.AddFilterableDateTime(nameof(document.EndDate), document.EndDate ?? DateTime.MaxValue);
 
-        if (document.EndDate.HasValue)
-        {
-            result.AddFilterableStringAndContentString(nameof(document.EndDate), document.EndDate.Value.ToDateString());
-        }
         return result;
     }
 
@@ -108,25 +111,16 @@ public static class SearchDocumentExtensions
         return value;
     }
 
-    private static string ToDateString(this DateTime value)
+    public static void AddRetrievableAndSearchableString(this IndexDocument document, string name, string value)
     {
-        return value.ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture);
-    }
-
-    private static DateTime? ToDateTime(this object value)
-    {
-        if (value == null)
+        if (!string.IsNullOrWhiteSpace(value))
         {
-            return null;
+            document.Add(new IndexDocumentField(name, value, IndexDocumentFieldValueType.String)
+            {
+                IsRetrievable = true,
+                IsSearchable = true,
+            });
+            document.AddContentString(value);
         }
-        if (value is DateTime dateTime)
-        {
-            return dateTime;
-        }
-        if (DateTime.TryParse(value.ToString(), CultureInfo.InvariantCulture, out dateTime))
-        {
-            return dateTime;
-        }
-        return null;
     }
 }
