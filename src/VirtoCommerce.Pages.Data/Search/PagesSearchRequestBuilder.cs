@@ -107,7 +107,7 @@ namespace VirtoCommerce.Pages.Data.Search
 
         private async Task AddLanguageFilter(PageDocumentSearchCriteria criteria, List<IFilter> filter)
         {
-            IFilter cultureFilter = null; // = CreateTermFilter(nameof(PageDocument.CultureName), "__any");
+            IFilter cultureFilter = null;
 
             if (!criteria.LanguageCode.IsNullOrEmpty())
             {
