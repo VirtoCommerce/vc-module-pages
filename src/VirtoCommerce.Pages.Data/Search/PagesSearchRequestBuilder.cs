@@ -107,11 +107,11 @@ namespace VirtoCommerce.Pages.Data.Search
 
         private async Task AddLanguageFilter(PageDocumentSearchCriteria criteria, List<IFilter> filter)
         {
-            var cultureFilter = CreateTermFilter(nameof(PageDocument.CultureName), "__any");
+            IFilter cultureFilter = null; // = CreateTermFilter(nameof(PageDocument.CultureName), "__any");
 
             if (!criteria.LanguageCode.IsNullOrEmpty())
             {
-                cultureFilter = cultureFilter.Or(CreateTermFilter(nameof(PageDocument.CultureName), criteria.LanguageCode));
+                cultureFilter = CreateTermFilter(nameof(PageDocument.CultureName), criteria.LanguageCode);
             }
             else
             {
@@ -119,10 +119,14 @@ namespace VirtoCommerce.Pages.Data.Search
                 var storeLanguage = store?.DefaultLanguage;
                 if (!storeLanguage.IsNullOrEmpty())
                 {
-                    cultureFilter = cultureFilter.Or(CreateTermFilter(nameof(PageDocument.CultureName), storeLanguage));
+                    cultureFilter = CreateTermFilter(nameof(PageDocument.CultureName), storeLanguage);
                 }
             }
-            filter.Add(cultureFilter);
+
+            if (cultureFilter != null)
+            {
+                filter.Add(cultureFilter);
+            }
         }
 
         protected virtual IList<SortingField> GetSorting(PageDocumentSearchCriteria criteria)

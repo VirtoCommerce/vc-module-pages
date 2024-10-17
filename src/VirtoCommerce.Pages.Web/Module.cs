@@ -4,12 +4,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using VirtoCommerce.CoreModule.Core.Seo;
+
 //using VirtoCommerce.ExperienceApiModule.Core.Extensions;
 //using VirtoCommerce.ExperienceApiModule.Core.Infrastructure;
 using VirtoCommerce.Pages.Core;
 using VirtoCommerce.Pages.Core.Events;
 using VirtoCommerce.Pages.Core.Search;
-using VirtoCommerce.Pages.Data;
 using VirtoCommerce.Pages.Data.Handlers;
 using VirtoCommerce.Pages.Data.Search;
 using VirtoCommerce.Platform.Core.Events;
@@ -26,22 +27,10 @@ public class Module : IModule, IHasConfiguration
 
     public void Initialize(IServiceCollection serviceCollection)
     {
-        var assemblyMarker = typeof(AssemblyMarker);
-        //var graphQlBuilder = new CustomGraphQLBuilder(serviceCollection);
-        //graphQlBuilder.AddGraphTypes(assemblyMarker);
-        //serviceCollection.AddMediatR(assemblyMarker);
-        //serviceCollection.AddAutoMapper(assemblyMarker);
-        //serviceCollection.AddSchemaBuilders(assemblyMarker);
-
-        // Override models
-        //AbstractTypeFactory<OriginalModel>.OverrideType<OriginalModel, ExtendedModel>().MapToType<ExtendedEntity>();
-        //AbstractTypeFactory<OriginalEntity>.OverrideType<OriginalEntity, ExtendedEntity>();
-
         // Register services
         serviceCollection.AddTransient<IPageDocumentSearchService, PageDocumentSearchService>();
-
+        serviceCollection.AddTransient<ISeoBySlugResolver, BuilderIOSlugResolver>();
         serviceCollection.AddTransient<PagesSearchRequestBuilder>();
-
         serviceCollection.AddTransient<PageChangedHandler>();
 
     }

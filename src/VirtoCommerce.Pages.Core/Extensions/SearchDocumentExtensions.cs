@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Pages.Core.Models;
 using VirtoCommerce.Platform.Core.Common;
@@ -32,16 +33,16 @@ public static class SearchDocumentExtensions
             Description = (string)document.GetValueSafe("description"),
             Content = (string)document.GetValueSafe("content"),
             CreatedBy = (string)document.GetValueSafe("createdby"),
-            CreatedDate = (DateTime)document.GetValueSafe("createddate"),
+            CreatedDate = document.GetDateSafe("createddate") ?? DateTime.MinValue,
             ModifiedBy = (string)document.GetValueSafe("modifiedby"),
-            ModifiedDate = (DateTime?)document.GetValueSafe("modifieddate"),
+            ModifiedDate = document.GetDateSafe("modifieddate") ?? DateTime.MinValue,
             Source = (string)document.GetValueSafe("source"),
             MimeType = (string)document.GetValueSafe("mimetype"),
             Status = (PageDocumentStatus)Enum.Parse(typeof(PageDocumentStatus), (string)document.GetValueSafe("status")),
             Visibility = (PageDocumentVisibility)Enum.Parse(typeof(PageDocumentVisibility), (string)document.GetValueSafe("visibility")),
             UserGroups = ((object[])document.GetValueSafe("usergroups")).Cast<string>().ToArray(),
-            StartDate = (DateTime?)document.GetValueSafe("startdate"),
-            EndDate = (DateTime?)document.GetValueSafe("enddate"),
+            StartDate = document.GetDateSafe("startdate"),
+            EndDate = document.GetDateSafe("enddate"),
         };
 
         if (result.StartDate == DateTime.MinValue)
@@ -109,6 +110,20 @@ public static class SearchDocumentExtensions
         }
 
         return value;
+    }
+
+    public static DateTime? GetDateSafe(this IDictionary<string, object> dictionary, string key)
+    {
+        var value = dictionary.GetValueSafe(key);
+        if (value is DateTime date)
+        {
+            return date;
+        }
+        if (value is string stringValue && DateTime.TryParse(stringValue, out date))
+        {
+            return date;
+        }
+        return null;
     }
 
     public static void AddRetrievableAndSearchableString(this IndexDocument document, string name, string value)

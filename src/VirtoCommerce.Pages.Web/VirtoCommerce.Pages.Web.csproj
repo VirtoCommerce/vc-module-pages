@@ -11,4 +11,7 @@
     <ProjectReference Include="..\VirtoCommerce.Pages.Core\VirtoCommerce.Pages.Core.csproj" />
     <ProjectReference Include="..\VirtoCommerce.Pages.Data\VirtoCommerce.Pages.Data.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controllers\Api\" />
+  </ItemGroup>
 </Project>
