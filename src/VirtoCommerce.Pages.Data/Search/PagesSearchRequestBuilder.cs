@@ -82,7 +82,7 @@ namespace VirtoCommerce.Pages.Data.Search
             return result;
         }
 
-        private void AddUserGroups(PageDocumentSearchCriteria criteria, List<IFilter> result)
+        private static void AddUserGroups(PageDocumentSearchCriteria criteria, List<IFilter> result)
         {
             var userGroups = criteria.UserGroups ?? [];
             var filter = new TermFilter
@@ -97,7 +97,7 @@ namespace VirtoCommerce.Pages.Data.Search
             result.Add(filter);
         }
 
-        private void AddDateFilter(PageDocumentSearchCriteria criteria, List<IFilter> result)
+        private static void AddDateFilter(PageDocumentSearchCriteria criteria, List<IFilter> result)
         {
             var date = criteria.CertainDate ?? DateTime.UtcNow;
             var dateFilter = CreateDateFilter(nameof(PageDocument.StartDate), date, true)

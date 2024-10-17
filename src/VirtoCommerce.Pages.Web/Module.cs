@@ -29,7 +29,7 @@ public class Module : IModule, IHasConfiguration
     {
         // Register services
         serviceCollection.AddTransient<IPageDocumentSearchService, PageDocumentSearchService>();
-        serviceCollection.AddTransient<ISeoBySlugResolver, BuilderIOSlugResolver>();
+        serviceCollection.AddTransient<ISeoBySlugResolver, PageDocumentSlugResolver>();
         serviceCollection.AddTransient<PagesSearchRequestBuilder>();
         serviceCollection.AddTransient<PageChangedHandler>();
 

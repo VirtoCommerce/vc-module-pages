@@ -6,7 +6,7 @@ using VirtoCommerce.Pages.Core.Search;
 
 namespace VirtoCommerce.Pages.Data.Search;
 
-public class BuilderIOSlugResolver(IPageDocumentSearchService searchService) : ISeoBySlugResolver
+public class PageDocumentSlugResolver(IPageDocumentSearchService searchService) : ISeoBySlugResolver
 {
     public async Task<SeoInfo[]> FindSeoBySlugAsync(string slug)
     {
@@ -14,7 +14,7 @@ public class BuilderIOSlugResolver(IPageDocumentSearchService searchService) : I
         {
             return [];
         }
-        if (!slug.StartsWith("/"))
+        if (!slug.StartsWith('/'))
         {
             slug = "/" + slug;
         }

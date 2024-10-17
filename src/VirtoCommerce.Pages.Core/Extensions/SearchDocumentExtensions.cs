@@ -91,7 +91,7 @@ public static class SearchDocumentExtensions
         result.AddFilterableStringAndContentString(nameof(document.Status), document.Status.ToString());
         result.AddFilterableStringAndContentString(nameof(document.Visibility), document.Visibility.ToString());
 
-        var userGroups = document.UserGroups != null && document.UserGroups.Any()
+        var userGroups = document.UserGroups is { Length: > 0 }
             ? document.UserGroups
             : ["__any"];
         result.AddFilterableCollectionAndContentString(nameof(document.UserGroups), userGroups);
