@@ -7,9 +7,12 @@ namespace VirtoCommerce.Pages.Core;
 
 public static class ModuleConstants
 {
-    public const string PageDocumentType = "Pages";
+    public static string PageDocumentType => "Pages";
+
     public static class Security
     {
+        public static string ModuleGroup => "Pages";
+
         public static class Permissions
         {
             public const string Create = "Pages:create";

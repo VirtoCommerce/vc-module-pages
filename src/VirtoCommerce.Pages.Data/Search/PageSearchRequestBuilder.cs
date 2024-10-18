@@ -12,7 +12,7 @@ using VirtoCommerce.StoreModule.Core.Services;
 
 namespace VirtoCommerce.Pages.Data.Search
 {
-    public class PagesSearchRequestBuilder(
+    public class PageSearchRequestBuilder(
         ISearchPhraseParser searchPhraseParser,
         IStoreService storeService) : ISearchRequestBuilder
     {
@@ -28,15 +28,13 @@ namespace VirtoCommerce.Pages.Data.Search
                 searchCriteria = searchCriteria.CloneTyped();
                 var filters = await GetFilters(searchCriteria);
 
-                result = new SearchRequest
-                {
-                    SearchKeywords = searchCriteria.Keyword,
-                    SearchFields = [IndexDocumentExtensions.ContentFieldName],
-                    Filter = filters.And(),
-                    Sorting = GetSorting(searchCriteria),
-                    Skip = criteria.Skip,
-                    Take = criteria.Take,
-                };
+                result = AbstractTypeFactory<SearchRequest>.TryCreateInstance();
+                result.SearchKeywords = searchCriteria.Keyword;
+                result.SearchFields = [IndexDocumentExtensions.ContentFieldName];
+                result.Filter = filters.And();
+                result.Sorting = GetSorting(searchCriteria);
+                result.Skip = criteria.Skip;
+                result.Take = criteria.Take;
             }
 
             return result;
@@ -148,7 +146,7 @@ namespace VirtoCommerce.Pages.Data.Search
             return new TermFilter
             {
                 FieldName = fieldName,
-                Values = new[] { value },
+                Values = [value],
             };
         }
 

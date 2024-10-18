@@ -9,8 +9,10 @@ using VirtoCommerce.CoreModule.Core.Seo;
 //using VirtoCommerce.ExperienceApiModule.Core.Extensions;
 //using VirtoCommerce.ExperienceApiModule.Core.Infrastructure;
 using VirtoCommerce.Pages.Core;
+using VirtoCommerce.Pages.Core.Converters;
 using VirtoCommerce.Pages.Core.Events;
 using VirtoCommerce.Pages.Core.Search;
+using VirtoCommerce.Pages.Data.Converters;
 using VirtoCommerce.Pages.Data.Handlers;
 using VirtoCommerce.Pages.Data.Search;
 using VirtoCommerce.Platform.Core.Events;
@@ -29,8 +31,10 @@ public class Module : IModule, IHasConfiguration
     {
         // Register services
         serviceCollection.AddTransient<IPageDocumentSearchService, PageDocumentSearchService>();
-        serviceCollection.AddTransient<ISeoBySlugResolver, PageDocumentSlugResolver>();
-        serviceCollection.AddTransient<PagesSearchRequestBuilder>();
+        serviceCollection.AddTransient<IPageDocumentConverter, PageDocumentConverter>();
+        serviceCollection.AddTransient<ISeoResolver, PageDocumentSeoResolver>();
+        serviceCollection.AddTransient<PageSearchRequestBuilder>();
+        serviceCollection.AddTransient<PageDocumentConverter>();
         serviceCollection.AddTransient<PageChangedHandler>();
 
     }
@@ -41,7 +45,9 @@ public class Module : IModule, IHasConfiguration
 
         // Register permissions
         var permissionsRegistrar = serviceProvider.GetRequiredService<IPermissionsRegistrar>();
-        permissionsRegistrar.RegisterPermissions(ModuleInfo.Id, "Pages", ModuleConstants.Security.Permissions.AllPermissions);
+        permissionsRegistrar.RegisterPermissions(ModuleInfo.Id,
+            ModuleConstants.Security.ModuleGroup,
+            ModuleConstants.Security.Permissions.AllPermissions);
 
         // Register settings
         var settingsRegistrar = appBuilder.ApplicationServices.GetRequiredService<ISettingsRegistrar>();
