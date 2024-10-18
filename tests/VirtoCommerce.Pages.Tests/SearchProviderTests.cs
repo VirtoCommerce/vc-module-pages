@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using VirtoCommerce.Pages.Core.Models;
+using VirtoCommerce.Pages.Data.Converters;
 using VirtoCommerce.Pages.Data.Search;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.SearchModule.Core.Services;
@@ -288,9 +289,10 @@ public abstract class SearchProviderTests : SearchProviderTestsBase
         var logger = new NullLogger<SearchPhraseParser>();
         var storeService = GetStoreService();
         var parser = new SearchPhraseParser(logger);
-        var builder = new PagesSearchRequestBuilder(parser, storeService);
+        var builder = new PageSearchRequestBuilder(parser, storeService);
+        var converter = new PageDocumentConverter();
 
-        return new PageDocumentSearchService(provider, builder);
+        return new PageDocumentSearchService(provider, builder, converter);
     }
 
     private IStoreService GetStoreService()
