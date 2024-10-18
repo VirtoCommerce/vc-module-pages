@@ -11,7 +11,8 @@ using VirtoCommerce.SearchModule.Core.Services;
 namespace VirtoCommerce.Pages.Data.Search;
 
 public class PageDocumentSearchService(ISearchProvider searchProvider,
-    PageSearchRequestBuilder requestBuilder, PageDocumentConverter pageDocumentConverter)
+    PageSearchRequestBuilder requestBuilder,
+    PageDocumentConverter pageDocumentConverter)
     : IPageDocumentSearchService
 {
     public virtual async Task<PageDocumentSearchResult> SearchAsync(PageDocumentSearchCriteria criteria, bool clone = true)

@@ -34,6 +34,11 @@ public class PageDocumentConverter : IPageDocumentConverter
         result.StartDate = searchDocument.GetDateSafe("startdate");
         result.EndDate = searchDocument.GetDateSafe("enddate");
 
+        if (result.ModifiedDate == DateTime.MinValue)
+        {
+            result.ModifiedDate = null;
+        }
+
         if (result.StartDate == DateTime.MinValue)
         {
             result.StartDate = null;
