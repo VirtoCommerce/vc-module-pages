@@ -284,7 +284,7 @@ public abstract class SearchProviderTests : SearchProviderTestsBase
         }
     }
 
-    private PageDocumentSearchService GetSearchService(ISearchProvider provider)
+    private static PageDocumentSearchService GetSearchService(ISearchProvider provider)
     {
         var logger = new NullLogger<SearchPhraseParser>();
         var storeService = GetStoreService();
@@ -307,7 +307,7 @@ public abstract class SearchProviderTests : SearchProviderTestsBase
                     Name = "Test store",
                     Url = "http://localhost",
                     TimeZone = "UTC",
-                    Languages = new[] { "en-US" }
+                    Languages = ["en-US"]
                 }
             });
 
