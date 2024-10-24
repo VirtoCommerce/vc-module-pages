@@ -19,7 +19,7 @@ namespace VirtoCommerce.Pages.Tests;
 [Trait("Category", "IntegrationTest")]
 public abstract class SearchProviderTests : SearchProviderTestsBase
 {
-    public const string DocumentType = "Pages";
+    public static readonly string DocumentType = "Pages";
 
     [Fact]
     public virtual async Task CanAddDocuments()
@@ -295,7 +295,7 @@ public abstract class SearchProviderTests : SearchProviderTestsBase
         return new PageDocumentSearchService(provider, builder, converter);
     }
 
-    private IStoreService GetStoreService()
+    private static IStoreService GetStoreService()
     {
         var storeService = new Mock<IStoreService>();
 

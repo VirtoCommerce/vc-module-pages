@@ -44,7 +44,7 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
 
     private async Task<IList<PageDocument>> FindFiles(SeoSearchCriteria criteria)
     {
-        var permalink = criteria.Permalink?.StartsWith("/") ?? false
+        var permalink = criteria.Permalink?.StartsWith('/') ?? false
             ? criteria.Permalink
             : $"/{criteria.Permalink}";
 
