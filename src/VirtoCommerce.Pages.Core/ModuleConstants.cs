@@ -43,11 +43,32 @@ public static class ModuleConstants
             };
         }
 
+        public static class General
+        {
+            public static SettingDescriptor Enable { get; } = new()
+            {
+                Name = "VirtoPages.Enable",
+                GroupName = "VirtoPages",
+                ValueType = SettingValueType.Boolean,
+                IsPublic = true,
+                DefaultValue = false,
+            };
+        }
+
         public static IEnumerable<SettingDescriptor> AllSettings
         {
             get
             {
                 yield return Search.IndexationDatePages;
+                yield return General.Enable;
+            }
+        }
+
+        public static IEnumerable<SettingDescriptor> StoreLevelSettings
+        {
+            get
+            {
+                yield return General.Enable;
             }
         }
     }
