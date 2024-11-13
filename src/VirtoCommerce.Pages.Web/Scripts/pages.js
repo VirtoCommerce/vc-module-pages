@@ -12,4 +12,4 @@ angular.module(moduleName, [])
                 template: 'Modules/$(VirtoCommerce.Pages)/Scripts/widgets/storeWidget.tpl.html'
             }, 'storeDetail');
         }]
-);
+    );

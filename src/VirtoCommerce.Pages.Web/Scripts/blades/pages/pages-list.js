@@ -1,12 +1,16 @@
 angular.module('virtoCommerce.pagesModule')
     .controller('virtoCommerce.pagesModule.pagesListController',
-        ['$scope', '$translate', 'virtoCommerce.pagesModule.pagesApi',
-            'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService',
-            'platformWebApp.uiGridHelper', 'platformWebApp.bladeUtils',
+        ['$scope',
+            'platformWebApp.bladeNavigationService',
+            'platformWebApp.bladeUtils',
+            'platformWebApp.dialogService',
+            'platformWebApp.uiGridHelper',
             'virtoCommerce.searchModule.searchIndexation',
+            'virtoCommerce.pagesModule.pagesApi',
             'moment',
-            function ($scope, $translate, pagesApi, bladeNavigationService,
-                dialogService, uiGridHelper, bladeUtils, searchApi, moment) {
+            function ($scope, bladeNavigationService, bladeUtils,
+                dialogService, uiGridHelper, searchApi, pagesApi, moment) {
+
                 var blade = $scope.blade;
 
                 blade.updatePermission = 'pages:update';
@@ -18,7 +22,7 @@ angular.module('virtoCommerce.pagesModule')
                 blade.refresh = function () {
                     blade.isLoading = true;
 
-                    var sort = uiGridHelper.getSortExpression($scope);
+                    // todo: var sort = uiGridHelper.getSortExpression($scope);
 
                     pagesApi.search({
                         storeId: blade.storeId,
@@ -39,7 +43,28 @@ angular.module('virtoCommerce.pagesModule')
                 };
 
                 $scope.delete = function (data) {
+                    // todo: implement
                 };
+
+                blade.getSelectedRows = function () {
+                    return $scope.gridApi.selection.getSelectedRows();
+                }
+
+                blade.toolbarCommands = [
+                    {
+                        name: "platform.commands.refresh", icon: 'fa fa-refresh',
+                        executeMethod: blade.refresh,
+                        canExecuteMethod: function () {
+                            return true;
+                        }
+                    },
+                    {
+                        name: "platform.commands.delete", icon: 'fa fa-trash-o',
+                        executeMethod: function () { deleteList($scope.gridApi.selection.getSelectedRows()); },
+                        canExecuteMethod: isItemsChecked,
+                        permission: 'content:delete'
+                    }
+                ];
 
                 function openDetailsBlade(listItem) {
                     $scope.selectedNodeId = listItem.id;
@@ -71,34 +96,13 @@ angular.module('virtoCommerce.pagesModule')
                     });
                 }
 
-                blade.getSelectedRows = function () {
-                    return $scope.gridApi.selection.getSelectedRows();
-                }
-
                 function deleteList(selection) {
+                    // todo: implement
                 }
 
                 function isItemsChecked() {
                     return !blade.pasteMode && $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());
                 }
-
-
-                blade.toolbarCommands = [
-                    {
-                        name: "platform.commands.refresh", icon: 'fa fa-refresh',
-                        executeMethod: blade.refresh,
-                        canExecuteMethod: function () {
-                            return true;
-                        }
-                    }
-                ];
-
-                blade.toolbarCommands.push({
-                    name: "platform.commands.delete", icon: 'fa fa-trash-o',
-                    executeMethod: function () { deleteList($scope.gridApi.selection.getSelectedRows()); },
-                    canExecuteMethod: isItemsChecked,
-                    permission: 'content:delete'
-                });
 
                 // ui-grid
                 $scope.setGridOptions = function (gridOptions) {
