@@ -60,7 +60,7 @@ angular.module('virtoCommerce.pagesModule')
                     },
                     {
                         name: "platform.commands.delete", icon: 'fa fa-trash-o',
-                        executeMethod: function () { deleteList($scope.gridApi.selection.getSelectedRows()); },
+                        executeMethod: function () { onDeleteList($scope.gridApi.selection.getSelectedRows()); },
                         canExecuteMethod: isItemsChecked,
                         permission: 'content:delete'
                     }
@@ -96,7 +96,7 @@ angular.module('virtoCommerce.pagesModule')
                     });
                 }
 
-                function deleteList(selection) {
+                function onDeleteList(selection) {
                     // todo: implement
                 }
 
