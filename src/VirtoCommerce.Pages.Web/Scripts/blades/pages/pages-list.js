@@ -3,15 +3,14 @@ angular.module('virtoCommerce.pagesModule')
         ['$scope', '$injector', function ($scope, $injector) {
 
             // dependencies
-            var bladeNavigationService = $injector.get('platformWebApp.bladeNavigationService');
-            var bladeUtils = $injector.get('platformWebApp.bladeUtils');
-            var dialogService = $injector.get('platformWebApp.dialogService');
-            var uiGridHelper = $injector.get('platformWebApp.uiGridHelper');
-            var searchApi = $injector.get('virtoCommerce.searchModule.searchIndexation');
-            var pagesApi = $injector.get('virtoCommerce.pagesModule.pagesApi');
-            var moment = $injector.get('moment');
+            let bladeNavigationService = $injector.get('platformWebApp.bladeNavigationService');
+            let bladeUtils = $injector.get('platformWebApp.bladeUtils');
+            let uiGridHelper = $injector.get('platformWebApp.uiGridHelper');
+            let searchApi = $injector.get('virtoCommerce.searchModule.searchIndexation');
+            let pagesApi = $injector.get('virtoCommerce.pagesModule.pagesApi');
+            let moment = $injector.get('moment');
 
-            var blade = $scope.blade;
+            let blade = $scope.blade;
 
             blade.updatePermission = 'pages:update';
             blade.searchKeyword = null;
