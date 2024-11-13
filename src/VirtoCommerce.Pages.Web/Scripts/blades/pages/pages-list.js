@@ -1,0 +1,114 @@
+angular.module('virtoCommerce.pagesModule')
+    .controller('virtoCommerce.pagesModule.pagesListController',
+        ['$scope', '$translate', 'virtoCommerce.pagesModule.pagesApi',
+            'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService',
+            'platformWebApp.uiGridHelper', 'platformWebApp.bladeUtils',
+            'virtoCommerce.searchModule.searchIndexation',
+            'moment',
+            function ($scope, $translate, pagesApi, bladeNavigationService,
+                dialogService, uiGridHelper, bladeUtils, searchApi, moment) {
+                var blade = $scope.blade;
+
+                blade.updatePermission = 'pages:update';
+                blade.searchKeyword = null;
+                blade.currentPage = 0;
+                $scope.selectedNodeId = null;
+                $scope.listEntries = [];
+
+                blade.refresh = function () {
+                    blade.isLoading = true;
+
+                    var sort = uiGridHelper.getSortExpression($scope);
+
+                    pagesApi.search({
+                        storeId: blade.storeId,
+                        skip: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
+                        take: $scope.pageSettings.itemsPerPageCount,
+                        keyword: blade.searchKeyword,
+                        // sort: sort,
+                    }, function (data) {
+                        $scope.listEntries = data.results;
+                        $scope.pageSettings.totalItems = data.totalCount;
+                        blade.isLoading = false;
+                    });
+                    // todo: error handling
+                };
+
+                $scope.selectNode = function (listItem) {
+                    openDetailsBlade(listItem);
+                };
+
+                $scope.delete = function (data) {
+                };
+
+                function openDetailsBlade(listItem) {
+                    $scope.selectedNodeId = listItem.id;
+                    const doc = {
+                        documentType: 'Pages',
+                        documentId: listItem.id
+                    };
+                    searchApi.getDocIndex(doc, function (data) {
+
+                        var momentFormat = "YYYYMMDDHHmmss";
+                        const index = data[0];
+                        const modifiedDate = moment.utc(index.modifieddate, momentFormat);
+
+                        const searchBlade = {
+                            id: 'virtoPageIndexDetails',
+                            currentEntityId: listItem.id,
+                            currentEntity: {
+                                id: listItem.id,
+                                name: listItem.title,
+                            },
+                            data: index,
+                            indexDate: modifiedDate,
+                            documentType: 'Pages',
+                            controller: 'virtoCommerce.searchModule.indexDetailController',
+                            template: 'Modules/$(VirtoCommerce.Search)/Scripts/blades/index-detail.tpl.html'
+                        };
+
+                        bladeNavigationService.showBlade(searchBlade, blade);
+                    });
+                }
+
+                blade.getSelectedRows = function () {
+                    return $scope.gridApi.selection.getSelectedRows();
+                }
+
+                function deleteList(selection) {
+                }
+
+                function isItemsChecked() {
+                    return !blade.pasteMode && $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());
+                }
+
+
+                blade.toolbarCommands = [
+                    {
+                        name: "platform.commands.refresh", icon: 'fa fa-refresh',
+                        executeMethod: blade.refresh,
+                        canExecuteMethod: function () {
+                            return true;
+                        }
+                    }
+                ];
+
+                blade.toolbarCommands.push({
+                    name: "platform.commands.delete", icon: 'fa fa-trash-o',
+                    executeMethod: function () { deleteList($scope.gridApi.selection.getSelectedRows()); },
+                    canExecuteMethod: isItemsChecked,
+                    permission: 'content:delete'
+                });
+
+                // ui-grid
+                $scope.setGridOptions = function (gridOptions) {
+                    uiGridHelper.initialize($scope, gridOptions,
+                        function (gridApi) {
+                            $scope.gridApi = gridApi;
+                            // uiGridHelper.bindRefreshOnSortChanged($scope);
+                        });
+                };
+                bladeUtils.initializePagination($scope, false);
+
+                blade.refresh();
+            }]);

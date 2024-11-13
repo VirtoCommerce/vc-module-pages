@@ -6,10 +6,13 @@
 
   <platformVersion>3.825.0</platformVersion>
   <dependencies>
-    
+    <dependency id="VirtoCommerce.Core" version="3.808.0" />
+    <dependency id="VirtoCommerce.Search" version="3.804.0" />
+    <dependency id="VirtoCommerce.Store" version="3.809.0" />
+    <dependency id="VirtoCommerce.Customer" version="3.820.0" />
   </dependencies>
 
-  <title>VirtoCommerce Pages module</title>
+  <title>VirtoPages</title>
   <description>VirtoCommerce Pages module</description>
 
   <authors>

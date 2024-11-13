@@ -12,5 +12,18 @@
         "description": "Activating VirtoPages for the Store"
       }
     }
+  },
+  "virto-pages": {
+    "blades": {
+      "pages-list": {
+        "title": "Virto Pages",
+        "labels": {
+          "permalink": "Permalink",
+          "status": "Status",
+          "source": "Source",
+          "title": "Title"
+        }
+      }
+    }
   }
 }

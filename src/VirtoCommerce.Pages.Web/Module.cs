@@ -19,6 +19,7 @@ using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.SearchModule.Core.Services;
 using VirtoCommerce.StoreModule.Core.Model;
 
 namespace VirtoCommerce.Pages.Web;
@@ -53,6 +54,9 @@ public class Module : IModule, IHasConfiguration
         // Register settings
         var settingsRegistrar = appBuilder.ApplicationServices.GetRequiredService<ISettingsRegistrar>();
         settingsRegistrar.RegisterSettings(ModuleConstants.Settings.AllSettings, ModuleInfo.Id);
+
+        var searchRequestBuilderRegistrar = appBuilder.ApplicationServices.GetService<ISearchRequestBuilderRegistrar>();
+        searchRequestBuilderRegistrar.Register(ModuleConstants.PageDocumentType, appBuilder.ApplicationServices.GetService<PageSearchRequestBuilder>);
 
         //Register store level settings
         settingsRegistrar.RegisterSettingsForType(ModuleConstants.Settings.StoreLevelSettings, nameof(Store));
