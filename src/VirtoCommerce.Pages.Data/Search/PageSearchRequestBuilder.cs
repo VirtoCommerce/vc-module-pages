@@ -82,7 +82,11 @@ namespace VirtoCommerce.Pages.Data.Search
 
         private static void AddUserGroups(PageDocumentSearchCriteria criteria, List<IFilter> result)
         {
-            var userGroups = criteria.UserGroups ?? [];
+            if (criteria.UserGroups == null)
+            {
+                return;
+            }
+            var userGroups = criteria.UserGroups;
             var filter = new TermFilter
             {
                 FieldName = nameof(PageDocument.UserGroups),

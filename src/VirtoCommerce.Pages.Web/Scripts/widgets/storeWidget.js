@@ -11,7 +11,7 @@ angular.module('virtoCommerce.pagesModule')
                 blade.currentEntityId && resources.count(blade.currentEntityId, function (result) {
                     $scope.count = result.totalCount;
                 });
-            };
+            }
 
             $scope.openBlade = function () {
                 var newBlade = {
