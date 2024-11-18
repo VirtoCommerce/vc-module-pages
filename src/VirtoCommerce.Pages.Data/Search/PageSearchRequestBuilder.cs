@@ -12,7 +12,7 @@ using VirtoCommerce.StoreModule.Core.Services;
 
 namespace VirtoCommerce.Pages.Data.Search
 {
-    public class PagesSearchRequestBuilder(
+    public class PageSearchRequestBuilder(
         ISearchPhraseParser searchPhraseParser,
         IStoreService storeService) : ISearchRequestBuilder
     {
@@ -28,15 +28,13 @@ namespace VirtoCommerce.Pages.Data.Search
                 searchCriteria = searchCriteria.CloneTyped();
                 var filters = await GetFilters(searchCriteria);
 
-                result = new SearchRequest
-                {
-                    SearchKeywords = searchCriteria.Keyword,
-                    SearchFields = [IndexDocumentExtensions.ContentFieldName],
-                    Filter = filters.And(),
-                    Sorting = GetSorting(searchCriteria),
-                    Skip = criteria.Skip,
-                    Take = criteria.Take,
-                };
+                result = AbstractTypeFactory<SearchRequest>.TryCreateInstance();
+                result.SearchKeywords = searchCriteria.Keyword;
+                result.SearchFields = [IndexDocumentExtensions.ContentFieldName];
+                result.Filter = filters.And();
+                result.Sorting = GetSorting(searchCriteria);
+                result.Skip = criteria.Skip;
+                result.Take = criteria.Take;
             }
 
             return result;
@@ -82,9 +80,13 @@ namespace VirtoCommerce.Pages.Data.Search
             return result;
         }
 
-        private void AddUserGroups(PageDocumentSearchCriteria criteria, List<IFilter> result)
+        private static void AddUserGroups(PageDocumentSearchCriteria criteria, List<IFilter> result)
         {
-            var userGroups = criteria.UserGroups ?? [];
+            if (criteria.UserGroups == null)
+            {
+                return;
+            }
+            var userGroups = criteria.UserGroups;
             var filter = new TermFilter
             {
                 FieldName = nameof(PageDocument.UserGroups),
@@ -97,7 +99,7 @@ namespace VirtoCommerce.Pages.Data.Search
             result.Add(filter);
         }
 
-        private void AddDateFilter(PageDocumentSearchCriteria criteria, List<IFilter> result)
+        private static void AddDateFilter(PageDocumentSearchCriteria criteria, List<IFilter> result)
         {
             var date = criteria.CertainDate ?? DateTime.UtcNow;
             var dateFilter = CreateDateFilter(nameof(PageDocument.StartDate), date, true)
@@ -107,11 +109,11 @@ namespace VirtoCommerce.Pages.Data.Search
 
         private async Task AddLanguageFilter(PageDocumentSearchCriteria criteria, List<IFilter> filter)
         {
-            var cultureFilter = CreateTermFilter(nameof(PageDocument.CultureName), "__any");
+            IFilter cultureFilter = null;
 
             if (!criteria.LanguageCode.IsNullOrEmpty())
             {
-                cultureFilter = cultureFilter.Or(CreateTermFilter(nameof(PageDocument.CultureName), criteria.LanguageCode));
+                cultureFilter = CreateTermFilter(nameof(PageDocument.CultureName), criteria.LanguageCode);
             }
             else
             {
@@ -119,10 +121,14 @@ namespace VirtoCommerce.Pages.Data.Search
                 var storeLanguage = store?.DefaultLanguage;
                 if (!storeLanguage.IsNullOrEmpty())
                 {
-                    cultureFilter = cultureFilter.Or(CreateTermFilter(nameof(PageDocument.CultureName), storeLanguage));
+                    cultureFilter = CreateTermFilter(nameof(PageDocument.CultureName), storeLanguage);
                 }
             }
-            filter.Add(cultureFilter);
+
+            if (cultureFilter != null)
+            {
+                filter.Add(cultureFilter);
+            }
         }
 
         protected virtual IList<SortingField> GetSorting(PageDocumentSearchCriteria criteria)
@@ -144,7 +150,7 @@ namespace VirtoCommerce.Pages.Data.Search
             return new TermFilter
             {
                 FieldName = fieldName,
-                Values = new[] { value },
+                Values = [value],
             };
         }
 

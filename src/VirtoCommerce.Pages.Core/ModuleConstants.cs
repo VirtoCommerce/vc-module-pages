@@ -7,9 +7,12 @@ namespace VirtoCommerce.Pages.Core;
 
 public static class ModuleConstants
 {
-    public const string PageDocumentType = "Pages";
+    public static string PageDocumentType => "Pages";
+
     public static class Security
     {
+        public static string ModuleGroup => "Pages";
+
         public static class Permissions
         {
             public const string Create = "Pages:create";
@@ -40,11 +43,32 @@ public static class ModuleConstants
             };
         }
 
+        public static class General
+        {
+            public static SettingDescriptor Enable { get; } = new()
+            {
+                Name = "VirtoPages.Enable",
+                GroupName = "VirtoPages",
+                ValueType = SettingValueType.Boolean,
+                IsPublic = true,
+                DefaultValue = false,
+            };
+        }
+
         public static IEnumerable<SettingDescriptor> AllSettings
         {
             get
             {
                 yield return Search.IndexationDatePages;
+                yield return General.Enable;
+            }
+        }
+
+        public static IEnumerable<SettingDescriptor> StoreLevelSettings
+        {
+            get
+            {
+                yield return General.Enable;
             }
         }
     }

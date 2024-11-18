@@ -4,5 +4,26 @@
     "Pages:read": "View Pages related data",
     "Pages:update": "Update Pages related data",
     "Pages:delete": "Delete Pages related data"
+  },
+  "settings": {
+    "VirtoPages": {
+      "Enable": {
+        "title": "Enable",
+        "description": "Activating VirtoPages for the Store"
+      }
+    }
+  },
+  "virto-pages": {
+    "blades": {
+      "pages-list": {
+        "title": "Virto Pages",
+        "labels": {
+          "permalink": "Permalink",
+          "status": "Status",
+          "source": "Source",
+          "title": "Title"
+        }
+      }
+    }
   }
 }

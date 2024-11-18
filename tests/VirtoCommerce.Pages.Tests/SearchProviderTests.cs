@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using VirtoCommerce.Pages.Core.Models;
+using VirtoCommerce.Pages.Data.Converters;
 using VirtoCommerce.Pages.Data.Search;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.SearchModule.Core.Services;
@@ -18,7 +19,7 @@ namespace VirtoCommerce.Pages.Tests;
 [Trait("Category", "IntegrationTest")]
 public abstract class SearchProviderTests : SearchProviderTestsBase
 {
-    public const string DocumentType = "Pages";
+    public static readonly string DocumentType = "Pages";
 
     [Fact]
     public virtual async Task CanAddDocuments()
@@ -283,17 +284,18 @@ public abstract class SearchProviderTests : SearchProviderTestsBase
         }
     }
 
-    private PageDocumentSearchService GetSearchService(ISearchProvider provider)
+    private static PageDocumentSearchService GetSearchService(ISearchProvider provider)
     {
         var logger = new NullLogger<SearchPhraseParser>();
         var storeService = GetStoreService();
         var parser = new SearchPhraseParser(logger);
-        var builder = new PagesSearchRequestBuilder(parser, storeService);
+        var builder = new PageSearchRequestBuilder(parser, storeService);
+        var converter = new PageDocumentConverter();
 
-        return new PageDocumentSearchService(provider, builder);
+        return new PageDocumentSearchService(provider, builder, converter);
     }
 
-    private IStoreService GetStoreService()
+    private static IStoreService GetStoreService()
     {
         var storeService = new Mock<IStoreService>();
 
@@ -305,7 +307,7 @@ public abstract class SearchProviderTests : SearchProviderTestsBase
                     Name = "Test store",
                     Url = "http://localhost",
                     TimeZone = "UTC",
-                    Languages = new[] { "en-US" }
+                    Languages = ["en-US"]
                 }
             });
 
