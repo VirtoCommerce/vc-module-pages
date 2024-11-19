@@ -2,15 +2,54 @@
 
 ## Overview
 
-Virto Pages is a module designed to manage and display content pages within the Virto Commerce platform. It allows you to store, search, and retrieve pages from supported Content Management Systems (CMS). The module integrates seamlessly with existing stores, enhancing their capabilities for content management.
+The Virto Pages module is a solution designed to connect different CMS seamlessly within the Virto Commerce. It offers a CMS-agnostic architecture, enabling users to manage public, private, and personalized pages effectively. Once pages are published, they are stored within Virto Pages, making the CMS optional after the design phase. This approach allows for flexibility in detaching, replacing, or using multiple CMS platforms simultaneously for scenarios like landing pages, blogs, and more.
 
-![Architecture Scheme](docs/media/architecture.png)
+![image](https://github.com/user-attachments/assets/a40ae81a-6f11-4f57-971f-cd512772bd1d)
 
-## Features
 
-* **Storing Content Pages**: Save pages retrieved from a CMS into the Virto platform for efficient management.
-* **Page Search**: Find pages quickly using advanced search functionality.
-* **Retrieve Pages by ID or Permalink**: Access pages easily using unique identifiers or user-friendly URLs.
+## Key Features
+
+* **CMS-Agnostic Architecture**: CMS is required only during the design phase. Once published, content is stored in Virto Pages for use without real-time CMS dependency.
+* **Hosted Content Pages**: Save pages retrieved from a CMS into the Virto platform for efficient management.
+* **Content Scenarios:**
+  1. **Public Pages**: Accessible to all users.
+  2. **Private Pages:** Restricted to authorized users.
+  3. **Personalized Pages:** Tailored content for specific user groups.
+  4. **Scheduled Publishing:** Define start and end dates for content visibility.
+  5. **Retrieve Pages by permalink**: Access pages easily using unique identifiers or user-friendly URLs.
+  6. **Retrieve Pages by ID**: Access pages easily using unique identifiers or user-friendly URLs.
+* **Full-Text Search Capabilities:** Quickly search and retrieve pages by keyword.
+
+## Supported CMS Platforms
+
+* **Builder.io**: Fully supported for integration.
+* **Contentful**: (coming soon).
+* **Optimizely**: (coming soon).
+* **Virto**: Page Builder (coming soon).
+
+## Architecture
+
+![image](https://github.com/user-attachments/assets/455320a6-9e13-4683-aa2e-e90a24995e78)
+
+The Virto Pages module employs an event-driven architecture to ensure efficient content management and retrieval. Key components include:
+
+1. **Content Storage**: Pages are stored offline in an index, ensuring quick access and rendering without live CMS dependency.
+2. **Event Handling**: Changes in content trigger events to update, index, or remove pages as necessary.
+3. **Frontend Integration**: Pages are resolved their permalink (slug) from the offline index for rendering.
+4. **Unified Page Document and API**: Unified Page Document and API allow access to pages that are created by different CMS.
+
+Scenarios:
+
+1.**Design Time**:
+  * Integrate with a CMS to create and design pages.
+  * Configure and prepare content for publishing.
+2. **Publishing**:
+  * Publish pages to store them in Virto Pages.
+  * CMS is no longer required post-publishing.
+3. **Rendering**:
+  * Pages are accessed and rendered via their permalink or unique ID.
+  * Content is served from offline storage for fast and reliable performance.
+  * Customer can search pages by keyword.
 
 ## User Guide
 
@@ -36,27 +75,15 @@ The Virto Pages module operates through integration with your selected CMS, leve
 
 This event-driven architecture ensures that the content in your store is always up to date and can be easily managed.
 
-## Supported CMS Platforms
-
-- **BuilderIO**: Fully supported for integration ([BuilderIO Documentation](link)).
-- **Contentful** (coming soon).
-- **Optimizely** (coming soon).
-
-## Future Enhancements
-
-The Virto Pages module is constantly evolving. Upcoming features include support for additional CMS platforms and enhanced search capabilities to further streamline content management.
-
 ## License
-
 Copyright (c) Virto Solutions LTD.  All rights reserved.
 
-Licensed under the Virto Commerce Open Software License (the "License"); you
+This software is licensed under the Virto Commerce Open Software License (the "License"); you
 may not use this file except in compliance with the License. You may
-obtain a copy of the License at
+obtain a copy of the License at http://virtocommerce.com/opensourcelicense.
 
-<https://virtocommerce.com/open-source-license>
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
+Unless required by the applicable law or agreed to in written form, the software
+distributed under the License is provided on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
 implied.
+
