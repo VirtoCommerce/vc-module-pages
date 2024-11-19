@@ -1,5 +1,5 @@
 {
-    "artifactKey": "VirtoCommerce.BuilderIO",
+    "artifactKey": "VirtoCommerce.Pages",
     "deployRepo": "vc-deploy-dev",
     "cmPath": "platform-dev/resources/deployment-cm.yaml",
     "dev": {
