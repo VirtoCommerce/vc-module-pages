@@ -1,46 +1,50 @@
-# Pages
+# Virto Pages Documentation
 
 ## Overview
 
-Short overview of what the new module is.
+Virto Pages is a module designed to manage and display content pages within the Virto Commerce platform. It allows you to store, search, and retrieve pages from supported Content Management Systems (CMS). The module integrates seamlessly with existing stores, enhancing their capabilities for content management.
 
-- What is the new or updated experience?
+![Architecture Scheme](docs/media/architecture.png)
 
-- Does this module replace an existing module/experience? If yes, what is the transition plan?
+## Features
 
-- Does this module has dependency on other ? If yes, list/explain the dependencies.
+* **Storing Content Pages**: Save pages retrieved from a CMS into the Virto platform for efficient management.
+* **Page Search**: Find pages quickly using advanced search functionality.
+* **Retrieve Pages by ID or Permalink**: Access pages easily using unique identifiers or user-friendly URLs.
 
-- List the key deployment scenarios - why would people use this module?
+## User Guide
 
-## Functional Requirements
+To enable Virto Pages for your store, follow these steps:
 
-Short description of the new module functional requirements.
+1. Go to the **Stores** section in the platform.
+2. Select the desired store.
+3. In the **Settings** widget, navigate to the `Virto Pages` section and toggle the **Enabled** setting to "On".
 
-## Scenarios
+![Enable Module Pages](docs/media/enable-module-pages.png)
 
-List of scenarios that the new module implements
+Once enabled, the module will be active for that specific store, allowing you to manage pages directly.
 
-1. [Scenario 1](/doc/scenario-name1.md)
-1. [Scenario 2](/doc/scenario-name2.md)
-1. [Scenario 3](/doc/scenario-name3.md)
-    1. [Scenario 3.1](/doc/scenario-name31.md)
-    1. [Scenario 3.2](/doc/scenario-name32.md)
-1. [Scenario 4](/doc/scenario-name4.md)
+## Module Workflow
 
-## Web API
+### Under the Hood
 
-Web API documentation for each module is built out automatically and can be accessed by following the link bellow:
-<https://link-to-swager-api>
+The Virto Pages module operates through integration with your selected CMS, leveraging hooks and events to manage content updates efficiently.
 
-## Database Model
+- **Content Retrieval**: The integration module receives pages from the CMS through a dedicated hook, which is responsible for fetching the requested page.
+- **Conversion to PageDocument**: The fetched page is then converted into a [`PageDocument`](src/VirtoCommerce.Pages.Core/Models/PageDocument.cs) model.
+- **Event Handling**: The module triggers a [`PagesDomainEvent`](src/VirtoCommerce.Pages.Data/Handlers/PageChangedHandler.cs), which is processed by the pages module. During processing, the document can either be indexed for searching or removed from the index as needed.
 
-![DB model](./docs/media/diagram-db-model.png)
+This event-driven architecture ensures that the content in your store is always up to date and can be easily managed.
 
-## Related topics
+## Supported CMS Platforms
 
-[Some Article1](some-article1.md)
+- **BuilderIO**: Fully supported for integration ([BuilderIO Documentation](link)).
+- **Contentful** (coming soon).
+- **Optimizely** (coming soon).
 
-[Some Article2](some-article2.md)
+## Future Enhancements
+
+The Virto Pages module is constantly evolving. Upcoming features include support for additional CMS platforms and enhanced search capabilities to further streamline content management.
 
 ## License
 
