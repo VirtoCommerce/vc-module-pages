@@ -29,7 +29,7 @@ The Virto Pages module is a solution designed to connect different CMS seamlessl
 
 ## Architecture
 
-![image](https://github.com/user-attachments/assets/455320a6-9e13-4683-aa2e-e90a24995e78)
+![image](https://github.com/user-attachments/assets/4f85edf5-c905-4761-9d64-b44b938f4c29)
 
 The Virto Pages module employs an event-driven architecture to ensure efficient content management and retrieval. Key components include:
 
