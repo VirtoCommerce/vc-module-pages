@@ -12,8 +12,8 @@
     <dependency id="VirtoCommerce.Customer" version="3.817.0" />
   </dependencies>
 
-  <title>VirtoPages</title>
-  <description>VirtoCommerce Pages module</description>
+  <title>Virto Pages</title>
+  <description>Provides a robust and flexible solution for managing content in digital commerce scenarios. Decoupling the CMS post-publishing ensures long-term efficiency, adaptability, and performance.</description>
 
   <authors>
     <author>Basil Kotov</author>
