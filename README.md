@@ -1,4 +1,4 @@
-# Virto Pages Documentation
+# Virto Pages
 
 ## Overview
 
