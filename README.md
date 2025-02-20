@@ -1,23 +1,21 @@
-# Virto Pages
+# Virto Commerce Pages Module
 
-## Overview
-
-The Virto Pages module is a solution designed to connect different CMS seamlessly within the Virto Commerce. It offers a CMS-agnostic architecture, enabling users to manage public, private, and personalized pages effectively. Once pages are published, they are stored within Virto Pages, making the CMS optional after the design phase. This approach allows for flexibility in detaching, replacing, or using multiple CMS platforms simultaneously for scenarios like landing pages, blogs, and more.
+The Virto Commerce Pages module is a solution designed to connect different CMS seamlessly within the Virto Commerce. It offers a CMS-agnostic architecture, enabling users to manage public, private, and personalized pages effectively. Once pages are published, they are stored within Virto Pages, making the CMS optional after the design phase. This approach allows for flexibility in detaching, replacing, or using multiple CMS platforms simultaneously for scenarios like landing pages, blogs, and more.
 
 ![image](https://github.com/user-attachments/assets/a40ae81a-6f11-4f57-971f-cd512772bd1d)
 
 
-## Key Features
+## Key features
 
 * **CMS-Agnostic Architecture**: CMS is required only during the design phase. Once published, content is stored in Virto Pages for use without real-time CMS dependency.
 * **Hosted Content Pages**: Save pages retrieved from a CMS into the Virto platform for efficient management.
 * **Content Scenarios:**
-  1. **Public Pages**: Accessible to all users.
-  2. **Private Pages:** Restricted to authorized users.
-  3. **Personalized Pages:** Tailored content for specific user groups.
-  4. **Scheduled Publishing:** Define start and end dates for content visibility.
-  5. **Retrieve Pages by permalink**: Access pages easily using unique identifiers or user-friendly URLs.
-  6. **Retrieve Pages by ID**: Access pages easily using unique identifiers or user-friendly URLs.
+  * **Public Pages**: Accessible to all users.
+  * **Private Pages:** Restricted to authorized users.
+  * **Personalized Pages:** Tailored content for specific user groups.
+  * **Scheduled Publishing:** Define start and end dates for content visibility.
+  * **Retrieve Pages by permalink**: Access pages easily using unique identifiers or user-friendly URLs.
+  * **Retrieve Pages by ID**: Access pages easily using unique identifiers or user-friendly URLs.
 * **Full-Text Search Capabilities:** Quickly search and retrieve pages by keyword.
 
 ## Supported CMS Platforms
@@ -33,25 +31,25 @@ The Virto Pages module is a solution designed to connect different CMS seamlessl
 
 The Virto Pages module employs an event-driven architecture to ensure efficient content management and retrieval. Key components include:
 
-1. **Content Storage**: Pages are stored offline in an index, ensuring quick access and rendering without live CMS dependency.
-2. **Event Handling**: Changes in content trigger events to update, index, or remove pages as necessary.
-3. **Frontend Integration**: Pages are resolved their permalink (slug) from the offline index for rendering.
-4. **Unified Page Document and API**: Unified Page Document and API allow access to pages that are created by different CMS.
+* **Content Storage**: Pages are stored offline in an index, ensuring quick access and rendering without live CMS dependency.
+* **Event Handling**: Changes in content trigger events to update, index, or remove pages as necessary.
+* **Frontend Integration**: Pages are resolved their permalink (slug) from the offline index for rendering.
+* **Unified Page Document and API**: Unified Page Document and API allow access to pages that are created by different CMS.
 
 Scenarios:
 
-1.**Design Time**:
+* **Design Time**:
   * Integrate with a CMS to create and design pages.
   * Configure and prepare content for publishing.
-2. **Publishing**:
+* **Publishing**:
   * Publish pages to store them in Virto Pages.
   * CMS is no longer required post-publishing.
-3. **Rendering**:
+* **Rendering**:
   * Pages are accessed and rendered via their permalink or unique ID.
   * Content is served from offline storage for fast and reliable performance.
   * Customer can search pages by keyword.
 
-## User Guide
+## User guide
 
 To enable Virto Pages for your store, follow these steps:
 
@@ -289,6 +287,21 @@ The response for the `pageDocuments` query includes a list of pages matching the
 ```
 
 The `source` property indicates the CMS used to create the page.
+
+## Documentation
+
+* [Pages module user documentation](https://docs.virtocommerce.org/platform/user-guide/pages/overview/)
+* [GraphQL API documentation](https://docs.virtocommerce.org/platform/developer-guide/GraphQL-Storefront-API-Reference-xAPI/Pages/overview/)
+* [REST API](https://virtostart-demo-admin.govirto.com/docs/index.html?urls.primaryName=VirtoCommerce.Pages)
+* [View on GitHub](https://github.com/VirtoCommerce/vc-module-pages)
+
+## References
+
+* [Deployment](https://docs.virtocommerce.org/platform/developer-guide/Tutorials-and-How-tos/Tutorials/deploy-module-from-source-code/)
+* [Installation](https://docs.virtocommerce.org/platform/user-guide/modules-installation/)
+* [Home](https://virtocommerce.com)
+* [Community](https://www.virtocommerce.org)
+* [Download latest release](https://github.com/VirtoCommerce/vc-module-pages/releases/latest)
 
 ## License
 Copyright (c) Virto Solutions LTD.  All rights reserved.
