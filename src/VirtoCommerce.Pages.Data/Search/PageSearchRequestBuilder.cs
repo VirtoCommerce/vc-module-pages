@@ -71,7 +71,10 @@ namespace VirtoCommerce.Pages.Data.Search
                 result.Add(CreateTermFilter(nameof(PageDocument.Visibility), PageDocumentVisibility.Public.ToString()));
             }
 
-            result.Add(CreateTermFilter(nameof(PageDocument.Status), criteria.Status.ToString()));
+            if (criteria.Status != null)
+            {
+                result.Add(CreateTermFilter(nameof(PageDocument.Status), criteria.Status.ToString()));
+            }
 
             await AddLanguageFilter(criteria, result);
             AddDateFilter(criteria, result);
@@ -115,7 +118,7 @@ namespace VirtoCommerce.Pages.Data.Search
             {
                 cultureFilter = CreateTermFilter(nameof(PageDocument.CultureName), criteria.LanguageCode);
             }
-            else
+            else if (criteria.LanguageCode == string.Empty)
             {
                 var store = await storeService.GetByIdAsync(criteria.StoreId);
                 var storeLanguage = store?.DefaultLanguage;
