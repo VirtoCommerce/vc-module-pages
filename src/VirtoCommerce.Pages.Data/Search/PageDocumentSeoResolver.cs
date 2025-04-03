@@ -69,6 +69,7 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
         searchCriteria.Permalink = permalink;
         searchCriteria.Skip = criteria.Skip;
         searchCriteria.Take = criteria.Take;
+        searchCriteria.Status = PageDocumentStatus.Published;
 
         var member = await FindMember(criteria.UserId);
         if (member != null)
