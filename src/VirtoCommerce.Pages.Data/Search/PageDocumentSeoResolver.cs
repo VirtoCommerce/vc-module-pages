@@ -11,35 +11,50 @@ using VirtoCommerce.Pages.Core.Models;
 using VirtoCommerce.Pages.Core.Search;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.StoreModule.Core.Services;
 
 namespace VirtoCommerce.Pages.Data.Search;
 
 public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
     Func<UserManager<ApplicationUser>> userManagerFactory,
+    IStoreService storeService,
     IMemberService memberService
     ) : ISeoResolver
 {
     public async Task<IList<SeoInfo>> FindSeoAsync(SeoSearchCriteria criteria)
     {
-        return (await FindFiles(criteria))
-            .DistinctBy(x => x.Id)
-            .Select(x =>
-            {
-                var info = AbstractTypeFactory<SeoInfo>.TryCreateInstance();
-                info.Name = x.Title;
-                info.SemanticUrl = x.Permalink;
-                info.StoreId = x.StoreId;
-                info.LanguageCode = x.CultureName;
-                info.ObjectId = x.Id;
-                info.Id = x.Id;
-                info.IsActive = x.Status == PageDocumentStatus.Published && x.Visibility == PageDocumentVisibility.Public;
-                info.ObjectType = ModuleConstants.PageDocumentType;
-                info.CreatedBy = x.CreatedBy;
-                info.CreatedDate = x.CreatedDate;
-                return info;
-            })
-            .OrderBy(x => x.LanguageCode)
-            .ToList();
+        var store = await storeService.GetByIdAsync(criteria.StoreId);
+        if (store == null)
+        {
+            throw new InvalidOperationException($"Store with ID {criteria.StoreId} not found");
+        }
+        var pagesEnabled = store.Settings.GetValue<bool>(ModuleConstants.Settings.General.Enable);
+        if (pagesEnabled)
+        {
+            return (await FindFiles(criteria))
+                .DistinctBy(x => x.Id)
+                .Select(x =>
+                {
+                    var info = AbstractTypeFactory<SeoInfo>.TryCreateInstance();
+                    info.Name = x.Title;
+                    info.SemanticUrl = x.Permalink;
+                    info.StoreId = x.StoreId;
+                    info.LanguageCode = x.CultureName;
+                    info.ObjectId = x.Id;
+                    info.Id = x.Id;
+                    info.IsActive = x.Status == PageDocumentStatus.Published &&
+                                    x.Visibility == PageDocumentVisibility.Public;
+                    info.ObjectType = ModuleConstants.PageDocumentType;
+                    info.CreatedBy = x.CreatedBy;
+                    info.CreatedDate = x.CreatedDate;
+                    return info;
+                })
+                .OrderBy(x => x.LanguageCode)
+                .ToList();
+        }
+
+        return [];
     }
 
     private async Task<IList<PageDocument>> FindFiles(SeoSearchCriteria criteria)
@@ -54,6 +69,7 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
         searchCriteria.Permalink = permalink;
         searchCriteria.Skip = criteria.Skip;
         searchCriteria.Take = criteria.Take;
+        searchCriteria.Status = PageDocumentStatus.Published;
 
         var member = await FindMember(criteria.UserId);
         if (member != null)
