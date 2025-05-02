@@ -30,7 +30,10 @@ public class PageDocumentConverter : IPageDocumentConverter
         result.MimeType = (string)searchDocument.GetValueSafe("mimetype");
         result.Status = (PageDocumentStatus)Enum.Parse(typeof(PageDocumentStatus), (string)searchDocument.GetValueSafe("status"));
         result.Visibility = (PageDocumentVisibility)Enum.Parse(typeof(PageDocumentVisibility), (string)searchDocument.GetValueSafe("visibility"));
-        result.UserGroups = ((object[])searchDocument.GetValueSafe("usergroups")).Cast<string>().ToArray();
+        var userGroupsValue = searchDocument.GetValueSafe("usergroups");
+        result.UserGroups = userGroupsValue is string userGroups
+            ? [userGroups]
+            : ((object[])searchDocument.GetValueSafe("usergroups")).Cast<string>().ToArray();
         result.StartDate = searchDocument.GetDateSafe("startdate");
         result.EndDate = searchDocument.GetDateSafe("enddate");
 
