@@ -25,7 +25,7 @@ public class PageDocumentConverter : IPageDocumentConverter
         result.CreatedBy = (string)searchDocument.GetValueSafe("createdby");
         result.CreatedDate = searchDocument.GetDateSafe("createddate") ?? DateTime.MinValue;
         result.ModifiedBy = (string)searchDocument.GetValueSafe("modifiedby");
-        result.ModifiedDate = searchDocument.GetDateSafe("modifieddate") ?? DateTime.MinValue;
+        result.ModifiedDate = searchDocument.GetDateSafeOrNull("modifieddate");
         result.Source = (string)searchDocument.GetValueSafe("source");
         result.MimeType = (string)searchDocument.GetValueSafe("mimetype");
         result.Status = (PageDocumentStatus)Enum.Parse(typeof(PageDocumentStatus), (string)searchDocument.GetValueSafe("status"));
@@ -34,23 +34,8 @@ public class PageDocumentConverter : IPageDocumentConverter
         result.UserGroups = userGroupsValue is string userGroups
             ? [userGroups]
             : ((object[])userGroupsValue).Cast<string>().ToArray();
-        result.StartDate = searchDocument.GetDateSafe("startdate");
-        result.EndDate = searchDocument.GetDateSafe("enddate");
-
-        if (result.ModifiedDate == DateTime.MinValue)
-        {
-            result.ModifiedDate = null;
-        }
-
-        if (result.StartDate == DateTime.MinValue)
-        {
-            result.StartDate = null;
-        }
-
-        if (result.EndDate == DateTime.MaxValue)
-        {
-            result.EndDate = null;
-        }
+        result.StartDate = searchDocument.GetDateSafeOrNull("startdate");
+        result.EndDate = searchDocument.GetDateSafeOrNull("enddate");
 
         if (result.UserGroups != null && result.UserGroups.Length == 1 && result.UserGroups[0] == "__any")
         {
