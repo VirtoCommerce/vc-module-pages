@@ -18,6 +18,18 @@ internal static class ConverterExtensions
         return value;
     }
 
+    public static DateTime? GetDateSafeOrNull(this IDictionary<string, object> dictionary, string key)
+    {
+        var result = dictionary.GetDateSafe(key);
+
+        if (result == DateTime.MinValue || result == DateTime.MaxValue)
+        {
+            return null;
+        }
+
+        return result;
+    }
+
     public static DateTime? GetDateSafe(this IDictionary<string, object> dictionary, string key)
     {
         var value = dictionary.GetValueSafe(key);

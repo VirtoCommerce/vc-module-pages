@@ -104,10 +104,13 @@ namespace VirtoCommerce.Pages.Data.Search
 
         private static void AddDateFilter(PageDocumentSearchCriteria criteria, List<IFilter> result)
         {
-            var date = criteria.CertainDate ?? DateTime.UtcNow;
-            var dateFilter = CreateDateFilter(nameof(PageDocument.StartDate), date, true)
-                .And(CreateDateFilter(nameof(PageDocument.EndDate), date, false));
-            result.Add(dateFilter);
+            if (criteria.CertainDate.HasValue)
+            {
+                var date = criteria.CertainDate.Value;
+                var dateFilter = CreateDateFilter(nameof(PageDocument.StartDate), date, true)
+                    .And(CreateDateFilter(nameof(PageDocument.EndDate), date, false));
+                result.Add(dateFilter);
+            }
         }
 
         private async Task AddLanguageFilter(PageDocumentSearchCriteria criteria, List<IFilter> filter)
