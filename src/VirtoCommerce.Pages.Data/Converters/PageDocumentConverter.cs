@@ -33,7 +33,7 @@ public class PageDocumentConverter : IPageDocumentConverter
         var userGroupsValue = searchDocument.GetValueSafe("usergroups");
         result.UserGroups = userGroupsValue is string userGroups
             ? [userGroups]
-            : ((object[])searchDocument.GetValueSafe("usergroups")).Cast<string>().ToArray();
+            : ((object[])userGroupsValue).Cast<string>().ToArray();
         result.StartDate = searchDocument.GetDateSafe("startdate");
         result.EndDate = searchDocument.GetDateSafe("enddate");
 
