@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.Pages.Core;
 using VirtoCommerce.Pages.Core.Models;
+using VirtoCommerce.Pages.Data.Converters;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.SearchModule.Core.Extensions;
 using VirtoCommerce.SearchModule.Core.Model;
@@ -95,7 +96,7 @@ namespace VirtoCommerce.Pages.Data.Search
                 FieldName = nameof(PageDocument.UserGroups),
                 Values =
                 [
-                    "__any",
+                    PageDocumentConverter.Any,
                     ..userGroups
                 ]
             };
@@ -115,25 +116,29 @@ namespace VirtoCommerce.Pages.Data.Search
 
         private async Task AddLanguageFilter(PageDocumentSearchCriteria criteria, List<IFilter> filter)
         {
-            IFilter cultureFilter = null;
+            var store = await storeService.GetByIdAsync(criteria.StoreId);
+            var storeLanguage = store?.DefaultLanguage;
 
-            if (!criteria.LanguageCode.IsNullOrEmpty())
+            var filters = new[]
             {
-                cultureFilter = CreateTermFilter(nameof(PageDocument.CultureName), criteria.LanguageCode);
+                criteria.LanguageCode.EmptyToNull(),
+                storeLanguage.EmptyToNull(),
             }
-            else if (criteria.LanguageCode == string.Empty)
+            .Where(x => x != null)
+            .ToArray();
+
+            if (filters.Any())
             {
-                var store = await storeService.GetByIdAsync(criteria.StoreId);
-                var storeLanguage = store?.DefaultLanguage;
-                if (!storeLanguage.IsNullOrEmpty())
+                var result = new TermFilter
                 {
-                    cultureFilter = CreateTermFilter(nameof(PageDocument.CultureName), storeLanguage);
-                }
-            }
-
-            if (cultureFilter != null)
-            {
-                filter.Add(cultureFilter);
+                    FieldName = nameof(PageDocument.CultureName),
+                    Values =
+                    [
+                        PageDocumentConverter.Any,
+                        ..filters
+                    ],
+                };
+                filter.Add(result);
             }
         }
 
