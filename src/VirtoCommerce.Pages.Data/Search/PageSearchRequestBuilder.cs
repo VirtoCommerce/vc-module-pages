@@ -131,7 +131,7 @@ namespace VirtoCommerce.Pages.Data.Search
             .Where(x => x != null)
             .ToArray();
 
-            if (filters.Any())
+            if (filters.Length > 0)
             {
                 var result = new TermFilter
                 {
