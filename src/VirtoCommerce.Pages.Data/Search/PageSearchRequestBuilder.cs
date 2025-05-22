@@ -116,12 +116,16 @@ namespace VirtoCommerce.Pages.Data.Search
 
         private async Task AddLanguageFilter(PageDocumentSearchCriteria criteria, List<IFilter> filter)
         {
+            if (criteria.LanguageCode.IsNullOrEmpty())
+            {
+                return;
+            }
             var store = await storeService.GetByIdAsync(criteria.StoreId);
             var storeLanguage = store?.DefaultLanguage;
 
             var filters = new[]
             {
-                criteria.LanguageCode.EmptyToNull(),
+                criteria.LanguageCode,
                 storeLanguage.EmptyToNull(),
             }
             .Where(x => x != null)
