@@ -129,6 +129,7 @@ namespace VirtoCommerce.Pages.Data.Search
                 storeLanguage.EmptyToNull(),
             }
             .Where(x => x != null)
+            .Distinct()
             .ToArray();
 
             if (filters.Length > 0)
