@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.Pages.Core;
 using VirtoCommerce.Pages.Core.Models;
+using VirtoCommerce.Pages.Data.Converters;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.SearchModule.Core.Extensions;
 using VirtoCommerce.SearchModule.Core.Model;
@@ -95,7 +96,7 @@ namespace VirtoCommerce.Pages.Data.Search
                 FieldName = nameof(PageDocument.UserGroups),
                 Values =
                 [
-                    "__any",
+                    PageDocumentConverter.Any,
                     ..userGroups
                 ]
             };
@@ -115,25 +116,34 @@ namespace VirtoCommerce.Pages.Data.Search
 
         private async Task AddLanguageFilter(PageDocumentSearchCriteria criteria, List<IFilter> filter)
         {
-            IFilter cultureFilter = null;
-
-            if (!criteria.LanguageCode.IsNullOrEmpty())
+            if (criteria.LanguageCode.IsNullOrEmpty())
             {
-                cultureFilter = CreateTermFilter(nameof(PageDocument.CultureName), criteria.LanguageCode);
+                return;
             }
-            else if (criteria.LanguageCode == string.Empty)
+            var store = await storeService.GetByIdAsync(criteria.StoreId);
+            var storeLanguage = store?.DefaultLanguage;
+
+            var languages = new[]
             {
-                var store = await storeService.GetByIdAsync(criteria.StoreId);
-                var storeLanguage = store?.DefaultLanguage;
-                if (!storeLanguage.IsNullOrEmpty())
+                criteria.LanguageCode,
+                storeLanguage.EmptyToNull(),
+            }
+            .Where(x => x != null)
+            .Distinct()
+            .ToArray();
+
+            if (languages.Length > 0)
+            {
+                var termFilter = new TermFilter
                 {
-                    cultureFilter = CreateTermFilter(nameof(PageDocument.CultureName), storeLanguage);
-                }
-            }
-
-            if (cultureFilter != null)
-            {
-                filter.Add(cultureFilter);
+                    FieldName = nameof(PageDocument.CultureName),
+                    Values =
+                    [
+                        PageDocumentConverter.Any,
+                        ..languages
+                    ],
+                };
+                filter.Add(termFilter);
             }
         }
 

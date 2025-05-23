@@ -11,6 +11,8 @@ namespace VirtoCommerce.Pages.Data.Converters;
 
 public class PageDocumentConverter : IPageDocumentConverter
 {
+    public const string Any = "__any";
+
     public virtual PageDocument ToPageDocument(SearchDocument searchDocument)
     {
         var result = AbstractTypeFactory<PageDocument>.TryCreateInstance();
@@ -37,12 +39,12 @@ public class PageDocumentConverter : IPageDocumentConverter
         result.StartDate = searchDocument.GetDateSafeOrNull("startdate");
         result.EndDate = searchDocument.GetDateSafeOrNull("enddate");
 
-        if (result.UserGroups != null && result.UserGroups.Length == 1 && result.UserGroups[0] == "__any")
+        if (result.UserGroups != null && result.UserGroups.Length == 1 && result.UserGroups[0] == Any)
         {
             result.UserGroups = [];
         }
 
-        if (result.CultureName == "__any")
+        if (result.CultureName == Any)
         {
             result.CultureName = null;
         }
@@ -55,7 +57,7 @@ public class PageDocumentConverter : IPageDocumentConverter
         var result = new IndexDocument(pageDocument.Id);
         result.AddFilterableStringAndContentString(nameof(pageDocument.OuterId), pageDocument.OuterId);
         result.AddFilterableStringAndContentString(nameof(pageDocument.StoreId), pageDocument.StoreId);
-        result.AddFilterableStringAndContentString(nameof(pageDocument.CultureName), pageDocument.CultureName ?? "__any");
+        result.AddFilterableStringAndContentString(nameof(pageDocument.CultureName), pageDocument.CultureName ?? Any);
         result.AddFilterableStringAndContentString(nameof(pageDocument.Permalink), pageDocument.Permalink.Permalink());
         result.AddRetrievableAndSearchableString(nameof(pageDocument.Title), pageDocument.Title);
         result.AddRetrievableAndSearchableString(nameof(pageDocument.Description), pageDocument.Description);
@@ -75,7 +77,7 @@ public class PageDocumentConverter : IPageDocumentConverter
 
         var userGroups = pageDocument.UserGroups is { Length: > 0 }
             ? pageDocument.UserGroups
-            : ["__any"];
+            : [Any];
         result.AddFilterableCollectionAndContentString(nameof(pageDocument.UserGroups), userGroups);
 
         result.AddFilterableDateTime(nameof(pageDocument.StartDate), pageDocument.StartDate ?? DateTime.MinValue);
