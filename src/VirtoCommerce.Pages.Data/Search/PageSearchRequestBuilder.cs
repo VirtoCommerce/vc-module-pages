@@ -123,7 +123,7 @@ namespace VirtoCommerce.Pages.Data.Search
             var store = await storeService.GetByIdAsync(criteria.StoreId);
             var storeLanguage = store?.DefaultLanguage;
 
-            var filters = new[]
+            var languages = new[]
             {
                 criteria.LanguageCode,
                 storeLanguage.EmptyToNull(),
@@ -132,18 +132,18 @@ namespace VirtoCommerce.Pages.Data.Search
             .Distinct()
             .ToArray();
 
-            if (filters.Length > 0)
+            if (languages.Length > 0)
             {
-                var result = new TermFilter
+                var termFilter = new TermFilter
                 {
                     FieldName = nameof(PageDocument.CultureName),
                     Values =
                     [
                         PageDocumentConverter.Any,
-                        ..filters
+                        ..languages
                     ],
                 };
-                filter.Add(result);
+                filter.Add(termFilter);
             }
         }
 
