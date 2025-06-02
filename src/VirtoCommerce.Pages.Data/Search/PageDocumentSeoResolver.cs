@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using VirtoCommerce.CoreModule.Core.Seo;
 using VirtoCommerce.CustomerModule.Core.Model;
 using VirtoCommerce.CustomerModule.Core.Services;
 using VirtoCommerce.Pages.Core;
@@ -12,6 +11,8 @@ using VirtoCommerce.Pages.Core.Search;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Seo.Core.Models;
+using VirtoCommerce.Seo.Core.Services;
 using VirtoCommerce.StoreModule.Core.Services;
 
 namespace VirtoCommerce.Pages.Data.Search;
@@ -19,8 +20,8 @@ namespace VirtoCommerce.Pages.Data.Search;
 public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
     Func<UserManager<ApplicationUser>> userManagerFactory,
     IStoreService storeService,
-    IMemberService memberService
-    ) : ISeoResolver
+    IMemberService memberService)
+    : ISeoResolver
 {
     public async Task<IList<SeoInfo>> FindSeoAsync(SeoSearchCriteria criteria)
     {
@@ -43,8 +44,8 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
                     info.LanguageCode = x.CultureName;
                     info.ObjectId = x.Id;
                     info.Id = x.Id;
-                    info.IsActive = x.Status == PageDocumentStatus.Published &&
-                                    x.Visibility == PageDocumentVisibility.Public;
+                    // the FindFiles method always returns only active documents
+                    info.IsActive = true;
                     info.ObjectType = ModuleConstants.PageDocumentType;
                     info.CreatedBy = x.CreatedBy;
                     info.CreatedDate = x.CreatedDate;
@@ -73,15 +74,14 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
         searchCriteria.Status = PageDocumentStatus.Published;
 
         var member = await FindMember(criteria.UserId);
+
         if (member != null)
         {
             searchCriteria.UserGroups = member.Groups.ToArray();
             searchCriteria.Visibility = PageDocumentVisibility.Private;
         }
 
-        var result = await searchService.SearchAllNoCloneAsync(searchCriteria);
-
-        return result;
+        return await searchService.SearchAllNoCloneAsync(searchCriteria);
     }
 
     private async Task<Member> FindMember(string userId)

@@ -1,13 +1,6 @@
-//using GraphQL.Server;
-//using MediatR;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using VirtoCommerce.CoreModule.Core.Seo;
-
-//using VirtoCommerce.ExperienceApiModule.Core.Extensions;
-//using VirtoCommerce.ExperienceApiModule.Core.Infrastructure;
 using VirtoCommerce.Pages.Core;
 using VirtoCommerce.Pages.Core.Converters;
 using VirtoCommerce.Pages.Core.Events;
@@ -20,6 +13,7 @@ using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.SearchModule.Core.Services;
+using VirtoCommerce.Seo.Core.Services;
 using VirtoCommerce.StoreModule.Core.Model;
 
 namespace VirtoCommerce.Pages.Web;
