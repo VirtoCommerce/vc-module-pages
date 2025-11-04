@@ -115,7 +115,7 @@ namespace VirtoCommerce.Pages.Data.Search
             }
         }
 
-        private void AddOrganizationFilter(PageDocumentSearchCriteria criteria, List<IFilter> result)
+        private static void AddOrganizationFilter(PageDocumentSearchCriteria criteria, List<IFilter> result)
         {
             if (criteria.OrganizationId.IsNullOrEmpty())
             {
