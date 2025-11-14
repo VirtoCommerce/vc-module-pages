@@ -80,6 +80,7 @@ namespace VirtoCommerce.Pages.Data.Search
             await AddLanguageFilter(criteria, result);
             AddDateFilter(criteria, result);
             AddUserGroups(criteria, result);
+            AddOrganizationFilter(criteria, result);
 
             return result;
         }
@@ -112,6 +113,20 @@ namespace VirtoCommerce.Pages.Data.Search
                     .And(CreateDateFilter(nameof(PageDocument.EndDate), date, false));
                 result.Add(dateFilter);
             }
+        }
+
+        private static void AddOrganizationFilter(PageDocumentSearchCriteria criteria, List<IFilter> result)
+        {
+            if (criteria.OrganizationId.IsNullOrEmpty())
+            {
+                return;
+            }
+            var anyFilter = new TermFilter
+            {
+                FieldName = nameof(PageDocument.OrganizationId),
+                Values = [PageDocumentConverter.Any, criteria.OrganizationId],
+            };
+            result.Add(anyFilter);
         }
 
         private async Task AddLanguageFilter(PageDocumentSearchCriteria criteria, List<IFilter> filter)

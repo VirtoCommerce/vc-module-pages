@@ -10,6 +10,7 @@ public class PageDocument : IEntity, IAuditable
     public string StoreId { get; set; }
     public string CultureName { get; set; }
     public string Permalink { get; set; }
+    public string OrganizationId { get; set; }
     public string Title { get; set; }
     public string Description { get; set; }
     public PageDocumentStatus Status { get; set; }
