@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "Pages:create": "创建与页面相关的数据",
+    "Pages:read": "查看与页面相关的数据",
+    "Pages:update": "更新与页面相关的数据",
+    "Pages:delete": "删除与页面相关的数据"
+  },
+  "settings": {
+    "VirtoPages": {
+      "Enable": {
+        "title": "Virto 页面",
+        "description": "为商店启用/禁用 Virto 页面"
+      }
+    }
+  },
+  "virto-pages": {
+    "blades": {
+      "pages-list": {
+        "title": "Virto 页面",
+        "labels": {
+          "permalink": "永久链接",
+          "status": "状态",
+          "source": "来源",
+          "title": "标题"
+        }
+      }
+    }
+  }
+}

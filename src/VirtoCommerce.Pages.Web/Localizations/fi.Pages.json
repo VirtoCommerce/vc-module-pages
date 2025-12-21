@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "Pages:create": "Luo sivuihin liittyviä tietoja",
+    "Pages:read": "Näytä sivuihin liittyviä tietoja",
+    "Pages:update": "Päivitä sivuihin liittyviä tietoja",
+    "Pages:delete": "Poista sivuihin liittyviä tietoja"
+  },
+  "settings": {
+    "VirtoPages": {
+      "Enable": {
+        "title": "Virto-sivut",
+        "description": "Ota käyttöön tai poista käytöstä Virto-sivut kaupassa"
+      }
+    }
+  },
+  "virto-pages": {
+    "blades": {
+      "pages-list": {
+        "title": "Virto-sivut",
+        "labels": {
+          "permalink": "Pysyvä linkki",
+          "status": "Tila",
+          "source": "Lähde",
+          "title": "Otsikko"
+        }
+      }
+    }
+  }
+}
