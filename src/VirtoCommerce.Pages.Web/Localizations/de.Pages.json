@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "Pages:create": "Erstelle seitenbezogene Daten",
+    "Pages:read": "Seitenbezogene Daten anzeigen",
+    "Pages:update": "Seitenbezogene Daten aktualisieren",
+    "Pages:delete": "Seitenbezogene Daten löschen"
+  },
+  "settings": {
+    "VirtoPages": {
+      "Enable": {
+        "title": "Virto Seiten",
+        "description": "Aktiviere/deaktiviere Virto Seiten für den Shop"
+      }
+    }
+  },
+  "virto-pages": {
+    "blades": {
+      "pages-list": {
+        "title": "Virto Seiten",
+        "labels": {
+          "permalink": "Perma-Link",
+          "status": "Status",
+          "source": "Quelle",
+          "title": "Titel"
+        }
+      }
+    }
+  }
+}

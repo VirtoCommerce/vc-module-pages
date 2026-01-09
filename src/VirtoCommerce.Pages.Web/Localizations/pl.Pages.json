@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "Pages:create": "Tworzenie danych związanych ze stronami",
+    "Pages:read": "Wyświetlanie danych związanych ze stronami",
+    "Pages:update": "Aktualizowanie danych związanych ze stronami",
+    "Pages:delete": "Usuwanie danych związanych ze stronami"
+  },
+  "settings": {
+    "VirtoPages": {
+      "Enable": {
+        "title": "Virto Strony",
+        "description": "Włącz/wyłącz Virto Strony dla sklepu"
+      }
+    }
+  },
+  "virto-pages": {
+    "blades": {
+      "pages-list": {
+        "title": "Virto Strony",
+        "labels": {
+          "permalink": "Link stały",
+          "status": "Status",
+          "source": "Źródło",
+          "title": "Tytuł"
+        }
+      }
+    }
+  }
+}
