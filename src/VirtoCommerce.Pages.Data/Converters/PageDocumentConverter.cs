@@ -21,6 +21,7 @@ public class PageDocumentConverter : IPageDocumentConverter
         result.StoreId = (string)searchDocument.GetValueSafe("storeid");
         result.CultureName = (string)searchDocument.GetValueSafe("culturename");
         result.Permalink = (string)searchDocument.GetValueSafe("permalink");
+        result.OrganizationId = (string)searchDocument.GetValueSafe("organizationid");
         result.Title = (string)searchDocument.GetValueSafe("title");
         result.Description = (string)searchDocument.GetValueSafe("description");
         result.Content = (string)searchDocument.GetValueSafe("content");
@@ -49,6 +50,11 @@ public class PageDocumentConverter : IPageDocumentConverter
             result.CultureName = null;
         }
 
+        if (result.OrganizationId == Any)
+        {
+            result.OrganizationId = null;
+        }
+
         return result;
     }
 
@@ -59,6 +65,7 @@ public class PageDocumentConverter : IPageDocumentConverter
         result.AddFilterableStringAndContentString(nameof(pageDocument.StoreId), pageDocument.StoreId);
         result.AddFilterableStringAndContentString(nameof(pageDocument.CultureName), pageDocument.CultureName ?? Any);
         result.AddFilterableStringAndContentString(nameof(pageDocument.Permalink), pageDocument.Permalink.Permalink());
+        result.AddFilterableStringAndContentString(nameof(pageDocument.OrganizationId), pageDocument.OrganizationId ?? Any);
         result.AddRetrievableAndSearchableString(nameof(pageDocument.Title), pageDocument.Title);
         result.AddRetrievableAndSearchableString(nameof(pageDocument.Description), pageDocument.Description);
         result.AddRetrievableAndSearchableString(nameof(pageDocument.Content), pageDocument.Content);

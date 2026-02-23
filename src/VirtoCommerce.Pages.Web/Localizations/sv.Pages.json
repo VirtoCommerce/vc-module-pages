@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "Pages:create": "Skapa sidor relaterad data",
+    "Pages:read": "Visa sidor relaterad data",
+    "Pages:update": "Uppdatera sidor relaterad data",
+    "Pages:delete": "Ta bort sidor relaterad data"
+  },
+  "settings": {
+    "VirtoPages": {
+      "Enable": {
+        "title": "Virto Sidor",
+        "description": "Aktivera/inaktivera Virto Sidor för butiken"
+      }
+    }
+  },
+  "virto-pages": {
+    "blades": {
+      "pages-list": {
+        "title": "Virto Sidor",
+        "labels": {
+          "permalink": "Permalänk",
+          "status": "Status",
+          "source": "Källa",
+          "title": "Titel"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "Pages:create": "Crea dati relativi alle pagine",
+    "Pages:read": "Visualizza dati relativi alle pagine",
+    "Pages:update": "Aggiorna dati relativi alle pagine",
+    "Pages:delete": "Elimina dati relativi alle pagine"
+  },
+  "settings": {
+    "VirtoPages": {
+      "Enable": {
+        "title": "Virto Pagine",
+        "description": "Abilita/disabilita le Virto Pagine per il negozio"
+      }
+    }
+  },
+  "virto-pages": {
+    "blades": {
+      "pages-list": {
+        "title": "Virto Pagine",
+        "labels": {
+          "permalink": "Permalink",
+          "status": "Stato",
+          "source": "Fonte",
+          "title": "Titolo"
+        }
+      }
+    }
+  }
+}
