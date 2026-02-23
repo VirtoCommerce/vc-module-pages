@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "Pages:create": "ページに関連するデータを作成",
+    "Pages:read": "ページに関連するデータを表示",
+    "Pages:update": "ページに関連するデータを更新",
+    "Pages:delete": "ページに関連するデータを削除"
+  },
+  "settings": {
+    "VirtoPages": {
+      "Enable": {
+        "title": "Virto ページ",
+        "description": "ストアの Virto ページを有効化/無効化"
+      }
+    }
+  },
+  "virto-pages": {
+    "blades": {
+      "pages-list": {
+        "title": "Virto ページ",
+        "labels": {
+          "permalink": "パーマリンク",
+          "status": "状態",
+          "source": "ソース",
+          "title": "タイトル"
+        }
+      }
+    }
+  }
+}
