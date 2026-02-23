@@ -8,8 +8,8 @@
   "settings": {
     "VirtoPages": {
       "Enable": {
-        "title": "Enable",
-        "description": "Activating VirtoPages for the Store"
+        "title": "Virto Pages",
+        "description": "Enable/ disable Virto Pages for the Store"
       }
     }
   },
