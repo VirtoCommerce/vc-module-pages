@@ -44,6 +44,7 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
                     info.LanguageCode = x.CultureName;
                     info.ObjectId = x.Id;
                     info.Id = x.Id;
+                    info.OrganizationId = x.OrganizationId;
                     // the FindFiles method always returns only active documents
                     info.IsActive = true;
                     info.ObjectType = ModuleConstants.PageDocumentType;
@@ -72,6 +73,7 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
         searchCriteria.Take = criteria.Take;
         searchCriteria.CertainDate = DateTime.UtcNow;
         searchCriteria.Status = PageDocumentStatus.Published;
+        searchCriteria.OrganizationId = criteria.OrganizationId;
 
         var member = await FindMember(criteria.UserId);
 
