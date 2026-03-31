@@ -8,7 +8,7 @@
   "settings": {
     "VirtoPages": {
       "Enable": {
-        "title": "Virto ページ",
+        "title": "Virto ページを有効にする",
         "description": "ストアの Virto ページを有効化/無効化"
       }
     }

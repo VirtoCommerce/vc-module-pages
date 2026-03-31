@@ -8,7 +8,7 @@
   "settings": {
     "VirtoPages": {
       "Enable": {
-        "title": "Virto-sivut",
+        "title": "Ota Virto-sivut käyttöön",
         "description": "Ota käyttöön tai poista käytöstä Virto-sivut kaupassa"
       }
     }

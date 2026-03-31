@@ -8,7 +8,7 @@
   "settings": {
     "VirtoPages": {
       "Enable": {
-        "title": "Virto Pages",
+        "title": "Activer Virto Pages",
         "description": "Activer/désactiver les Virto Pages pour le magasin"
       }
     }

@@ -8,7 +8,7 @@
   "settings": {
     "VirtoPages": {
       "Enable": {
-        "title": "Virto 页面",
+        "title": "启用 Virto 页面",
         "description": "为商店启用/禁用 Virto 页面"
       }
     }

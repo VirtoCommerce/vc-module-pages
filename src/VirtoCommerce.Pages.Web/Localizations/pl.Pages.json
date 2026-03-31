@@ -8,7 +8,7 @@
   "settings": {
     "VirtoPages": {
       "Enable": {
-        "title": "Virto Strony",
+        "title": "Włącz Virto Strony",
         "description": "Włącz/wyłącz Virto Strony dla sklepu"
       }
     }

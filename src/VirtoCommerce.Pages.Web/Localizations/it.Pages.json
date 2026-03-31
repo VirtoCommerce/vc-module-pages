@@ -8,7 +8,7 @@
   "settings": {
     "VirtoPages": {
       "Enable": {
-        "title": "Virto Pagine",
+        "title": "Abilita Virto Pagine",
         "description": "Abilita/disabilita le Virto Pagine per il negozio"
       }
     }

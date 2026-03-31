@@ -8,7 +8,7 @@
   "settings": {
     "VirtoPages": {
       "Enable": {
-        "title": "Virto Sidor",
+        "title": "Aktivera Virto Sidor",
         "description": "Aktivera/inaktivera Virto Sidor för butiken"
       }
     }
