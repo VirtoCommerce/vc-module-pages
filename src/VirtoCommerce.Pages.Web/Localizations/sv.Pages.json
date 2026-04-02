@@ -11,6 +11,18 @@
         "title": "Aktivera Virto Sidor",
         "description": "Aktivera/inaktivera Virto Sidor för butiken"
       }
+    },
+    "VirtoCommerce": {
+      "Search": {
+        "IndexingJobs": {
+          "IndexationDate": {
+            "PageDocument": {
+              "title": "Datum och tid för siddokumentindexering",
+              "description": "Datum och tid då indexeringsuppgiften för siddokument startar"
+            }
+          }
+        }
+      }
     }
   },
   "virto-pages": {

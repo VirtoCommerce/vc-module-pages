@@ -11,6 +11,18 @@
         "title": "Włącz Virto Strony",
         "description": "Włącz/wyłącz Virto Strony dla sklepu"
       }
+    },
+    "VirtoCommerce": {
+      "Search": {
+        "IndexingJobs": {
+          "IndexationDate": {
+            "PageDocument": {
+              "title": "Data i czas indeksacji dokumentu strony",
+              "description": "Data i czas rozpoczęcia zadania indeksowania dokumentu strony"
+            }
+          }
+        }
+      }
     }
   },
   "virto-pages": {

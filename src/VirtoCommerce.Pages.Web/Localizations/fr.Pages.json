@@ -11,6 +11,18 @@
         "title": "Activer Virto Pages",
         "description": "Activer/désactiver les Virto Pages pour le magasin"
       }
+    },
+    "VirtoCommerce": {
+      "Search": {
+        "IndexingJobs": {
+          "IndexationDate": {
+            "PageDocument": {
+              "title": "Date et heure d'indexation des documents de page",
+              "description": "Date et heure de démarrage de la tâche d'indexation des documents de page"
+            }
+          }
+        }
+      }
     }
   },
   "virto-pages": {

@@ -11,6 +11,18 @@
         "title": "Aktiver Virto Sider",
         "description": "Aktiver/deaktiver Virto Sider for butikken"
       }
+    },
+    "VirtoCommerce": {
+      "Search": {
+        "IndexingJobs": {
+          "IndexationDate": {
+            "PageDocument": {
+              "title": "Dato og tid for sideindeksering",
+              "description": "Dato og tid da sideindekseringsoppgaven starter"
+            }
+          }
+        }
+      }
     }
   },
   "virto-pages": {
