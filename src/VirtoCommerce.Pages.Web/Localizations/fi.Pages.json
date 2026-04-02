@@ -11,6 +11,18 @@
         "title": "Ota Virto-sivut käyttöön",
         "description": "Ota käyttöön tai poista käytöstä Virto-sivut kaupassa"
       }
+    },
+    "VirtoCommerce": {
+      "Search": {
+        "IndexingJobs": {
+          "IndexationDate": {
+            "PageDocument": {
+              "title": "Sivudokumentin indeksointipäivä ja -aika",
+              "description": "Päivämäärä ja aika, jolloin sivudokumentin indeksointitehtävä käynnistyy"
+            }
+          }
+        }
+      }
     }
   },
   "virto-pages": {

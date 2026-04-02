@@ -11,6 +11,18 @@
         "title": "Virto ページを有効にする",
         "description": "ストアの Virto ページを有効化/無効化"
       }
+    },
+    "VirtoCommerce": {
+      "Search": {
+        "IndexingJobs": {
+          "IndexationDate": {
+            "PageDocument": {
+              "title": "ページドキュメントのインデックス作成日時",
+              "description": "ページドキュメントのインデックス作成タスクが開始される日時"
+            }
+          }
+        }
+      }
     }
   },
   "virto-pages": {
