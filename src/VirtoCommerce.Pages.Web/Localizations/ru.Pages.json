@@ -11,6 +11,18 @@
         "title": "Включить Virto Pages",
         "description": "Включить/выключить Virto Pages для магазина"
       }
+    },
+    "VirtoCommerce": {
+      "Search": {
+        "IndexingJobs": {
+          "IndexationDate": {
+            "PageDocument": {
+              "title": "Дата и время индексации документа страницы",
+              "description": "Дата и время начала задачи индексирования документа страницы"
+            }
+          }
+        }
+      }
     }
   },
   "virto-pages": {

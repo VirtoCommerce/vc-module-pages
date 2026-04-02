@@ -11,6 +11,18 @@
         "title": "Abilita Virto Pagine",
         "description": "Abilita/disabilita le Virto Pagine per il negozio"
       }
+    },
+    "VirtoCommerce": {
+      "Search": {
+        "IndexingJobs": {
+          "IndexationDate": {
+            "PageDocument": {
+              "title": "Data e ora di indicizzazione del documento di pagina",
+              "description": "Data e ora in cui inizia l'attività di indicizzazione del documento di pagina"
+            }
+          }
+        }
+      }
     }
   },
   "virto-pages": {
