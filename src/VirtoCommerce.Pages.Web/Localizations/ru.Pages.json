@@ -1,0 +1,41 @@
+{
+  "permissions": {
+    "Pages:create": "Создать данные, связанные со страницами",
+    "Pages:read": "Просмотреть данные, связанные со страницами",
+    "Pages:update": "Обновить данные, связанные со страницами",
+    "Pages:delete": "Удалить данные, связанные со страницами"
+  },
+  "settings": {
+    "VirtoPages": {
+      "Enable": {
+        "title": "Включить Virto Pages",
+        "description": "Включить/выключить Virto Pages для магазина"
+      }
+    },
+    "VirtoCommerce": {
+      "Search": {
+        "IndexingJobs": {
+          "IndexationDate": {
+            "PageDocument": {
+              "title": "Дата и время индексации документа страницы",
+              "description": "Дата и время начала задачи индексирования документа страницы"
+            }
+          }
+        }
+      }
+    }
+  },
+  "virto-pages": {
+    "blades": {
+      "pages-list": {
+        "title": "Virto Pages",
+        "labels": {
+          "permalink": "Постоянная ссылка",
+          "status": "Статус",
+          "source": "Источник",
+          "title": "Заголовок"
+        }
+      }
+    }
+  }
+}

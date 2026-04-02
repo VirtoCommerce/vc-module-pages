@@ -1,0 +1,41 @@
+{
+  "permissions": {
+    "Pages:create": "Opprett siderelatert data",
+    "Pages:read": "Vis siderelatert data",
+    "Pages:update": "Oppdater siderelatert data",
+    "Pages:delete": "Slett siderelatert data"
+  },
+  "settings": {
+    "VirtoPages": {
+      "Enable": {
+        "title": "Aktiver Virto Sider",
+        "description": "Aktiver/deaktiver Virto Sider for butikken"
+      }
+    },
+    "VirtoCommerce": {
+      "Search": {
+        "IndexingJobs": {
+          "IndexationDate": {
+            "PageDocument": {
+              "title": "Dato og tid for sideindeksering",
+              "description": "Dato og tid da sideindekseringsoppgaven starter"
+            }
+          }
+        }
+      }
+    }
+  },
+  "virto-pages": {
+    "blades": {
+      "pages-list": {
+        "title": "Virto Sider",
+        "labels": {
+          "permalink": "Permalenke",
+          "status": "Status",
+          "source": "Kilde",
+          "title": "Tittel"
+        }
+      }
+    }
+  }
+}

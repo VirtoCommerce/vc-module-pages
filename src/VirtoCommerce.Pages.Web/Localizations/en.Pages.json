@@ -11,6 +11,18 @@
         "title": "Enable",
         "description": "Activating VirtoPages for the Store"
       }
+    },
+    "VirtoCommerce": {
+      "Search": {
+        "IndexingJobs": {
+          "IndexationDate": {
+            "PageDocument": {
+              "title": "Page document indexation date and time",
+              "description": "Date and time when the page document indexing task starts"
+            }
+          }
+        }
+      }
     }
   },
   "virto-pages": {

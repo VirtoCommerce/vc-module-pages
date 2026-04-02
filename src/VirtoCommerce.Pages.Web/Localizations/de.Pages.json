@@ -1,0 +1,41 @@
+{
+  "permissions": {
+    "Pages:create": "Erstelle seitenbezogene Daten",
+    "Pages:read": "Seitenbezogene Daten anzeigen",
+    "Pages:update": "Seitenbezogene Daten aktualisieren",
+    "Pages:delete": "Seitenbezogene Daten löschen"
+  },
+  "settings": {
+    "VirtoPages": {
+      "Enable": {
+        "title": "Virto Seiten aktivieren",
+        "description": "Aktiviere/deaktiviere Virto Seiten für den Shop"
+      }
+    },
+    "VirtoCommerce": {
+      "Search": {
+        "IndexingJobs": {
+          "IndexationDate": {
+            "PageDocument": {
+              "title": "Datum und Uhrzeit der Seitendokumentindizierung",
+              "description": "Datum und Uhrzeit des Starts der Seitendokumentindizierungsaufgabe"
+            }
+          }
+        }
+      }
+    }
+  },
+  "virto-pages": {
+    "blades": {
+      "pages-list": {
+        "title": "Virto Seiten",
+        "labels": {
+          "permalink": "Perma-Link",
+          "status": "Status",
+          "source": "Quelle",
+          "title": "Titel"
+        }
+      }
+    }
+  }
+}

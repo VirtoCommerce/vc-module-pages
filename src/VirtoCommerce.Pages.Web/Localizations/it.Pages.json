@@ -1,0 +1,41 @@
+{
+  "permissions": {
+    "Pages:create": "Crea dati relativi alle pagine",
+    "Pages:read": "Visualizza dati relativi alle pagine",
+    "Pages:update": "Aggiorna dati relativi alle pagine",
+    "Pages:delete": "Elimina dati relativi alle pagine"
+  },
+  "settings": {
+    "VirtoPages": {
+      "Enable": {
+        "title": "Abilita Virto Pagine",
+        "description": "Abilita/disabilita le Virto Pagine per il negozio"
+      }
+    },
+    "VirtoCommerce": {
+      "Search": {
+        "IndexingJobs": {
+          "IndexationDate": {
+            "PageDocument": {
+              "title": "Data e ora di indicizzazione del documento di pagina",
+              "description": "Data e ora in cui inizia l'attività di indicizzazione del documento di pagina"
+            }
+          }
+        }
+      }
+    }
+  },
+  "virto-pages": {
+    "blades": {
+      "pages-list": {
+        "title": "Virto Pagine",
+        "labels": {
+          "permalink": "Permalink",
+          "status": "Stato",
+          "source": "Fonte",
+          "title": "Titolo"
+        }
+      }
+    }
+  }
+}

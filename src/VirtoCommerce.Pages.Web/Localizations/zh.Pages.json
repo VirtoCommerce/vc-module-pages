@@ -1,0 +1,41 @@
+{
+  "permissions": {
+    "Pages:create": "创建与页面相关的数据",
+    "Pages:read": "查看与页面相关的数据",
+    "Pages:update": "更新与页面相关的数据",
+    "Pages:delete": "删除与页面相关的数据"
+  },
+  "settings": {
+    "VirtoPages": {
+      "Enable": {
+        "title": "启用 Virto 页面",
+        "description": "为商店启用/禁用 Virto 页面"
+      }
+    },
+    "VirtoCommerce": {
+      "Search": {
+        "IndexingJobs": {
+          "IndexationDate": {
+            "PageDocument": {
+              "title": "页面文档索引日期和时间",
+              "description": "页面文档索引任务开始的日期和时间"
+            }
+          }
+        }
+      }
+    }
+  },
+  "virto-pages": {
+    "blades": {
+      "pages-list": {
+        "title": "Virto 页面",
+        "labels": {
+          "permalink": "永久链接",
+          "status": "状态",
+          "source": "来源",
+          "title": "标题"
+        }
+      }
+    }
+  }
+}
