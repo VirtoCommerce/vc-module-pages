@@ -29,14 +29,9 @@ public class PageIndexDocumentChangesProvider(
             return 0;
         }
 
-        long totalCount = 0;
-
-        foreach (var provider in providers)
-        {
-            totalCount += await provider.GetTotalChangesCountAsync(startDate, endDate);
-        }
-
-        return totalCount;
+        // Use the same cached data as GetChangesAsync to keep total and changes consistent
+        var allChanges = await GetAllChangesCachedAsync(providers, startDate, endDate);
+        return allChanges.Count;
     }
 
     public async Task<IList<IndexDocumentChange>> GetChangesAsync(DateTime? startDate, DateTime? endDate, long skip, long take)

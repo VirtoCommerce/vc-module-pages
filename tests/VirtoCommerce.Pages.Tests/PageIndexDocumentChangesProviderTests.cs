@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
@@ -189,13 +190,21 @@ public class PageIndexDocumentChangesProviderTests : IDisposable
         long totalChanges,
         IList<IndexDocumentChange> changes = null)
     {
+        // Auto-generate changes to match totalChanges when not explicitly provided
+        changes ??= Enumerable.Range(0, (int)totalChanges).Select(i => new IndexDocumentChange
+        {
+            DocumentId = $"{name}-page-{i}",
+            ChangeDate = DateTime.UtcNow.AddMinutes(-i),
+            ChangeType = IndexDocumentChangeType.Modified,
+        }).ToList();
+
         var mock = new Mock<IPageContentProvider>();
         mock.Setup(p => p.ProviderName).Returns(name);
         mock.Setup(p => p.SupportsReindexation).Returns(supportsReindexation);
         mock.Setup(p => p.GetTotalChangesCountAsync(It.IsAny<DateTime?>(), It.IsAny<DateTime?>()))
             .ReturnsAsync(totalChanges);
         mock.Setup(p => p.GetChangesAsync(It.IsAny<DateTime?>(), It.IsAny<DateTime?>(), It.IsAny<long>(), It.IsAny<long>()))
-            .ReturnsAsync(changes ?? []);
+            .ReturnsAsync(changes);
         return mock;
     }
 }

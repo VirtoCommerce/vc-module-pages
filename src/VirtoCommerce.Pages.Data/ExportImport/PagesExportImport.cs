@@ -33,6 +33,8 @@ public class PagesExportImport(IPageDocumentSearchService searchService)
         var criteria = AbstractTypeFactory<PageDocumentSearchCriteria>.TryCreateInstance();
         criteria.Take = BatchSize;
         criteria.Skip = 0;
+        // Export all pages regardless of visibility (Private disables the visibility filter)
+        criteria.Visibility = PageDocumentVisibility.Private;
 
         int totalCount;
         do
