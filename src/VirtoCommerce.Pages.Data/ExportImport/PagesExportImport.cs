@@ -76,7 +76,7 @@ public class PagesExportImport(IPageDocumentSearchService searchService)
         var progressInfo = new ExportImportProgressInfo { Description = "Importing pages..." };
         progressCallback(progressInfo);
 
-        using var streamReader = new StreamReader(inputStream);
+        using var streamReader = new StreamReader(inputStream, leaveOpen: true);
         using var jsonReader = new JsonTextReader(streamReader);
 
         var serializer = new JsonSerializer();
