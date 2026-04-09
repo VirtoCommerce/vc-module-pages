@@ -30,6 +30,13 @@ public class PageIndexDocumentBuilder(
 
                 foreach (var page in pages)
                 {
+                    if (string.IsNullOrEmpty(page.StoreId))
+                    {
+                        logger.LogWarning("Skipping page '{PageId}' from provider '{ProviderName}': StoreId is required",
+                            page.Id, provider.ProviderName);
+                        continue;
+                    }
+
                     var indexDocument = documentConverter.ToIndexDocument(page);
                     result.Add(indexDocument);
                 }
