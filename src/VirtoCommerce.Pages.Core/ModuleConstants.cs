@@ -53,6 +53,14 @@ public static class ModuleConstants
                 IsPublic = true,
                 DefaultValue = false,
             };
+
+            public static SettingDescriptor ScheduledSyncEnabled { get; } = new()
+            {
+                Name = "VirtoPages.ScheduledSync.Enable",
+                GroupName = "VirtoPages|Scheduled Sync",
+                ValueType = SettingValueType.Boolean,
+                DefaultValue = false,
+            };
         }
 
         public static IEnumerable<SettingDescriptor> AllSettings
@@ -61,6 +69,7 @@ public static class ModuleConstants
             {
                 yield return Search.IndexationDatePages;
                 yield return General.Enable;
+                yield return General.ScheduledSyncEnabled;
             }
         }
 
