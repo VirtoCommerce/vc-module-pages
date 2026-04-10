@@ -10,6 +10,12 @@
       "Enable": {
         "title": "Aktivera Virto Sidor",
         "description": "Aktivera/inaktivera Virto Sidor för butiken"
+      },
+      "ScheduledSync": {
+        "Enable": {
+          "title": "Aktivera schemalagd synkronisering",
+          "description": "Aktivera/inaktivera periodisk synkronisering av sidor från innehållsleverantörer"
+        }
       }
     },
     "VirtoCommerce": {

@@ -10,6 +10,12 @@
       "Enable": {
         "title": "启用 Virto 页面",
         "description": "为商店启用/禁用 Virto 页面"
+      },
+      "ScheduledSync": {
+        "Enable": {
+          "title": "启用定时同步",
+          "description": "启用/禁用从内容提供商定期同步页面"
+        }
       }
     },
     "VirtoCommerce": {

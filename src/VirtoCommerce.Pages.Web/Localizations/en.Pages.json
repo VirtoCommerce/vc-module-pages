@@ -10,6 +10,12 @@
       "Enable": {
         "title": "Enable Virto Pages",
         "description": "Enable/disable Virto Pages for the Store"
+      },
+      "ScheduledSync": {
+        "Enable": {
+          "title": "Enable Scheduled Sync",
+          "description": "Enable/disable periodic synchronization of pages from content providers"
+        }
       }
     },
     "VirtoCommerce": {

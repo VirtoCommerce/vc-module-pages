@@ -10,6 +10,12 @@
       "Enable": {
         "title": "Ota Virto-sivut käyttöön",
         "description": "Ota käyttöön tai poista käytöstä Virto-sivut kaupassa"
+      },
+      "ScheduledSync": {
+        "Enable": {
+          "title": "Ota ajastettu synkronointi käyttöön",
+          "description": "Ota käyttöön/poista käytöstä sivujen säännöllinen synkronointi sisällöntarjoajilta"
+        }
       }
     },
     "VirtoCommerce": {

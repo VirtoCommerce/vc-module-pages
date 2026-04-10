@@ -10,6 +10,12 @@
       "Enable": {
         "title": "Включить Virto Pages",
         "description": "Включить/выключить Virto Pages для магазина"
+      },
+      "ScheduledSync": {
+        "Enable": {
+          "title": "Включить плановую синхронизацию",
+          "description": "Включить/выключить периодическую синхронизацию страниц от поставщиков контента"
+        }
       }
     },
     "VirtoCommerce": {

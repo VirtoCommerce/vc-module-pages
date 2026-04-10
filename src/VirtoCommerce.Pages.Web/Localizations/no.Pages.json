@@ -10,6 +10,12 @@
       "Enable": {
         "title": "Aktiver Virto Sider",
         "description": "Aktiver/deaktiver Virto Sider for butikken"
+      },
+      "ScheduledSync": {
+        "Enable": {
+          "title": "Aktiver planlagt synkronisering",
+          "description": "Aktiver/deaktiver periodisk synkronisering av sider fra innholdsleverandører"
+        }
       }
     },
     "VirtoCommerce": {

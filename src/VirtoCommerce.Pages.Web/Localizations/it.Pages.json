@@ -10,6 +10,12 @@
       "Enable": {
         "title": "Abilita Virto Pagine",
         "description": "Abilita/disabilita le Virto Pagine per il negozio"
+      },
+      "ScheduledSync": {
+        "Enable": {
+          "title": "Abilita sincronizzazione pianificata",
+          "description": "Abilita/disabilita la sincronizzazione periodica delle pagine dai fornitori di contenuti"
+        }
       }
     },
     "VirtoCommerce": {

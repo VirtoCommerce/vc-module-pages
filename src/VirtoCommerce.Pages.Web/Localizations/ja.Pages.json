@@ -10,6 +10,12 @@
       "Enable": {
         "title": "Virto ページを有効にする",
         "description": "ストアの Virto ページを有効化/無効化"
+      },
+      "ScheduledSync": {
+        "Enable": {
+          "title": "定期同期を有効化",
+          "description": "コンテンツプロバイダーからのページの定期同期を有効/無効にする"
+        }
       }
     },
     "VirtoCommerce": {

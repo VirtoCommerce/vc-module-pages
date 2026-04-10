@@ -37,7 +37,7 @@ public static class ModuleConstants
             public static SettingDescriptor IndexationDatePages { get; } = new()
             {
                 Name = $"VirtoCommerce.Search.IndexingJobs.IndexationDate.{nameof(PageDocument)}",
-                GroupName = "Pages|Search",
+                GroupName = "VirtoPages|Search",
                 ValueType = SettingValueType.DateTime,
                 DefaultValue = default(DateTime),
             };

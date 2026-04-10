@@ -10,6 +10,12 @@
       "Enable": {
         "title": "Activer Virto Pages",
         "description": "Activer/désactiver les Virto Pages pour le magasin"
+      },
+      "ScheduledSync": {
+        "Enable": {
+          "title": "Activer la synchronisation planifiée",
+          "description": "Activer/désactiver la synchronisation périodique des pages depuis les fournisseurs de contenu"
+        }
       }
     },
     "VirtoCommerce": {
