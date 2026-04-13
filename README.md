@@ -55,7 +55,7 @@ Scenarios:
 
 ## Content Providers
 
-Content providers are the bridge between external CMS platforms and the Virto Pages module. Each CMS integration module implements the `IPageContentProvider` interface and registers itself with the `IPageContentProviderRegistrar`.
+Content providers are the bridge between external CMS platforms and the Virto Pages module. Each CMS integration module implements the `IPageContentProvider` interface and registers it in the DI container.
 
 ### IPageContentProvider Interface
 
@@ -65,19 +65,17 @@ public interface IPageContentProvider
     string ProviderName { get; }
     bool SupportsReindexation { get; }
 
-    Task<long> GetTotalChangesCountAsync(DateTime? startDate, DateTime? endDate);
-    Task<IList<IndexDocumentChange>> GetChangesAsync(DateTime? startDate, DateTime? endDate, long skip, long take);
+    Task<PageChangesSearchResult> SearchChangesAsync(PageChangesSearchCriteria criteria);
     Task<IList<PageDocument>> GetByIdsAsync(IList<string> ids);
 }
 ```
 
 ### Registration Example
 
-In your CMS integration module's `PostInitialize`:
+In your CMS integration module's `Initialize`:
 
 ```csharp
-var registrar = serviceProvider.GetRequiredService<IPageContentProviderRegistrar>();
-registrar.RegisterProvider(() => serviceProvider.GetRequiredService<MyCustomContentProvider>());
+serviceCollection.AddTransient<IPageContentProvider, MyCustomContentProvider>();
 ```
 
 ### Index Rebuild

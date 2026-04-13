@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using VirtoCommerce.Pages.Core.Models;
 using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Pages.Core;
@@ -36,8 +35,8 @@ public static class ModuleConstants
         {
             public static SettingDescriptor IndexationDatePages { get; } = new()
             {
-                Name = $"VirtoCommerce.Search.IndexingJobs.IndexationDate.{nameof(PageDocument)}",
-                GroupName = "VirtoPages|Search",
+                Name = $"VirtoCommerce.Search.IndexingJobs.IndexationDate.{PageDocumentType}",
+                GroupName = "Pages|Search",
                 ValueType = SettingValueType.DateTime,
                 DefaultValue = default(DateTime),
             };
@@ -48,7 +47,7 @@ public static class ModuleConstants
             public static SettingDescriptor Enable { get; } = new()
             {
                 Name = "VirtoPages.Enable",
-                GroupName = "VirtoPages",
+                GroupName = "Pages",
                 ValueType = SettingValueType.Boolean,
                 IsPublic = true,
                 DefaultValue = false,
@@ -57,7 +56,7 @@ public static class ModuleConstants
             public static SettingDescriptor ScheduledSyncEnabled { get; } = new()
             {
                 Name = "VirtoPages.ScheduledSync.Enable",
-                GroupName = "VirtoPages|Scheduled Sync",
+                GroupName = "Pages|Scheduled Sync",
                 ValueType = SettingValueType.Boolean,
                 DefaultValue = false,
             };

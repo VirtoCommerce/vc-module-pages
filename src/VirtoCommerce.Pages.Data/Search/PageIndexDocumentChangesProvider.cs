@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using VirtoCommerce.Pages.Core;
 using VirtoCommerce.Pages.Core.ContentProviders;
+using VirtoCommerce.Pages.Core.Models;
 using VirtoCommerce.Pages.Data.Caching;
 using VirtoCommerce.Platform.Core.Caching;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.SearchModule.Core.Model;
 using VirtoCommerce.SearchModule.Core.Services;
@@ -14,7 +16,7 @@ using VirtoCommerce.SearchModule.Core.Services;
 namespace VirtoCommerce.Pages.Data.Search;
 
 public class PageIndexDocumentChangesProvider(
-    IPageContentProviderRegistrar providerRegistrar,
+    IEnumerable<IPageContentProvider> contentProviders,
     ISettingsManager settingsManager,
     IPlatformMemoryCache platformMemoryCache)
     : IIndexDocumentChangesProvider
@@ -64,12 +66,18 @@ public class PageIndexDocumentChangesProvider(
             cacheEntry.AddExpirationToken(PagesCacheRegion.CreateChangeToken());
             cacheEntry.SetAbsoluteExpiration(TimeSpan.FromMinutes(10));
 
+            var criteria = AbstractTypeFactory<PageChangesSearchCriteria>.TryCreateInstance();
+            criteria.StartDate = startDate;
+            criteria.EndDate = endDate;
+            criteria.Skip = 0;
+            criteria.Take = MaxChangesPerProvider;
+
             var allChanges = new List<IndexDocumentChange>();
 
             foreach (var provider in providers)
             {
-                var changes = await provider.GetChangesAsync(startDate, endDate, 0, MaxChangesPerProvider);
-                allChanges.AddRange(changes);
+                var result = await provider.SearchChangesAsync(criteria);
+                allChanges.AddRange(result.Results);
             }
 
             allChanges.Sort((a, b) => b.ChangeDate.CompareTo(a.ChangeDate));
@@ -93,7 +101,7 @@ public class PageIndexDocumentChangesProvider(
             }
         }
 
-        var providers = providerRegistrar.GetProviders();
+        var providers = contentProviders.ToList();
 
         // For full reindex, validate all providers support it
         if (isFullReindex)

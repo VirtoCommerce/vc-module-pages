@@ -15,20 +15,17 @@ namespace VirtoCommerce.Pages.Tests;
 
 public class PageIndexDocumentBuilderTests
 {
-    private readonly Mock<IPageContentProviderRegistrar> _registrarMock = new();
     private readonly Mock<IPageDocumentConverter> _converterMock = new();
     private readonly Mock<ILogger<PageIndexDocumentBuilder>> _loggerMock = new();
 
-    private PageIndexDocumentBuilder CreateBuilder()
+    private PageIndexDocumentBuilder CreateBuilder(params IPageContentProvider[] providers)
     {
-        return new PageIndexDocumentBuilder(_registrarMock.Object, _converterMock.Object, _loggerMock.Object);
+        return new PageIndexDocumentBuilder(providers, _converterMock.Object, _loggerMock.Object);
     }
 
     [Fact]
     public async Task GetDocumentsAsync_NoProviders_ReturnsEmpty()
     {
-        _registrarMock.Setup(r => r.GetProviders()).Returns([]);
-
         var builder = CreateBuilder();
         var result = await builder.GetDocumentsAsync(["page1"]);
 
@@ -45,10 +42,9 @@ public class PageIndexDocumentBuilderTests
         provider.Setup(p => p.GetByIdsAsync(It.IsAny<IList<string>>()))
             .ReturnsAsync([page]);
 
-        _registrarMock.Setup(r => r.GetProviders()).Returns([provider.Object]);
         _converterMock.Setup(c => c.ToIndexDocument(page)).Returns(indexDoc);
 
-        var builder = CreateBuilder();
+        var builder = CreateBuilder(provider.Object);
         var result = await builder.GetDocumentsAsync(["page1"]);
 
         result.Should().HaveCount(1);
@@ -71,11 +67,10 @@ public class PageIndexDocumentBuilderTests
         provider2.Setup(p => p.GetByIdsAsync(It.IsAny<IList<string>>()))
             .ReturnsAsync([page2]);
 
-        _registrarMock.Setup(r => r.GetProviders()).Returns([provider1.Object, provider2.Object]);
         _converterMock.Setup(c => c.ToIndexDocument(It.IsAny<PageDocument>()))
             .Returns((PageDocument p) => new IndexDocument(p.Id));
 
-        var builder = CreateBuilder();
+        var builder = CreateBuilder(provider1.Object, provider2.Object);
         var result = await builder.GetDocumentsAsync(["page1", "page2"]);
 
         result.Should().HaveCount(2);
@@ -96,10 +91,9 @@ public class PageIndexDocumentBuilderTests
         workingProvider.Setup(p => p.GetByIdsAsync(It.IsAny<IList<string>>()))
             .ReturnsAsync([page]);
 
-        _registrarMock.Setup(r => r.GetProviders()).Returns([failingProvider.Object, workingProvider.Object]);
         _converterMock.Setup(c => c.ToIndexDocument(page)).Returns(new IndexDocument("page2"));
 
-        var builder = CreateBuilder();
+        var builder = CreateBuilder(failingProvider.Object, workingProvider.Object);
         var result = await builder.GetDocumentsAsync(["page1", "page2"]);
 
         result.Should().HaveCount(1);

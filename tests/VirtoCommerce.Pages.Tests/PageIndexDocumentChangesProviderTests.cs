@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using VirtoCommerce.Pages.Core;
 using VirtoCommerce.Pages.Core.ContentProviders;
+using VirtoCommerce.Pages.Core.Models;
 using VirtoCommerce.Pages.Data.Search;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Settings;
@@ -18,11 +19,10 @@ namespace VirtoCommerce.Pages.Tests;
 
 public class PageIndexDocumentChangesProviderTests : IDisposable
 {
-    private readonly Mock<IPageContentProviderRegistrar> _registrarMock = new();
     private readonly Mock<ISettingsManager> _settingsManagerMock = new();
     private readonly MemoryCache _memoryCache = new(Options.Create(new MemoryCacheOptions()));
 
-    private PageIndexDocumentChangesProvider CreateProvider()
+    private PageIndexDocumentChangesProvider CreateProvider(params IPageContentProvider[] providers)
     {
         var platformCache = new Mock<IPlatformMemoryCache>();
         platformCache.Setup(x => x.GetDefaultCacheEntryOptions()).Returns(new MemoryCacheEntryOptions());
@@ -32,7 +32,7 @@ public class PageIndexDocumentChangesProviderTests : IDisposable
         platformCache.Setup(x => x.CreateEntry(It.IsAny<object>()))
             .Returns((object key) => _memoryCache.CreateEntry(key));
 
-        return new PageIndexDocumentChangesProvider(_registrarMock.Object, _settingsManagerMock.Object, platformCache.Object);
+        return new PageIndexDocumentChangesProvider(providers, _settingsManagerMock.Object, platformCache.Object);
     }
 
     public void Dispose()
@@ -59,10 +59,9 @@ public class PageIndexDocumentChangesProviderTests : IDisposable
         SetSyncEnabled(true);
         var startDate = DateTime.UtcNow.AddDays(-1);
 
-        var contentProvider = CreateContentProvider("TestCMS", supportsReindexation: true, totalChanges: 5);
-        _registrarMock.Setup(r => r.GetProviders()).Returns([contentProvider.Object]);
+        var contentProvider = CreateContentProvider("TestCMS", supportsReindexation: true, changes: GenerateChanges("TestCMS", 5));
 
-        var provider = CreateProvider();
+        var provider = CreateProvider(contentProvider.Object);
         var count = await provider.GetTotalChangesCountAsync(startDate, null);
 
         count.Should().Be(5);
@@ -73,10 +72,9 @@ public class PageIndexDocumentChangesProviderTests : IDisposable
     {
         SetSyncEnabled(false);
 
-        var contentProvider = CreateContentProvider("TestCMS", supportsReindexation: true, totalChanges: 10);
-        _registrarMock.Setup(r => r.GetProviders()).Returns([contentProvider.Object]);
+        var contentProvider = CreateContentProvider("TestCMS", supportsReindexation: true, changes: GenerateChanges("TestCMS", 10));
 
-        var provider = CreateProvider();
+        var provider = CreateProvider(contentProvider.Object);
         var count = await provider.GetTotalChangesCountAsync(null, null);
 
         count.Should().Be(10);
@@ -85,10 +83,9 @@ public class PageIndexDocumentChangesProviderTests : IDisposable
     [Fact]
     public async Task GetTotalChangesCountAsync_FullReindex_ProviderDoesNotSupportReindexation_Throws()
     {
-        var contentProvider = CreateContentProvider("LegacyCMS", supportsReindexation: false, totalChanges: 0);
-        _registrarMock.Setup(r => r.GetProviders()).Returns([contentProvider.Object]);
+        var contentProvider = CreateContentProvider("LegacyCMS", supportsReindexation: false, changes: []);
 
-        var provider = CreateProvider();
+        var provider = CreateProvider(contentProvider.Object);
 
         var act = () => provider.GetTotalChangesCountAsync(null, null);
 
@@ -123,11 +120,10 @@ public class PageIndexDocumentChangesProviderTests : IDisposable
             new() { DocumentId = "page2", ChangeDate = DateTime.UtcNow.AddMinutes(-5), ChangeType = IndexDocumentChangeType.Modified },
         };
 
-        var provider1 = CreateContentProvider("CMS1", true, 1, changes1);
-        var provider2 = CreateContentProvider("CMS2", true, 1, changes2);
-        _registrarMock.Setup(r => r.GetProviders()).Returns([provider1.Object, provider2.Object]);
+        var provider1 = CreateContentProvider("CMS1", true, changes1);
+        var provider2 = CreateContentProvider("CMS2", true, changes2);
 
-        var provider = CreateProvider();
+        var provider = CreateProvider(provider1.Object, provider2.Object);
         var result = await provider.GetChangesAsync(startDate, null, 0, 100);
 
         result.Should().HaveCount(2);
@@ -136,11 +132,10 @@ public class PageIndexDocumentChangesProviderTests : IDisposable
     [Fact]
     public async Task GetChangesAsync_FullReindex_MultipleProviders_UnsupportedThrows()
     {
-        var supported = CreateContentProvider("SupportedCMS", supportsReindexation: true, totalChanges: 5);
-        var unsupported = CreateContentProvider("UnsupportedCMS", supportsReindexation: false, totalChanges: 0);
-        _registrarMock.Setup(r => r.GetProviders()).Returns([supported.Object, unsupported.Object]);
+        var supported = CreateContentProvider("SupportedCMS", supportsReindexation: true, changes: GenerateChanges("SupportedCMS", 5));
+        var unsupported = CreateContentProvider("UnsupportedCMS", supportsReindexation: false, changes: []);
 
-        var provider = CreateProvider();
+        var provider = CreateProvider(supported.Object, unsupported.Object);
 
         var act = () => provider.GetChangesAsync(null, null, 0, 100);
 
@@ -165,10 +160,9 @@ public class PageIndexDocumentChangesProviderTests : IDisposable
             });
         }
 
-        var contentProvider = CreateContentProvider("CMS", true, 10, changes);
-        _registrarMock.Setup(r => r.GetProviders()).Returns([contentProvider.Object]);
+        var contentProvider = CreateContentProvider("CMS", true, changes);
 
-        var provider = CreateProvider();
+        var provider = CreateProvider(contentProvider.Object);
         var result = await provider.GetChangesAsync(now.AddDays(-1), null, 2, 3);
 
         result.Should().HaveCount(3);
@@ -184,27 +178,30 @@ public class PageIndexDocumentChangesProviderTests : IDisposable
             .ReturnsAsync(setting);
     }
 
-    private static Mock<IPageContentProvider> CreateContentProvider(
-        string name,
-        bool supportsReindexation,
-        long totalChanges,
-        IList<IndexDocumentChange> changes = null)
+    private static List<IndexDocumentChange> GenerateChanges(string providerName, int count)
     {
-        // Auto-generate changes to match totalChanges when not explicitly provided
-        changes ??= Enumerable.Range(0, (int)totalChanges).Select(i => new IndexDocumentChange
+        return Enumerable.Range(0, count).Select(i => new IndexDocumentChange
         {
-            DocumentId = $"{name}-page-{i}",
+            DocumentId = $"{providerName}-page-{i}",
             ChangeDate = DateTime.UtcNow.AddMinutes(-i),
             ChangeType = IndexDocumentChangeType.Modified,
         }).ToList();
+    }
 
+    private static Mock<IPageContentProvider> CreateContentProvider(
+        string name,
+        bool supportsReindexation,
+        IList<IndexDocumentChange> changes)
+    {
         var mock = new Mock<IPageContentProvider>();
         mock.Setup(p => p.ProviderName).Returns(name);
         mock.Setup(p => p.SupportsReindexation).Returns(supportsReindexation);
-        mock.Setup(p => p.GetTotalChangesCountAsync(It.IsAny<DateTime?>(), It.IsAny<DateTime?>()))
-            .ReturnsAsync(totalChanges);
-        mock.Setup(p => p.GetChangesAsync(It.IsAny<DateTime?>(), It.IsAny<DateTime?>(), It.IsAny<long>(), It.IsAny<long>()))
-            .ReturnsAsync(changes);
+        mock.Setup(p => p.SearchChangesAsync(It.IsAny<PageChangesSearchCriteria>()))
+            .ReturnsAsync((PageChangesSearchCriteria criteria) => new PageChangesSearchResult
+            {
+                TotalCount = changes.Count,
+                Results = changes.Skip(criteria.Skip).Take(criteria.Take).ToList(),
+            });
         return mock;
     }
 }

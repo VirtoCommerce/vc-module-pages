@@ -12,7 +12,7 @@ using VirtoCommerce.SearchModule.Core.Services;
 namespace VirtoCommerce.Pages.Data.Search;
 
 public class PageIndexDocumentBuilder(
-    IPageContentProviderRegistrar providerRegistrar,
+    IEnumerable<IPageContentProvider> contentProviders,
     IPageDocumentConverter documentConverter,
     ILogger<PageIndexDocumentBuilder> logger)
     : IIndexDocumentBuilder
@@ -20,7 +20,7 @@ public class PageIndexDocumentBuilder(
     public async Task<IList<IndexDocument>> GetDocumentsAsync(IList<string> documentIds)
     {
         var result = new ConcurrentBag<IndexDocument>();
-        var providers = providerRegistrar.GetProviders();
+        var providers = contentProviders;
 
         await Parallel.ForEachAsync(providers, async (provider, _) =>
         {

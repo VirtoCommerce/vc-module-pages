@@ -5,11 +5,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Pages.Core;
-using VirtoCommerce.Pages.Core.ContentProviders;
 using VirtoCommerce.Pages.Core.Converters;
 using VirtoCommerce.Pages.Core.Events;
 using VirtoCommerce.Pages.Core.Search;
-using VirtoCommerce.Pages.Data.ContentProviders;
 using VirtoCommerce.Pages.Data.Converters;
 using VirtoCommerce.Pages.Data.ExportImport;
 using VirtoCommerce.Pages.Data.Handlers;
@@ -43,9 +41,6 @@ public class Module : IModule, IExportSupport, IImportSupport, IHasConfiguration
         serviceCollection.AddTransient<PageSearchRequestBuilder>();
         serviceCollection.AddTransient<PageDocumentConverter>();
         serviceCollection.AddTransient<PageChangedHandler>();
-
-        // Content providers
-        serviceCollection.AddSingleton<IPageContentProviderRegistrar, PageContentProviderRegistrar>();
 
         // Index rebuild
         serviceCollection.AddTransient<PageIndexDocumentBuilder>();
