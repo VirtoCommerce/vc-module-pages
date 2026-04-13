@@ -86,7 +86,7 @@ public class PageIndexDocumentChangesProvider(
         });
     }
 
-    private IReadOnlyList<IPageContentProvider> GetProvidersForOperation(DateTime? startDate)
+    private List<IPageContentProvider> GetProvidersForOperation(DateTime? startDate)
     {
         var isFullReindex = startDate == null;
         var isIncrementalSync = !isFullReindex;

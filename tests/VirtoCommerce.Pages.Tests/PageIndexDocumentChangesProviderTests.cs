@@ -191,7 +191,7 @@ public class PageIndexDocumentChangesProviderTests : IDisposable
     private static Mock<IPageContentProvider> CreateContentProvider(
         string name,
         bool supportsReindexation,
-        IList<IndexDocumentChange> changes)
+        List<IndexDocumentChange> changes)
     {
         var mock = new Mock<IPageContentProvider>();
         mock.Setup(p => p.ProviderName).Returns(name);
