@@ -1,4 +1,9 @@
 {
+  "module": {
+    "VirtoCommerce.Pages": {
+      "description": "Exportera/importera Virto Pages"
+    }
+  },
   "permissions": {
     "Pages:create": "Skapa sidor relaterad data",
     "Pages:read": "Visa sidor relaterad data",

@@ -1,4 +1,9 @@
 {
+  "module": {
+    "VirtoCommerce.Pages": {
+      "description": "Eksport/import stron Virto"
+    }
+  },
   "permissions": {
     "Pages:create": "Tworzenie danych związanych ze stronami",
     "Pages:read": "Wyświetlanie danych związanych ze stronami",

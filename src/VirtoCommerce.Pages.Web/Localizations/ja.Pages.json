@@ -1,4 +1,9 @@
 {
+  "module": {
+    "VirtoCommerce.Pages": {
+      "description": "Virto Pagesのエクスポート/インポート"
+    }
+  },
   "permissions": {
     "Pages:create": "ページに関連するデータを作成",
     "Pages:read": "ページに関連するデータを表示",

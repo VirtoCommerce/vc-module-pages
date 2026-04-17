@@ -1,4 +1,9 @@
 {
+  "module": {
+    "VirtoCommerce.Pages": {
+      "description": "导出/导入 Virto Pages"
+    }
+  },
   "permissions": {
     "Pages:create": "创建与页面相关的数据",
     "Pages:read": "查看与页面相关的数据",

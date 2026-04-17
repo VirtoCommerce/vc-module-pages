@@ -1,4 +1,9 @@
 {
+  "module": {
+    "VirtoCommerce.Pages": {
+      "description": "Virto Pages -sivujen vienti/tuonti"
+    }
+  },
   "permissions": {
     "Pages:create": "Luo sivuihin liittyviä tietoja",
     "Pages:read": "Näytä sivuihin liittyviä tietoja",

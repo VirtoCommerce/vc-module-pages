@@ -1,4 +1,9 @@
 {
+  "module": {
+    "VirtoCommerce.Pages": {
+      "description": "Eksporter/importer Virto Pages"
+    }
+  },
   "permissions": {
     "Pages:create": "Opprett siderelatert data",
     "Pages:read": "Vis siderelatert data",
