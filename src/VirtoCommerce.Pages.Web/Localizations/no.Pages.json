@@ -27,7 +27,7 @@
       "Search": {
         "IndexingJobs": {
           "IndexationDate": {
-            "PageDocument": {
+            "Pages": {
               "title": "Dato og tid for sideindeksering",
               "description": "Dato og tid da sideindekseringsoppgaven starter"
             }

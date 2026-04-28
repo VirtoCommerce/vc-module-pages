@@ -27,7 +27,7 @@
       "Search": {
         "IndexingJobs": {
           "IndexationDate": {
-            "PageDocument": {
+            "Pages": {
               "title": "ページドキュメントのインデックス作成日時",
               "description": "ページドキュメントのインデックス作成タスクが開始される日時"
             }

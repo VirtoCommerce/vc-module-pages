@@ -27,7 +27,7 @@
       "Search": {
         "IndexingJobs": {
           "IndexationDate": {
-            "PageDocument": {
+            "Pages": {
               "title": "Data i czas indeksacji dokumentu strony",
               "description": "Data i czas rozpoczęcia zadania indeksowania dokumentu strony"
             }

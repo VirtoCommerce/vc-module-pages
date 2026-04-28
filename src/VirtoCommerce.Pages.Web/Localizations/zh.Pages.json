@@ -27,7 +27,7 @@
       "Search": {
         "IndexingJobs": {
           "IndexationDate": {
-            "PageDocument": {
+            "Pages": {
               "title": "页面文档索引日期和时间",
               "description": "页面文档索引任务开始的日期和时间"
             }
