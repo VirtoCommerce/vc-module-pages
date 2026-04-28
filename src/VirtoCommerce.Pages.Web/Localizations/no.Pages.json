@@ -1,4 +1,9 @@
 {
+  "module": {
+    "VirtoCommerce.Pages": {
+      "description": "Eksporter/importer Virto Pages"
+    }
+  },
   "permissions": {
     "Pages:create": "Opprett siderelatert data",
     "Pages:read": "Vis siderelatert data",
@@ -10,13 +15,19 @@
       "Enable": {
         "title": "Aktiver Virto Sider",
         "description": "Aktiver/deaktiver Virto Sider for butikken"
+      },
+      "ScheduledSync": {
+        "Enable": {
+          "title": "Aktiver planlagt synkronisering",
+          "description": "Aktiver/deaktiver periodisk synkronisering av sider fra innholdsleverandører"
+        }
       }
     },
     "VirtoCommerce": {
       "Search": {
         "IndexingJobs": {
           "IndexationDate": {
-            "PageDocument": {
+            "Pages": {
               "title": "Dato og tid for sideindeksering",
               "description": "Dato og tid da sideindekseringsoppgaven starter"
             }

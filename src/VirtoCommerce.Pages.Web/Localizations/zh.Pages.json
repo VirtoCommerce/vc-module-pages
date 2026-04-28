@@ -1,4 +1,9 @@
 {
+  "module": {
+    "VirtoCommerce.Pages": {
+      "description": "导出/导入 Virto Pages"
+    }
+  },
   "permissions": {
     "Pages:create": "创建与页面相关的数据",
     "Pages:read": "查看与页面相关的数据",
@@ -10,13 +15,19 @@
       "Enable": {
         "title": "启用 Virto 页面",
         "description": "为商店启用/禁用 Virto 页面"
+      },
+      "ScheduledSync": {
+        "Enable": {
+          "title": "启用定时同步",
+          "description": "启用/禁用从内容提供商定期同步页面"
+        }
       }
     },
     "VirtoCommerce": {
       "Search": {
         "IndexingJobs": {
           "IndexationDate": {
-            "PageDocument": {
+            "Pages": {
               "title": "页面文档索引日期和时间",
               "description": "页面文档索引任务开始的日期和时间"
             }

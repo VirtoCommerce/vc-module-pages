@@ -18,6 +18,11 @@ angular.module('virtoCommerce.pagesModule')
             $scope.selectedNodeId = null;
             $scope.listEntries = [];
 
+            blade.search = function () {
+                $scope.pageSettings.currentPage = 1;
+                blade.refresh();
+            };
+
             blade.refresh = function () {
                 blade.isLoading = true;
 

@@ -17,6 +17,10 @@ The Virto Commerce Pages module is a solution designed to connect different CMS 
   * **Retrieve Pages by permalink**: Access pages easily using unique identifiers or user-friendly URLs.
   * **Retrieve Pages by ID**: Access pages easily using unique identifiers or user-friendly URLs.
 * **Full-Text Search Capabilities:** Quickly search and retrieve pages by keyword.
+* **Index Rebuild**: Rebuild the full-text search index from the admin UI or via background jobs through the platform's standard indexing infrastructure.
+* **Content Providers**: Pluggable abstraction for pulling pages from 3rd-party CMS platforms. CMS integration modules implement `IPageContentProvider` to supply pages for indexing.
+* **Scheduled Sync**: Periodic background synchronization of modified pages from content providers. Disabled by default; enable via the `VirtoPages.ScheduledSync.Enable` setting.
+* **Export/Import**: Backup and restore pages through the platform's generic export/import mechanism.
 
 ## Supported CMS Platforms
 
@@ -48,6 +52,48 @@ Scenarios:
   * Pages are accessed and rendered via their permalink or unique ID.
   * Content is served from offline storage for fast and reliable performance.
   * Customer can search pages by keyword.
+
+## Content Providers
+
+Content providers are the bridge between external CMS platforms and the Virto Pages module. Each CMS integration module implements the `IPageContentProvider` interface and registers it in the DI container.
+
+### IPageContentProvider Interface
+
+```csharp
+public interface IPageContentProvider
+{
+    string ProviderName { get; }
+    bool SupportsReindexation { get; }
+
+    Task<PageChangesSearchResult> SearchChangesAsync(PageChangesSearchCriteria criteria);
+    Task<IList<PageDocument>> GetByIdsAsync(IList<string> ids);
+}
+```
+
+### Registration Example
+
+In your CMS integration module's `Initialize`:
+
+```csharp
+serviceCollection.AddTransient<IPageContentProvider, MyCustomContentProvider>();
+```
+
+### Index Rebuild
+
+The module integrates with the platform's search indexing infrastructure via `IndexDocumentConfiguration`. This enables:
+
+* **Manual rebuild** from the admin UI (Search → Index → Pages → Build)
+* **Background indexing** through the platform's standard indexing jobs
+
+If a content provider does not support reindexation (`SupportsReindexation = false`), a full index rebuild will throw an exception listing the unsupported providers.
+
+### Scheduled Sync
+
+When enabled (`VirtoPages.ScheduledSync.Enable = true`), the platform's search indexing infrastructure periodically queries all registered content providers for changes and updates the search index accordingly. The sync interval is controlled by the Search module's global indexing schedule.
+
+### Export/Import
+
+Pages can be exported and imported through the platform's standard backup and restore mechanism. Export reads all pages from the search index and serializes them to JSON; import deserializes and re-indexes them.
 
 ## User guide
 

@@ -1,4 +1,9 @@
 {
+  "module": {
+    "VirtoCommerce.Pages": {
+      "description": "Virto Pages -sivujen vienti/tuonti"
+    }
+  },
   "permissions": {
     "Pages:create": "Luo sivuihin liittyviä tietoja",
     "Pages:read": "Näytä sivuihin liittyviä tietoja",
@@ -10,13 +15,19 @@
       "Enable": {
         "title": "Ota Virto-sivut käyttöön",
         "description": "Ota käyttöön tai poista käytöstä Virto-sivut kaupassa"
+      },
+      "ScheduledSync": {
+        "Enable": {
+          "title": "Ota ajastettu synkronointi käyttöön",
+          "description": "Ota käyttöön/poista käytöstä sivujen säännöllinen synkronointi sisällöntarjoajilta"
+        }
       }
     },
     "VirtoCommerce": {
       "Search": {
         "IndexingJobs": {
           "IndexationDate": {
-            "PageDocument": {
+            "Pages": {
               "title": "Sivudokumentin indeksointipäivä ja -aika",
               "description": "Päivämäärä ja aika, jolloin sivudokumentin indeksointitehtävä käynnistyy"
             }

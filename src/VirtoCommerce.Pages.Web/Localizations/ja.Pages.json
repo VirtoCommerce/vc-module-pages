@@ -1,4 +1,9 @@
 {
+  "module": {
+    "VirtoCommerce.Pages": {
+      "description": "Virto Pagesのエクスポート/インポート"
+    }
+  },
   "permissions": {
     "Pages:create": "ページに関連するデータを作成",
     "Pages:read": "ページに関連するデータを表示",
@@ -10,13 +15,19 @@
       "Enable": {
         "title": "Virto ページを有効にする",
         "description": "ストアの Virto ページを有効化/無効化"
+      },
+      "ScheduledSync": {
+        "Enable": {
+          "title": "定期同期を有効化",
+          "description": "コンテンツプロバイダーからのページの定期同期を有効/無効にする"
+        }
       }
     },
     "VirtoCommerce": {
       "Search": {
         "IndexingJobs": {
           "IndexationDate": {
-            "PageDocument": {
+            "Pages": {
               "title": "ページドキュメントのインデックス作成日時",
               "description": "ページドキュメントのインデックス作成タスクが開始される日時"
             }

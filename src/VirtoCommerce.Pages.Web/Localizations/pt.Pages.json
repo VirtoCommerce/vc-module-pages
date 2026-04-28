@@ -1,4 +1,9 @@
 {
+  "module": {
+    "VirtoCommerce.Pages": {
+      "description": "Exportar/importar páginas do Virto"
+    }
+  },
   "permissions": {
     "Pages:create": "Criar dados relacionados às páginas",
     "Pages:read": "Visualizar dados relacionados às páginas",
@@ -10,13 +15,19 @@
       "Enable": {
         "title": "Ativar Virto Páginas",
         "description": "Ativar/desativar as Virto Páginas para a loja"
+      },
+      "ScheduledSync": {
+        "Enable": {
+          "title": "Ativar sincronização programada",
+          "description": "Ativar/desativar a sincronização periódica de páginas de provedores de conteúdo"
+        }
       }
     },
     "VirtoCommerce": {
       "Search": {
         "IndexingJobs": {
           "IndexationDate": {
-            "PageDocument": {
+            "Pages": {
               "title": "Data e hora de indexação do documento de página",
               "description": "Data e hora em que a tarefa de indexação do documento de página começa"
             }
