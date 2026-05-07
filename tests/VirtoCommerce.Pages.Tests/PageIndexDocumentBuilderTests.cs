@@ -35,7 +35,7 @@ public class PageIndexDocumentBuilderTests
     [Fact]
     public async Task GetDocumentsAsync_ProviderReturnsPages_ConvertsToIndexDocuments()
     {
-        var page = new PageDocument { Id = "page1", Title = "Test Page", StoreId = "store1" };
+        var page = new PageDocument { Id = "page1", Title = "Test Page", StoreId = "store1", Content = "{}" };
         var indexDoc = new IndexDocument("page1");
 
         var provider = new Mock<IPageContentProvider>();
@@ -54,8 +54,8 @@ public class PageIndexDocumentBuilderTests
     [Fact]
     public async Task GetDocumentsAsync_MultipleProviders_AggregatesResults()
     {
-        var page1 = new PageDocument { Id = "page1", StoreId = "store1" };
-        var page2 = new PageDocument { Id = "page2", StoreId = "store1" };
+        var page1 = new PageDocument { Id = "page1", StoreId = "store1", Content = "{}" };
+        var page2 = new PageDocument { Id = "page2", StoreId = "store1", Content = "{}" };
 
         var provider1 = new Mock<IPageContentProvider>();
         provider1.Setup(p => p.ProviderName).Returns("CMS1");
@@ -79,7 +79,7 @@ public class PageIndexDocumentBuilderTests
     [Fact]
     public async Task GetDocumentsAsync_ProviderThrows_LogsErrorAndContinues()
     {
-        var page = new PageDocument { Id = "page2", StoreId = "store1" };
+        var page = new PageDocument { Id = "page2", StoreId = "store1", Content = "{}" };
 
         var failingProvider = new Mock<IPageContentProvider>();
         failingProvider.Setup(p => p.ProviderName).Returns("FailingCMS");
