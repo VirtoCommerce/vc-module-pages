@@ -23,7 +23,7 @@
   </owners>
 
   <projectUrl>https://github.com/VirtoCommerce/vc-module-pages</projectUrl>
-  <iconUrl>Modules/$(VirtoCommerce.Pages)/Content/logo.png</iconUrl>
+  <iconUrl>Modules/$(VirtoCommerce.Pages)/Content/logo.svg</iconUrl>
   <requireLicenseAcceptance>false</requireLicenseAcceptance>
 
   <assemblyFile>VirtoCommerce.Pages.Web.dll</assemblyFile>
