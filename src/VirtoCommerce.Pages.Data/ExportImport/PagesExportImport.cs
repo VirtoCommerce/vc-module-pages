@@ -1,4 +1,5 @@
-using System;
+using System;
+using System.Threading;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ public class PagesExportImport(IPageDocumentSearchService searchService)
 {
     private const int BatchSize = 50;
 
-    public async Task DoExportAsync(Stream outStream, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+    public async Task DoExportAsync(Stream outStream, Action<ExportImportProgressInfo> progressCallback, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -69,7 +70,7 @@ public class PagesExportImport(IPageDocumentSearchService searchService)
         await jsonWriter.FlushAsync();
     }
 
-    public async Task DoImportAsync(Stream inputStream, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+    public async Task DoImportAsync(Stream inputStream, Action<ExportImportProgressInfo> progressCallback, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -101,7 +102,7 @@ public class PagesExportImport(IPageDocumentSearchService searchService)
         JsonTextReader jsonReader,
         JsonSerializer serializer,
         Action<ExportImportProgressInfo> progressCallback,
-        ICancellationToken cancellationToken)
+        CancellationToken cancellationToken)
     {
         var progressInfo = new ExportImportProgressInfo { Description = "Importing pages..." };
         var processedCount = 0;
