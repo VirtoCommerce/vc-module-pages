@@ -1,4 +1,6 @@
 using System;
+
+using System.Threading;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,7 +16,7 @@ public class PagesExportImport(IPageDocumentSearchService searchService)
 {
     private const int BatchSize = 50;
 
-    public async Task DoExportAsync(Stream outStream, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+    public async Task DoExportAsync(Stream outStream, Action<ExportImportProgressInfo> progressCallback, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -26,9 +28,9 @@ public class PagesExportImport(IPageDocumentSearchService searchService)
 
         var serializer = new JsonSerializer();
 
-        await jsonWriter.WriteStartObjectAsync();
-        await jsonWriter.WritePropertyNameAsync("Pages");
-        await jsonWriter.WriteStartArrayAsync();
+        await jsonWriter.WriteStartObjectAsync(cancellationToken);
+        await jsonWriter.WritePropertyNameAsync("Pages", cancellationToken);
+        await jsonWriter.WriteStartArrayAsync(cancellationToken);
 
         var criteria = AbstractTypeFactory<PageDocumentSearchCriteria>.TryCreateInstance();
         criteria.Take = BatchSize;
@@ -63,13 +65,13 @@ public class PagesExportImport(IPageDocumentSearchService searchService)
         }
         while (criteria.Skip < totalCount);
 
-        await jsonWriter.WriteEndArrayAsync();
-        await jsonWriter.WriteEndObjectAsync();
+        await jsonWriter.WriteEndArrayAsync(cancellationToken);
+        await jsonWriter.WriteEndObjectAsync(cancellationToken);
 
-        await jsonWriter.FlushAsync();
+        await jsonWriter.FlushAsync(cancellationToken);
     }
 
-    public async Task DoImportAsync(Stream inputStream, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+    public async Task DoImportAsync(Stream inputStream, Action<ExportImportProgressInfo> progressCallback, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -81,7 +83,7 @@ public class PagesExportImport(IPageDocumentSearchService searchService)
 
         var serializer = new JsonSerializer();
 
-        while (await jsonReader.ReadAsync())
+        while (await jsonReader.ReadAsync(cancellationToken))
         {
             if (jsonReader.TokenType != JsonToken.PropertyName)
             {
@@ -101,17 +103,17 @@ public class PagesExportImport(IPageDocumentSearchService searchService)
         JsonTextReader jsonReader,
         JsonSerializer serializer,
         Action<ExportImportProgressInfo> progressCallback,
-        ICancellationToken cancellationToken)
+        CancellationToken cancellationToken)
     {
         var progressInfo = new ExportImportProgressInfo { Description = "Importing pages..." };
         var processedCount = 0;
 
-        await jsonReader.ReadAsync(); // StartArray
+        await jsonReader.ReadAsync(cancellationToken); // StartArray
 
         var batch = new PageDocument[BatchSize];
         var batchIndex = 0;
 
-        while (await jsonReader.ReadAsync())
+        while (await jsonReader.ReadAsync(cancellationToken))
         {
             if (jsonReader.TokenType == JsonToken.EndArray)
             {

@@ -1,4 +1,5 @@
-using System;
+using System;
+using System.Threading;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -89,13 +90,13 @@ public class Module : IModule, IExportSupport, IImportSupport, IHasConfiguration
         // Nothing to do here
     }
 
-    public Task ExportAsync(Stream outStream, ExportImportOptions options, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+    public Task ExportAsync(Stream outStream, ExportImportOptions options, Action<ExportImportProgressInfo> progressCallback, CancellationToken cancellationToken)
     {
         return _appBuilder.ApplicationServices.GetRequiredService<PagesExportImport>()
             .DoExportAsync(outStream, progressCallback, cancellationToken);
     }
 
-    public Task ImportAsync(Stream inputStream, ExportImportOptions options, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+    public Task ImportAsync(Stream inputStream, ExportImportOptions options, Action<ExportImportProgressInfo> progressCallback, CancellationToken cancellationToken)
     {
         return _appBuilder.ApplicationServices.GetRequiredService<PagesExportImport>()
             .DoImportAsync(inputStream, progressCallback, cancellationToken);

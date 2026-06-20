@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -64,15 +65,15 @@ public class PagesExportImportTests
             .ReturnsAsync(new IndexingResult { Items = [] });
 
         var exportImport = new PagesExportImport(_searchServiceMock.Object);
-        var cancellationToken = new Mock<ICancellationToken>();
+        var cancellationToken = CancellationToken.None;
 
         // Export
         using var stream = new MemoryStream();
-        await exportImport.DoExportAsync(stream, _ => { }, cancellationToken.Object);
+        await exportImport.DoExportAsync(stream, _ => { }, cancellationToken);
 
         // Import
         stream.Position = 0;
-        await exportImport.DoImportAsync(stream, _ => { }, cancellationToken.Object);
+        await exportImport.DoImportAsync(stream, _ => { }, cancellationToken);
 
         // Verify
         importedPages.Should().NotBeNull();
@@ -91,10 +92,10 @@ public class PagesExportImportTests
             .ReturnsAsync(new PageDocumentSearchResult { TotalCount = 0, Results = [] });
 
         var exportImport = new PagesExportImport(_searchServiceMock.Object);
-        var cancellationToken = new Mock<ICancellationToken>();
+        var cancellationToken = CancellationToken.None;
 
         using var stream = new MemoryStream();
-        await exportImport.DoExportAsync(stream, _ => { }, cancellationToken.Object);
+        await exportImport.DoExportAsync(stream, _ => { }, cancellationToken);
 
         stream.Position = 0;
         using var reader = new StreamReader(stream);
