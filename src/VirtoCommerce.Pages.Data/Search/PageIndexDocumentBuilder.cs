@@ -37,13 +37,9 @@ public class PageIndexDocumentBuilder(
                         continue;
                     }
 
-                    if (string.IsNullOrWhiteSpace(page.Content))
-                    {
-                        logger.LogWarning("Skipping page '{PageId}' from provider '{ProviderName}': Content is empty",
-                            page.Id, provider.ProviderName);
-                        continue;
-                    }
-
+                    // Pages without content are indexed intentionally: an empty page is still a valid,
+                    // searchable page and must be present in the index (parity with the event-driven path,
+                    // which never filtered on content).
                     var indexDocument = documentConverter.ToIndexDocument(page);
                     result.Add(indexDocument);
                 }

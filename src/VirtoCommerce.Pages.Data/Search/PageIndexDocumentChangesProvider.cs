@@ -63,9 +63,6 @@ public class PageIndexDocumentChangesProvider(
 
         return platformMemoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheEntry =>
         {
-            cacheEntry.AddExpirationToken(PagesCacheRegion.CreateChangeToken());
-            cacheEntry.SetAbsoluteExpiration(TimeSpan.FromMinutes(10));
-
             var criteria = AbstractTypeFactory<PageChangesSearchCriteria>.TryCreateInstance();
             criteria.StartDate = startDate;
             criteria.EndDate = endDate;
@@ -81,6 +78,21 @@ public class PageIndexDocumentChangesProvider(
             }
 
             allChanges.Sort((a, b) => b.ChangeDate.CompareTo(a.ChangeDate));
+
+            // Never cache an empty change list. For a full rebuild the key is ("null","null"); a
+            // scheduled-sync tick that runs against an empty index (no watermark) hits the same key and,
+            // if it runs before the pages are committed, would cache [] for the whole TTL and poison the
+            // real rebuild — completing "successfully" with 0 documents and leaving the index empty.
+            // Only a populated result is worth caching (and it stays invalidatable via PagesCacheRegion).
+            if (allChanges.Count > 0)
+            {
+                cacheEntry.AddExpirationToken(PagesCacheRegion.CreateChangeToken());
+                cacheEntry.SetAbsoluteExpiration(TimeSpan.FromMinutes(10));
+            }
+            else
+            {
+                cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMilliseconds(1);
+            }
 
             return (IList<IndexDocumentChange>)allChanges;
         });
