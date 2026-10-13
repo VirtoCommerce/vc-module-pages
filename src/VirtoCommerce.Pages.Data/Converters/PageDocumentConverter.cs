@@ -39,6 +39,7 @@ public class PageDocumentConverter : IPageDocumentConverter
             : ((object[])userGroupsValue).Cast<string>().ToArray();
         result.StartDate = searchDocument.GetDateSafeOrNull("startdate");
         result.EndDate = searchDocument.GetDateSafeOrNull("enddate");
+        result.TranslationGroupId = (string)searchDocument.GetValueSafe("translationgroupid");
 
         if (result.UserGroups != null && result.UserGroups.Length == 1 && result.UserGroups[0] == Any)
         {
@@ -89,6 +90,11 @@ public class PageDocumentConverter : IPageDocumentConverter
 
         result.AddFilterableDateTime(nameof(pageDocument.StartDate), pageDocument.StartDate ?? DateTime.MinValue);
         result.AddFilterableDateTime(nameof(pageDocument.EndDate), pageDocument.EndDate ?? DateTime.MaxValue);
+
+        if (!string.IsNullOrEmpty(pageDocument.TranslationGroupId))
+        {
+            result.AddFilterableStringAndContentString(nameof(pageDocument.TranslationGroupId), pageDocument.TranslationGroupId);
+        }
 
         return result;
     }
