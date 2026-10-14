@@ -21,6 +21,10 @@
           "title": "Aktivera schemalagd synkronisering",
           "description": "Aktivera/inaktivera periodisk synkronisering av sidor från innehållsleverantörer"
         }
+      },
+      "MissingTranslationBehavior": {
+        "title": "Missing translation",
+        "description": "Page with translations but none in the visitor language: show the default language version (DefaultLanguage) or not found (NotFound)"
       }
     },
     "VirtoCommerce": {

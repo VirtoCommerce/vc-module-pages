@@ -12,4 +12,5 @@ public class PageDocumentSearchCriteria : SearchCriteriaBase
     public PageDocumentStatus? Status { get; set; }
     public DateTime? CertainDate { get; set; }
     public string[] UserGroups { get; set; }
+    public string TranslationGroupId { get; set; }
 }
