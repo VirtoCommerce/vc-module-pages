@@ -1,4 +1,3 @@
 {
-  // Virto Pages of stores (Admin Shell Module Federation remote): widgets on other modules' blades, no menu item
   "remote": { "name": "pages_admin", "exposed": "./Module" }
 }
