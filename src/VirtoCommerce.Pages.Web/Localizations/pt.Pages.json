@@ -21,6 +21,10 @@
           "title": "Ativar sincronização programada",
           "description": "Ativar/desativar a sincronização periódica de páginas de provedores de conteúdo"
         }
+      },
+      "MissingTranslationBehavior": {
+        "title": "Missing translation",
+        "description": "Page with translations but none in the visitor language: show the default language version (DefaultLanguage) or not found (NotFound)"
       }
     },
     "VirtoCommerce": {

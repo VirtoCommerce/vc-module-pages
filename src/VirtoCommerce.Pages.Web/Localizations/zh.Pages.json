@@ -21,6 +21,10 @@
           "title": "启用定时同步",
           "description": "启用/禁用从内容提供商定期同步页面"
         }
+      },
+      "MissingTranslationBehavior": {
+        "title": "Missing translation",
+        "description": "Page with translations but none in the visitor language: show the default language version (DefaultLanguage) or not found (NotFound)"
       }
     },
     "VirtoCommerce": {
