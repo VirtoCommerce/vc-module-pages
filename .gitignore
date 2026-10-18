@@ -337,3 +337,5 @@ ASALocalRun/
 .nuke
 dist/
 **/Properties/launchSettings.json
+# Admin Shell plugin build output (built from src/VirtoCommerce.Pages.Web/vue)
+src/VirtoCommerce.Pages.Web/plugins/

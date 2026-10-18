@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "Pages:create": "إنشاء البيانات المتعلقة بالصفحات",
+    "Pages:read": "عرض البيانات المتعلقة بالصفحات",
+    "Pages:update": "تحديث البيانات المتعلقة بالصفحات",
+    "Pages:delete": "حذف البيانات المتعلقة بالصفحات"
+  },
+  "settings": {
+    "VirtoPages": {
+      "Enable": {
+        "title": "تفعيل Virto Pages",
+        "description": "تفعيل Virto Pages للمتجر أو تعطيلها"
+      },
+      "ScheduledSync": {
+        "Enable": {
+          "title": "تفعيل المزامنة المجدولة",
+          "description": "تفعيل المزامنة الدورية للصفحات من مزوّدي المحتوى أو تعطيلها"
+        }
+      }
+    },
+    "VirtoCommerce": {
+      "Search": {
+        "IndexingJobs": {
+          "IndexationDate": {
+            "Pages": {
+              "title": "تاريخ ووقت فهرسة مستندات الصفحات",
+              "description": "تاريخ ووقت بدء مهمة فهرسة مستندات الصفحات"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "VIRTO_PAGES": {
+    "EMPTY": "暂无页面",
+    "FIELDS": {
+      "LANGUAGE": "语言",
+      "PERMALINK": "永久链接",
+      "STATUS": "状态",
+      "TITLE": "标题"
+    },
+    "SOURCE": "来源",
+    "TOOLBAR": {
+      "REFRESH": "刷新"
+    },
+    "WIDGETS": {
+      "STORE": "Virto 页面"
+    }
+  }
+}

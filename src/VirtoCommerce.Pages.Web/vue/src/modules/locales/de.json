@@ -1,0 +1,18 @@
+{
+  "VIRTO_PAGES": {
+    "EMPTY": "Keine Seiten",
+    "FIELDS": {
+      "LANGUAGE": "Sprache",
+      "PERMALINK": "Perma-Link",
+      "STATUS": "Status",
+      "TITLE": "Titel"
+    },
+    "SOURCE": "Quelle",
+    "TOOLBAR": {
+      "REFRESH": "Aktualisieren"
+    },
+    "WIDGETS": {
+      "STORE": "Virto Seiten"
+    }
+  }
+}
