@@ -1,0 +1,18 @@
+{
+  "VIRTO_PAGES": {
+    "EMPTY": "Inga sidor",
+    "FIELDS": {
+      "LANGUAGE": "Språk",
+      "PERMALINK": "Permalänk",
+      "STATUS": "Status",
+      "TITLE": "Titel"
+    },
+    "SOURCE": "Källa",
+    "TOOLBAR": {
+      "REFRESH": "Uppdatera"
+    },
+    "WIDGETS": {
+      "STORE": "Virto Sidor"
+    }
+  }
+}
