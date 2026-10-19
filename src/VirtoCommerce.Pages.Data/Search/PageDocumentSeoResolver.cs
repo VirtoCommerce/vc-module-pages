@@ -167,7 +167,7 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
         return string.IsNullOrEmpty(languageCode) ||
                string.IsNullOrEmpty(document.CultureName) ||
                IsLanguage(document, languageCode) ||
-               (!string.IsNullOrEmpty(defaultLanguage) && IsLanguage(document, defaultLanguage));
+               IsLanguage(document, defaultLanguage);
     }
 
     private static bool IsLanguage(PageDocument document, string languageCode)
