@@ -35,8 +35,11 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
         if (pagesEnabled)
         {
             var member = await FindMember(criteria.UserId);
-            var files = await FindFiles(criteria, criteria.LanguageCode, member);
-            files = await AddTranslations(criteria, store, member, files);
+            // Every slug (products, categories) comes here first, so the permalink is searched once in every language
+            // and the language filter of the index (language, store default, any) is applied here.
+            var matched = await FindFiles(criteria, member);
+            IList<PageDocument> files = matched.Where(x => IsServedInLanguage(x, criteria.LanguageCode, store.DefaultLanguage)).ToList();
+            files = await AddTranslations(criteria, store, member, files, matched);
 
             return files
                 .DistinctBy(x => x.Id)
@@ -68,14 +71,17 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
     /// A visitor who switches language keeps the permalink of the previous language. When the permalink belongs to a page
     /// with translations, the version in the requested language is added; its own permalink lets the storefront move to it.
     /// </summary>
-    protected virtual async Task<IList<PageDocument>> AddTranslations(SeoSearchCriteria criteria, Store store, Member member, IList<PageDocument> files)
+    /// <param name="files">Documents with the permalink served in the requested language.</param>
+    /// <param name="matched">Documents with the permalink in any language.</param>
+    protected virtual async Task<IList<PageDocument>> AddTranslations(SeoSearchCriteria criteria, Store store, Member member,
+        IList<PageDocument> files, IList<PageDocument> matched)
     {
         if (string.IsNullOrEmpty(criteria.LanguageCode) || files.Any(x => IsLanguage(x, criteria.LanguageCode)))
         {
             return files;
         }
 
-        var groupIds = (await FindFiles(criteria, languageCode: null, member))
+        var groupIds = matched
             .Select(x => x.TranslationGroupId)
             .Where(x => !string.IsNullOrEmpty(x))
             .Distinct()
@@ -105,17 +111,23 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
             return files.Where(x => !groupIds.Contains(x.TranslationGroupId)).ToList();
         }
 
-        return [.. files, .. translations.Where(x => IsLanguage(x, store.DefaultLanguage))];
+        var defaultLanguage = translations.Where(x => IsLanguage(x, store.DefaultLanguage)).ToList();
+        if (defaultLanguage.Count > 0)
+        {
+            return [.. files, .. defaultLanguage];
+        }
+
+        // No version in the default language either: the page is served in the language its permalink belongs to.
+        return [.. files, .. matched.Where(x => groupIds.Contains(x.TranslationGroupId))];
     }
 
-    private async Task<IList<PageDocument>> FindFiles(SeoSearchCriteria criteria, string languageCode, Member member)
+    private async Task<IList<PageDocument>> FindFiles(SeoSearchCriteria criteria, Member member)
     {
         var permalink = criteria.Permalink?.StartsWith('/') ?? false
             ? criteria.Permalink
             : $"/{criteria.Permalink}";
 
         var searchCriteria = CreateSearchCriteria(criteria, member);
-        searchCriteria.LanguageCode = languageCode;
         searchCriteria.Permalink = permalink;
         searchCriteria.Skip = criteria.Skip;
         searchCriteria.Take = criteria.Take;
@@ -147,6 +159,15 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
         }
 
         return searchCriteria;
+    }
+
+    // Same as the language filter of the index: a document for any language, the requested one or the store default.
+    private static bool IsServedInLanguage(PageDocument document, string languageCode, string defaultLanguage)
+    {
+        return string.IsNullOrEmpty(languageCode) ||
+               string.IsNullOrEmpty(document.CultureName) ||
+               IsLanguage(document, languageCode) ||
+               (!string.IsNullOrEmpty(defaultLanguage) && IsLanguage(document, defaultLanguage));
     }
 
     private static bool IsLanguage(PageDocument document, string languageCode)

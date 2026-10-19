@@ -89,6 +89,33 @@ public class PageDocumentSeoResolverTranslationTests
         Assert.DoesNotContain(search.Requests, x => x.TranslationGroupId != null);
     }
 
+    [Fact]
+    public async Task FindSeoAsync_NotAPage_SearchesTheIndexOnce()
+    {
+        // Every slug (products, categories) goes through the page resolver first.
+        var search = new FakePageDocumentSearchService(Documents);
+
+        var result = await CreateResolver(search: search).FindSeoAsync(Criteria("some-product", "nl-NL"));
+
+        Assert.Empty(result);
+        Assert.Single(search.Requests);
+    }
+
+    [Fact]
+    public async Task FindSeoAsync_NoTranslationAndNoDefaultLanguageVersion_ReturnsMatchedVersion()
+    {
+        var search = new FakePageDocumentSearchService(
+        [
+            Page("contact-nl", "nl-NL", "/contact-opnemen", "contact"),
+            Page("contact-fr", "fr-FR", "/nous-contacter", "contact"),
+        ]);
+
+        var result = await CreateResolver(search: search).FindSeoAsync(Criteria("contact-opnemen", "de-DE"));
+
+        var info = Assert.Single(result);
+        Assert.Equal(("nl-NL", "/contact-opnemen"), (info.LanguageCode, info.SemanticUrl));
+    }
+
     private static SeoSearchCriteria Criteria(string permalink, string languageCode)
     {
         return new SeoSearchCriteria { StoreId = StoreId, Permalink = permalink, LanguageCode = languageCode, Take = 20 };

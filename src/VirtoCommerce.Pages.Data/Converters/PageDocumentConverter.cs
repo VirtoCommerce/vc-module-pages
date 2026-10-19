@@ -93,7 +93,7 @@ public class PageDocumentConverter : IPageDocumentConverter
 
         if (!string.IsNullOrEmpty(pageDocument.TranslationGroupId))
         {
-            result.AddFilterableStringAndContentString(nameof(pageDocument.TranslationGroupId), pageDocument.TranslationGroupId);
+            result.AddFilterableString(nameof(pageDocument.TranslationGroupId), pageDocument.TranslationGroupId);
         }
 
         return result;

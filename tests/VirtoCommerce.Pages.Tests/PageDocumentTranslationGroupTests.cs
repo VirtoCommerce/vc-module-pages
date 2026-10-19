@@ -26,6 +26,15 @@ public class PageDocumentTranslationGroupTests
     }
 
     [Fact]
+    public void ToIndexDocument_TranslationGroup_IsNotSearchableText()
+    {
+        var document = new PageDocumentConverter().ToIndexDocument(CreatePage("group-1"));
+
+        Assert.DoesNotContain(document.Fields, x => x.Name != nameof(PageDocument.TranslationGroupId) &&
+            (Equals(x.Value, "group-1") || x.Values?.Contains("group-1") == true));
+    }
+
+    [Fact]
     public void ToIndexDocument_WithoutTranslationGroup_DoesNotIndexField()
     {
         var document = new PageDocumentConverter().ToIndexDocument(CreatePage(null));
