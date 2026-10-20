@@ -91,44 +91,15 @@ public class PageDocumentSeoResolverTranslationTests
     }
 
     [Fact]
-    public async Task FindSeoAsync_NotAPage_DoesNotLookForTranslations()
+    public async Task FindSeoAsync_NotAPage_SearchesTheIndexOnce()
     {
-        // Every slug (products, categories) goes through the page resolver first: the language search and the search in
-        // every language, never a translation search.
+        // Every slug (products, categories) goes through the page resolver first.
         var search = new FakePageDocumentSearchService(Documents);
 
         var result = await CreateResolver(search: search).FindSeoAsync(Criteria("some-product", "nl-NL"));
 
         Assert.Empty(result);
-        Assert.Equal(["nl-NL", null], search.Requests.Select(x => x.LanguageCode));
-        Assert.All(search.Requests, x => Assert.Null(x.TranslationGroupIds));
-    }
-
-    [Fact]
-    public async Task FindSeoAsync_LanguageFilter_GoesThroughSearchCriteria()
-    {
-        // The language filter is applied by PageSearchRequestBuilder.GetFilters, so its overrides keep working.
-        var search = new FakePageDocumentSearchService(Documents);
-
-        await CreateResolver(search: search).FindSeoAsync(Criteria("faq", "nl-NL"));
-
-        var first = search.Requests[0];
-        Assert.Equal(("/faq", "nl-NL"), (first.Permalink, first.LanguageCode));
-        Assert.DoesNotContain(search.Requests, x => x.Permalink != null && x.LanguageCode == null);
-    }
-
-    [Fact]
-    public async Task FindSeoAsync_NothingInRequestedLanguage_SearchesPermalinkInEveryLanguage()
-    {
-        var search = new FakePageDocumentSearchService(Documents);
-
-        var result = await CreateResolver(search: search).FindSeoAsync(Criteria("veelgestelde-vragen", "en-US"));
-
-        Assert.Equal(["/faq"], result.Select(x => x.SemanticUrl));
-        Assert.Equal(3, search.Requests.Count);
-        Assert.Equal(("/veelgestelde-vragen", "en-US"), (search.Requests[0].Permalink, search.Requests[0].LanguageCode));
-        Assert.Equal(("/veelgestelde-vragen", null), (search.Requests[1].Permalink, search.Requests[1].LanguageCode));
-        Assert.Equal([GroupId], search.Requests[2].TranslationGroupIds);
+        Assert.Single(search.Requests);
     }
 
     [Fact]
