@@ -29,5 +29,11 @@ public class PageDocument : IEntity, IAuditable
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
 
+    /// <summary>
+    /// Shared by documents that are translations of the same page (one per culture). Optional: sources without
+    /// translations leave it empty.
+    /// </summary>
+    public string TranslationGroupId { get; set; }
+
     // metadata??
 }

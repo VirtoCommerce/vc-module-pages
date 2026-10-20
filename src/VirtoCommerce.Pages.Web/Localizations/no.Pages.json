@@ -21,6 +21,10 @@
           "title": "Aktiver planlagt synkronisering",
           "description": "Aktiver/deaktiver periodisk synkronisering av sider fra innholdsleverandører"
         }
+      },
+      "MissingTranslationBehavior": {
+        "title": "Manglende oversettelse",
+        "description": "Side med oversettelser, men uten versjon på besøkendes språk: vis versjonen på standardspråket (DefaultLanguage) eller «ikke funnet» (NotFound)"
       }
     },
     "VirtoCommerce": {

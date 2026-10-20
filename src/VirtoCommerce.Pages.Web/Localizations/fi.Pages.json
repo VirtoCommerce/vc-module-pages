@@ -21,6 +21,10 @@
           "title": "Ota ajastettu synkronointi käyttöön",
           "description": "Ota käyttöön/poista käytöstä sivujen säännöllinen synkronointi sisällöntarjoajilta"
         }
+      },
+      "MissingTranslationBehavior": {
+        "title": "Puuttuva käännös",
+        "description": "Sivulla on käännöksiä, mutta ei versiota vierailijan kielellä: näytä oletuskielinen versio (DefaultLanguage) tai ”ei löytynyt” (NotFound)"
       }
     },
     "VirtoCommerce": {

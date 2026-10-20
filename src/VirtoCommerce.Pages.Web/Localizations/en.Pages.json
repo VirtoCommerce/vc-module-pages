@@ -21,6 +21,10 @@
           "title": "Enable Scheduled Sync",
           "description": "Enable/disable periodic synchronization of pages from content providers"
         }
+      },
+      "MissingTranslationBehavior": {
+        "title": "Missing translation",
+        "description": "Page with translations but none in the visitor language: show the default language version (DefaultLanguage) or not found (NotFound)"
       }
     },
     "VirtoCommerce": {
