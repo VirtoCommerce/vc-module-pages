@@ -59,17 +59,17 @@ public class PageDocumentTranslationGroupTests
     }
 
     [Fact]
-    public async Task BuildRequestAsync_WithTranslationGroup_AddsTermFilter()
+    public async Task BuildRequestAsync_WithTranslationGroups_AddsSingleTermFilter()
     {
         var builder = new PageSearchRequestBuilder(new SearchPhraseParser(new NullLogger<SearchPhraseParser>()), Mock.Of<IStoreService>());
-        var criteria = new PageDocumentSearchCriteria { TranslationGroupId = "group-1", Visibility = PageDocumentVisibility.Private };
+        var criteria = new PageDocumentSearchCriteria { TranslationGroupIds = ["group-1", "group-2"], Visibility = PageDocumentVisibility.Private };
 
         var request = await builder.BuildRequestAsync(criteria);
 
         // A single filter is not wrapped into an AndFilter.
         var filters = request.Filter is AndFilter and ? and.ChildFilters : [request.Filter];
         var term = filters.OfType<TermFilter>().Single(x => x.FieldName == nameof(PageDocument.TranslationGroupId));
-        Assert.Equal(["group-1"], term.Values);
+        Assert.Equal(["group-1", "group-2"], term.Values);
     }
 
     private static PageDocument CreatePage(string translationGroupId)

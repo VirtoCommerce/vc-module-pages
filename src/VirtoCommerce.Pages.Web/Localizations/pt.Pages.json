@@ -23,8 +23,8 @@
         }
       },
       "MissingTranslationBehavior": {
-        "title": "Missing translation",
-        "description": "Page with translations but none in the visitor language: show the default language version (DefaultLanguage) or not found (NotFound)"
+        "title": "Tradução em falta",
+        "description": "Página com traduções, mas sem versão no idioma do visitante: mostrar a versão no idioma padrão (DefaultLanguage) ou «não encontrada» (NotFound)"
       }
     },
     "VirtoCommerce": {

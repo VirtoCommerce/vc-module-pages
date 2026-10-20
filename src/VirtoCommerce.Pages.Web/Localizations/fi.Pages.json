@@ -23,8 +23,8 @@
         }
       },
       "MissingTranslationBehavior": {
-        "title": "Missing translation",
-        "description": "Page with translations but none in the visitor language: show the default language version (DefaultLanguage) or not found (NotFound)"
+        "title": "Puuttuva käännös",
+        "description": "Sivulla on käännöksiä, mutta ei versiota vierailijan kielellä: näytä oletuskielinen versio (DefaultLanguage) tai ”ei löytynyt” (NotFound)"
       }
     },
     "VirtoCommerce": {

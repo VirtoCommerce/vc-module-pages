@@ -23,8 +23,8 @@
         }
       },
       "MissingTranslationBehavior": {
-        "title": "Missing translation",
-        "description": "Page with translations but none in the visitor language: show the default language version (DefaultLanguage) or not found (NotFound)"
+        "title": "缺少翻译",
+        "description": "页面有翻译，但没有访问者语言的版本：显示默认语言版本 (DefaultLanguage) 或“未找到” (NotFound)"
       }
     },
     "VirtoCommerce": {

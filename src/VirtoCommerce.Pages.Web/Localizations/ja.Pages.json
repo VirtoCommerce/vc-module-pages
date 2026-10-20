@@ -23,8 +23,8 @@
         }
       },
       "MissingTranslationBehavior": {
-        "title": "Missing translation",
-        "description": "Page with translations but none in the visitor language: show the default language version (DefaultLanguage) or not found (NotFound)"
+        "title": "翻訳がない場合",
+        "description": "翻訳があるが訪問者の言語のバージョンがないページ: 既定の言語のバージョンを表示する (DefaultLanguage) か、「見つかりません」とする (NotFound)"
       }
     },
     "VirtoCommerce": {

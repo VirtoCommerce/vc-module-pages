@@ -86,19 +86,98 @@ public class PageDocumentSeoResolverTranslationTests
         var result = await CreateResolver(search: search).FindSeoAsync(Criteria("faq", "en-US"));
 
         Assert.Equal(["/faq"], result.Select(x => x.SemanticUrl));
-        Assert.DoesNotContain(search.Requests, x => x.TranslationGroupId != null);
+        var request = Assert.Single(search.Requests);
+        Assert.Null(request.TranslationGroupIds);
     }
 
     [Fact]
-    public async Task FindSeoAsync_NotAPage_SearchesTheIndexOnce()
+    public async Task FindSeoAsync_NotAPage_DoesNotLookForTranslations()
     {
-        // Every slug (products, categories) goes through the page resolver first.
+        // Every slug (products, categories) goes through the page resolver first: the language search and the search in
+        // every language, never a translation search.
         var search = new FakePageDocumentSearchService(Documents);
 
         var result = await CreateResolver(search: search).FindSeoAsync(Criteria("some-product", "nl-NL"));
 
         Assert.Empty(result);
-        Assert.Single(search.Requests);
+        Assert.Equal(["nl-NL", null], search.Requests.Select(x => x.LanguageCode));
+        Assert.All(search.Requests, x => Assert.Null(x.TranslationGroupIds));
+    }
+
+    [Fact]
+    public async Task FindSeoAsync_LanguageFilter_GoesThroughSearchCriteria()
+    {
+        // The language filter is applied by PageSearchRequestBuilder.GetFilters, so its overrides keep working.
+        var search = new FakePageDocumentSearchService(Documents);
+
+        await CreateResolver(search: search).FindSeoAsync(Criteria("faq", "nl-NL"));
+
+        var first = search.Requests[0];
+        Assert.Equal(("/faq", "nl-NL"), (first.Permalink, first.LanguageCode));
+        Assert.DoesNotContain(search.Requests, x => x.Permalink != null && x.LanguageCode == null);
+    }
+
+    [Fact]
+    public async Task FindSeoAsync_NothingInRequestedLanguage_SearchesPermalinkInEveryLanguage()
+    {
+        var search = new FakePageDocumentSearchService(Documents);
+
+        var result = await CreateResolver(search: search).FindSeoAsync(Criteria("veelgestelde-vragen", "en-US"));
+
+        Assert.Equal(["/faq"], result.Select(x => x.SemanticUrl));
+        Assert.Equal(3, search.Requests.Count);
+        Assert.Equal(("/veelgestelde-vragen", "en-US"), (search.Requests[0].Permalink, search.Requests[0].LanguageCode));
+        Assert.Equal(("/veelgestelde-vragen", null), (search.Requests[1].Permalink, search.Requests[1].LanguageCode));
+        Assert.Equal([GroupId], search.Requests[2].TranslationGroupIds);
+    }
+
+    [Fact]
+    public async Task FindSeoAsync_SeveralTranslationGroups_SearchesTranslationsOnce()
+    {
+        // The same permalink is used by two different pages in other languages.
+        var search = new FakePageDocumentSearchService(
+        [
+            Page("news-nl", "nl-NL", "/nieuws", "news"),
+            Page("blog-fr", "fr-FR", "/nieuws", "blog"),
+            Page("news-de", "de-DE", "/nachrichten", "news"),
+        ]);
+
+        var result = await CreateResolver(search: search).FindSeoAsync(Criteria("nieuws", "de-DE"));
+
+        var info = Assert.Single(result);
+        Assert.Equal(("de-DE", "/nachrichten"), (info.LanguageCode, info.SemanticUrl));
+        var request = Assert.Single(search.Requests, x => x.TranslationGroupIds != null);
+        Assert.Equal(["blog", "news"], request.TranslationGroupIds.Order());
+    }
+
+    [Fact]
+    public async Task FindSeoAsync_SeveralTranslationsInOneLanguage_ReturnsLatestModified()
+    {
+        var older = Page("faq-nl-1", "nl-NL", "/veelgestelde-vragen", GroupId);
+        older.ModifiedDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        var newer = Page("faq-nl-2", "nl-NL", "/vragen", GroupId);
+        newer.ModifiedDate = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);
+        var search = new FakePageDocumentSearchService([older, newer, Page("en", "en-US", "/faq", GroupId)]);
+
+        var result = await CreateResolver(search: search).FindSeoAsync(Criteria("faq", "nl-NL"));
+
+        Assert.Equal(["en-US:/faq", "nl-NL:/vragen"], result.Select(x => $"{x.LanguageCode}:{x.SemanticUrl}"));
+    }
+
+    [Fact]
+    public async Task FindSeoAsync_SeveralTranslationsInOneLanguageWithSameDate_ReturnsFirstById()
+    {
+        var date = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        var search = new FakePageDocumentSearchService(
+        [
+            Page("faq-nl-b", "nl-NL", "/vragen-b", GroupId, date),
+            Page("faq-nl-a", "nl-NL", "/vragen-a", GroupId, date),
+            Page("en", "en-US", "/faq", GroupId),
+        ]);
+
+        var result = await CreateResolver(search: search).FindSeoAsync(Criteria("faq", "nl-NL"));
+
+        Assert.Equal(["en-US:/faq", "nl-NL:/vragen-a"], result.Select(x => $"{x.LanguageCode}:{x.SemanticUrl}"));
     }
 
     [Fact]
@@ -121,7 +200,8 @@ public class PageDocumentSeoResolverTranslationTests
         return new SeoSearchCriteria { StoreId = StoreId, Permalink = permalink, LanguageCode = languageCode, Take = 20 };
     }
 
-    private static PageDocument Page(string id, string cultureName, string permalink, string translationGroupId)
+    private static PageDocument Page(string id, string cultureName, string permalink, string translationGroupId,
+        DateTime? createdDate = null)
     {
         return new PageDocument
         {
@@ -131,7 +211,7 @@ public class PageDocumentSeoResolverTranslationTests
             Permalink = permalink,
             TranslationGroupId = translationGroupId,
             Status = PageDocumentStatus.Published,
-            CreatedDate = DateTime.UtcNow,
+            CreatedDate = createdDate ?? DateTime.UtcNow,
         };
     }
 
@@ -179,7 +259,7 @@ public class PageDocumentSeoResolverTranslationTests
 
             var results = documents
                 .Where(x => criteria.Permalink == null || x.Permalink == criteria.Permalink)
-                .Where(x => criteria.TranslationGroupId == null || x.TranslationGroupId == criteria.TranslationGroupId)
+                .Where(x => criteria.TranslationGroupIds == null || criteria.TranslationGroupIds.Contains(x.TranslationGroupId))
                 .Where(x => criteria.LanguageCode == null || x.CultureName == criteria.LanguageCode || x.CultureName == "en-US")
                 .ToList();
 

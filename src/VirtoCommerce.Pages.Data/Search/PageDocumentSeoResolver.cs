@@ -35,11 +35,9 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
         if (pagesEnabled)
         {
             var member = await FindMember(criteria.UserId);
-            // Every slug (products, categories) comes here first, so the permalink is searched once in every language
-            // and the language filter of the index (language, store default, any) is applied here.
-            var matched = await FindFiles(criteria, member);
-            IList<PageDocument> files = matched.Where(x => IsServedInLanguage(x, criteria.LanguageCode, store.DefaultLanguage)).ToList();
-            files = await AddTranslations(criteria, store, member, files, matched);
+            // The language filter of the index (language, store default, any) is applied as before translation groups.
+            var files = await FindFiles(criteria, criteria.LanguageCode, member);
+            files = await AddTranslations(criteria, store, member, files);
 
             return files
                 .DistinctBy(x => x.Id)
@@ -71,15 +69,21 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
     /// A visitor who switches language keeps the permalink of the previous language. When the permalink belongs to a page
     /// with translations, the version in the requested language is added; its own permalink lets the storefront move to it.
     /// </summary>
-    /// <param name="files">Documents with the permalink served in the requested language.</param>
-    /// <param name="matched">Documents with the permalink in any language.</param>
+    /// <param name="files">Documents with the permalink served in the requested language (language, store default, any).</param>
     protected virtual async Task<IList<PageDocument>> AddTranslations(SeoSearchCriteria criteria, Store store, Member member,
-        IList<PageDocument> files, IList<PageDocument> matched)
+        IList<PageDocument> files)
     {
         if (string.IsNullOrEmpty(criteria.LanguageCode) || files.Any(x => IsLanguage(x, criteria.LanguageCode)))
         {
             return files;
         }
+
+        // Nothing found in the requested language, store default or any: the permalink may belong to another language
+        // version of the page, so it is searched in every language. Slugs that are not pages (products, categories) pay
+        // for this second search too.
+        var matched = files.Count > 0
+            ? files
+            : await FindFiles(criteria, languageCode: null, member);
 
         var groupIds = matched
             .Select(x => x.TranslationGroupId)
@@ -92,13 +96,9 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
             return files;
         }
 
-        var translations = new List<PageDocument>();
-        foreach (var groupId in groupIds)
-        {
-            translations.AddRange(await FindTranslations(criteria, groupId, member));
-        }
+        var translations = await FindTranslations(criteria, groupIds, member);
 
-        var requested = translations.Where(x => IsLanguage(x, criteria.LanguageCode)).ToList();
+        var requested = OnePerLanguage(translations.Where(x => IsLanguage(x, criteria.LanguageCode)));
         if (requested.Count > 0)
         {
             return [.. files, .. requested];
@@ -111,23 +111,24 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
             return files.Where(x => !groupIds.Contains(x.TranslationGroupId)).ToList();
         }
 
-        var defaultLanguage = translations.Where(x => IsLanguage(x, store.DefaultLanguage)).ToList();
+        var defaultLanguage = OnePerLanguage(translations.Where(x => IsLanguage(x, store.DefaultLanguage)));
         if (defaultLanguage.Count > 0)
         {
             return [.. files, .. defaultLanguage];
         }
 
         // No version in the default language either: the page is served in the language its permalink belongs to.
-        return [.. files, .. matched.Where(x => groupIds.Contains(x.TranslationGroupId))];
+        return [.. files, .. OnePerLanguage(matched.Where(x => groupIds.Contains(x.TranslationGroupId)))];
     }
 
-    private async Task<IList<PageDocument>> FindFiles(SeoSearchCriteria criteria, Member member)
+    private async Task<IList<PageDocument>> FindFiles(SeoSearchCriteria criteria, string languageCode, Member member)
     {
         var permalink = criteria.Permalink?.StartsWith('/') ?? false
             ? criteria.Permalink
             : $"/{criteria.Permalink}";
 
         var searchCriteria = CreateSearchCriteria(criteria, member);
+        searchCriteria.LanguageCode = languageCode;
         searchCriteria.Permalink = permalink;
         searchCriteria.Skip = criteria.Skip;
         searchCriteria.Take = criteria.Take;
@@ -135,16 +136,23 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
         return await searchService.SearchAllNoCloneAsync(searchCriteria);
     }
 
-    private async Task<IList<PageDocument>> FindTranslations(SeoSearchCriteria criteria, string translationGroupId, Member member)
+    /// <summary>
+    /// Versions of the pages in the given translation groups, in one index search, in the requested language, the store
+    /// default language or any.
+    /// </summary>
+    protected virtual async Task<IList<PageDocument>> FindTranslations(SeoSearchCriteria criteria, IList<string> translationGroupIds, Member member)
     {
         var searchCriteria = CreateSearchCriteria(criteria, member);
-        searchCriteria.TranslationGroupId = translationGroupId;
+        searchCriteria.LanguageCode = criteria.LanguageCode;
+        searchCriteria.TranslationGroupIds = translationGroupIds;
 
         return await searchService.SearchAllNoCloneAsync(searchCriteria);
     }
 
-    // Only documents the visitor may see right now: published, in date range, matching visibility and organization.
-    private static PageDocumentSearchCriteria CreateSearchCriteria(SeoSearchCriteria criteria, Member member)
+    /// <summary>
+    /// Only documents the visitor may see right now: published, in date range, matching visibility and organization.
+    /// </summary>
+    protected virtual PageDocumentSearchCriteria CreateSearchCriteria(SeoSearchCriteria criteria, Member member)
     {
         var searchCriteria = AbstractTypeFactory<PageDocumentSearchCriteria>.TryCreateInstance();
         searchCriteria.StoreId = criteria.StoreId;
@@ -161,13 +169,16 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
         return searchCriteria;
     }
 
-    // Same as the language filter of the index: a document for any language, the requested one or the store default.
-    private static bool IsServedInLanguage(PageDocument document, string languageCode, string defaultLanguage)
+    // Uniqueness of (translation group, language) is not guaranteed by the index: the latest modified version wins.
+    private static List<PageDocument> OnePerLanguage(IEnumerable<PageDocument> documents)
     {
-        return string.IsNullOrEmpty(languageCode) ||
-               string.IsNullOrEmpty(document.CultureName) ||
-               IsLanguage(document, languageCode) ||
-               IsLanguage(document, defaultLanguage);
+        return documents
+            .GroupBy(x => x.CultureName, StringComparer.OrdinalIgnoreCase)
+            .Select(x => x
+                .OrderByDescending(document => document.ModifiedDate ?? document.CreatedDate)
+                .ThenBy(document => document.Id, StringComparer.Ordinal)
+                .First())
+            .ToList();
     }
 
     private static bool IsLanguage(PageDocument document, string languageCode)

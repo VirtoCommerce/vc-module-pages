@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Pages.Core.Models;
@@ -12,5 +13,5 @@ public class PageDocumentSearchCriteria : SearchCriteriaBase
     public PageDocumentStatus? Status { get; set; }
     public DateTime? CertainDate { get; set; }
     public string[] UserGroups { get; set; }
-    public string TranslationGroupId { get; set; }
+    public IList<string> TranslationGroupIds { get; set; }
 }

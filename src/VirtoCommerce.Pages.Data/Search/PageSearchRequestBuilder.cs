@@ -77,9 +77,13 @@ namespace VirtoCommerce.Pages.Data.Search
                 result.Add(CreateTermFilter(nameof(PageDocument.Status), criteria.Status.ToString()));
             }
 
-            if (!string.IsNullOrEmpty(criteria.TranslationGroupId))
+            if (criteria.TranslationGroupIds?.Any() == true)
             {
-                result.Add(CreateTermFilter(nameof(PageDocument.TranslationGroupId), criteria.TranslationGroupId));
+                result.Add(new TermFilter
+                {
+                    FieldName = nameof(PageDocument.TranslationGroupId),
+                    Values = criteria.TranslationGroupIds,
+                });
             }
 
             await AddLanguageFilter(criteria, result);
