@@ -33,8 +33,7 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
         var pagesEnabled = store.Settings.GetValue<bool>(ModuleConstants.Settings.General.Enable);
         if (pagesEnabled)
         {
-            return (await FindFiles(criteria))
-                .DistinctBy(x => x.Id)
+            return OrderBySpecificity((await FindFiles(criteria)).DistinctBy(x => x.Id))
                 .Select(x =>
                 {
                     var info = AbstractTypeFactory<SeoInfo>.TryCreateInstance();
@@ -52,11 +51,25 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
                     info.CreatedDate = x.CreatedDate;
                     return info;
                 })
-                .OrderBy(x => x.LanguageCode)
                 .ToList();
         }
 
         return [];
+    }
+
+    // Several published pages can share a permalink, for different audiences or periods. The SEO module picks one
+    // by store, organization and language and keeps this order among equal candidates, so the more specific page
+    // goes first: one for the visitor's organization, then one for their user groups, then one for registered
+    // users only; on a tie, the most recently changed page.
+    protected virtual IEnumerable<PageDocument> OrderBySpecificity(IEnumerable<PageDocument> pages)
+    {
+        return pages
+            .OrderBy(x => x.CultureName)
+            .ThenByDescending(x => !x.OrganizationId.IsNullOrEmpty())
+            .ThenByDescending(x => x.UserGroups is { Length: > 0 })
+            .ThenByDescending(x => x.Visibility == PageDocumentVisibility.Private)
+            .ThenByDescending(x => x.ModifiedDate ?? x.CreatedDate)
+            .ThenBy(x => x.Id, StringComparer.Ordinal);
     }
 
     private async Task<IList<PageDocument>> FindFiles(SeoSearchCriteria criteria)
@@ -74,6 +87,8 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
         searchCriteria.CertainDate = DateTime.UtcNow;
         searchCriteria.Status = PageDocumentStatus.Published;
         searchCriteria.OrganizationId = criteria.OrganizationId;
+        // A visitor without an organization must not get pages made for one.
+        searchCriteria.FilterByOrganization = true;
 
         var member = await FindMember(criteria.UserId);
 
