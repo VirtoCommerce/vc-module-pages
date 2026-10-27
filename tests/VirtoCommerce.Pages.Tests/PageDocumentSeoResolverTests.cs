@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using Moq;
+using VirtoCommerce.CustomerModule.Core.Model;
 using VirtoCommerce.CustomerModule.Core.Services;
 using VirtoCommerce.Pages.Core;
 using VirtoCommerce.Pages.Core.Models;
@@ -46,6 +47,35 @@ public class PageDocumentSeoResolverTests
         var resolver = CreateResolver([], criteria => searched = criteria);
 
         await resolver.FindSeoAsync(new SeoSearchCriteria { StoreId = StoreId, Permalink = "/about" });
+
+        searched.Should().NotBeNull();
+        searched.UserGroups.Should().BeEmpty();
+        searched.Visibility.Should().Be(PageDocumentVisibility.Public);
+    }
+
+    [Fact]
+    public async Task FindSeoAsync_SignedInContact_AsksForPagesForTheirUserGroupsAndRegisteredUsers()
+    {
+        PageDocumentSearchCriteria searched = null;
+        var user = new ApplicationUser { Id = "user", MemberId = "contact" };
+        var contact = new Contact { Id = "contact", Groups = ["vip"] };
+        var resolver = CreateResolver([], criteria => searched = criteria, user, contact);
+
+        await resolver.FindSeoAsync(new SeoSearchCriteria { StoreId = StoreId, Permalink = "/about", UserId = "user" });
+
+        searched.Should().NotBeNull();
+        searched.UserGroups.Should().Equal("vip");
+        searched.Visibility.Should().Be(PageDocumentVisibility.Private);
+    }
+
+    [Fact]
+    public async Task FindSeoAsync_SignedInUserWithoutContact_IsTreatedAsAnonymous()
+    {
+        PageDocumentSearchCriteria searched = null;
+        var user = new ApplicationUser { Id = "user", MemberId = "missing" };
+        var resolver = CreateResolver([], criteria => searched = criteria, user);
+
+        await resolver.FindSeoAsync(new SeoSearchCriteria { StoreId = StoreId, Permalink = "/about", UserId = "user" });
 
         searched.Should().NotBeNull();
         searched.UserGroups.Should().BeEmpty();
@@ -142,7 +172,9 @@ public class PageDocumentSeoResolverTests
 
     private static PageDocumentSeoResolver CreateResolver(
         IList<PageDocument> pages,
-        Action<PageDocumentSearchCriteria> onSearch = null)
+        Action<PageDocumentSearchCriteria> onSearch = null,
+        ApplicationUser user = null,
+        Member member = null)
     {
         var searchService = new Mock<IPageDocumentSearchService>();
         searchService
@@ -169,13 +201,18 @@ public class PageDocumentSeoResolverTests
 
         var userManager = new Mock<UserManager<ApplicationUser>>(
             Mock.Of<IUserStore<ApplicationUser>>(), null, null, null, null, null, null, null, null);
-        userManager.Setup(x => x.Users).Returns(new List<ApplicationUser>().AsQueryable());
+        userManager.Setup(x => x.Users).Returns((user == null ? new List<ApplicationUser>() : [user]).AsQueryable());
+
+        var memberService = new Mock<IMemberService>();
+        memberService
+            .Setup(x => x.GetByIdAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+            .ReturnsAsync((string id, string _, string _) => member != null && member.Id == id ? member : null);
 
         return new PageDocumentSeoResolver(
             searchService.Object,
             () => userManager.Object,
             storeService.Object,
-            Mock.Of<IMemberService>());
+            memberService.Object);
     }
 
     private static async Task<IList<string>> GetOrganizationFilterValues(PageDocumentSearchCriteria criteria)
