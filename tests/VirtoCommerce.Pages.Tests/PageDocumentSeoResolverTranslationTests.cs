@@ -12,6 +12,7 @@ using VirtoCommerce.Pages.Data.Search;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.SearchModule.Core.Model;
+using VirtoCommerce.Seo.Core.Extensions;
 using VirtoCommerce.Seo.Core.Models;
 using VirtoCommerce.StoreModule.Core.Model;
 using VirtoCommerce.StoreModule.Core.Services;
@@ -163,7 +164,46 @@ public class PageDocumentSeoResolverTranslationTests
         var result = await CreateResolver(search: search).FindSeoAsync(Criteria("contact-opnemen", "de-DE"));
 
         var info = Assert.Single(result);
-        Assert.Equal(("nl-NL", "/contact-opnemen"), (info.LanguageCode, info.SemanticUrl));
+        Assert.Equal(("contact-nl", "/contact-opnemen"), (info.ObjectId, info.SemanticUrl));
+        // Neither the requested nor the store default language: reported for any language, so x-api does not drop it.
+        Assert.Null(info.LanguageCode);
+        Assert.Same(info, result.GetBestMatchingSeoInfo(StoreId, "en-US", "de-DE"));
+    }
+
+    [Fact]
+    public async Task FindSeoAsync_AnonymousAndTranslationForAGroup_ReturnsDefaultLanguageVersion()
+    {
+        var restricted = Page("nl", "nl-NL", "/veelgestelde-vragen", GroupId);
+        restricted.UserGroups = ["vip"];
+        var search = new FakePageDocumentSearchService([restricted, Page("en", "en-US", "/faq", GroupId)]);
+
+        var ownPermalink = await CreateResolver(search: search).FindSeoAsync(Criteria("veelgestelde-vragen", "nl-NL"));
+        var defaultPermalink = await CreateResolver(search: search).FindSeoAsync(Criteria("faq", "nl-NL"));
+
+        Assert.Equal(["en-US:/faq"], ownPermalink.Select(x => $"{x.LanguageCode}:{x.SemanticUrl}"));
+        Assert.Equal(["en-US:/faq"], defaultPermalink.Select(x => $"{x.LanguageCode}:{x.SemanticUrl}"));
+    }
+
+    [Fact]
+    public async Task FindSeoAsync_AnonymousAndPrivateTranslation_ReturnsDefaultLanguageVersion()
+    {
+        var restricted = Page("nl", "nl-NL", "/veelgestelde-vragen", GroupId);
+        restricted.Visibility = PageDocumentVisibility.Private;
+        var search = new FakePageDocumentSearchService([restricted, Page("en", "en-US", "/faq", GroupId)]);
+
+        var result = await CreateResolver(search: search).FindSeoAsync(Criteria("veelgestelde-vragen", "nl-NL"));
+
+        Assert.Equal(["en-US:/faq"], result.Select(x => $"{x.LanguageCode}:{x.SemanticUrl}"));
+    }
+
+    [Fact]
+    public async Task FindSeoAsync_AnonymousAndPageForAGroup_ReturnsNothing()
+    {
+        var restricted = Page("about-en", "en-US", "/about-us", null);
+        restricted.UserGroups = ["vip"];
+        var search = new FakePageDocumentSearchService([restricted]);
+
+        Assert.Empty(await CreateResolver(search: search).FindSeoAsync(Criteria("about-us", "en-US")));
     }
 
     private static SeoSearchCriteria Criteria(string permalink, string languageCode)
@@ -182,6 +222,7 @@ public class PageDocumentSeoResolverTranslationTests
             Permalink = permalink,
             TranslationGroupId = translationGroupId,
             Status = PageDocumentStatus.Published,
+            Visibility = PageDocumentVisibility.Public,
             CreatedDate = createdDate ?? DateTime.UtcNow,
         };
     }
@@ -219,7 +260,10 @@ public class PageDocumentSeoResolverTranslationTests
             Mock.Of<IMemberService>());
     }
 
-    /// <summary>Filters like the index: by permalink, translation group and the language filter (language, store default, any).</summary>
+    /// <summary>
+    /// Filters like the index: by permalink, translation group, the language filter (language, store default, any)
+    /// user groups (a page without groups is for any group; null criteria groups skip the filter) and visibility.
+    /// </summary>
     private sealed class FakePageDocumentSearchService(IList<PageDocument> documents) : IPageDocumentSearchService
     {
         public List<PageDocumentSearchCriteria> Requests { get; } = [];
@@ -232,6 +276,9 @@ public class PageDocumentSeoResolverTranslationTests
                 .Where(x => criteria.Permalink == null || x.Permalink == criteria.Permalink)
                 .Where(x => criteria.TranslationGroupIds == null || criteria.TranslationGroupIds.Contains(x.TranslationGroupId))
                 .Where(x => criteria.LanguageCode == null || x.CultureName == criteria.LanguageCode || x.CultureName == "en-US")
+                .Where(x => criteria.UserGroups == null || x.UserGroups == null || x.UserGroups.Length == 0 ||
+                            x.UserGroups.Intersect(criteria.UserGroups).Any())
+                .Where(x => criteria.Visibility != PageDocumentVisibility.Public || x.Visibility == PageDocumentVisibility.Public)
                 .ToList();
 
             return Task.FromResult(new PageDocumentSearchResult
