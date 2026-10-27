@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "Pages:create": "יצירת נתונים הקשורים לדפים",
+    "Pages:read": "צפייה בנתונים הקשורים לדפים",
+    "Pages:update": "עדכון נתונים הקשורים לדפים",
+    "Pages:delete": "מחיקת נתונים הקשורים לדפים"
+  },
+  "settings": {
+    "VirtoPages": {
+      "Enable": {
+        "title": "הפעלת Virto Pages",
+        "description": "הפעלה/השבתה של Virto Pages עבור החנות"
+      },
+      "ScheduledSync": {
+        "Enable": {
+          "title": "הפעלת סנכרון מתוזמן",
+          "description": "הפעלה/השבתה של סנכרון תקופתי של דפים מספקי תוכן"
+        }
+      }
+    },
+    "VirtoCommerce": {
+      "Search": {
+        "IndexingJobs": {
+          "IndexationDate": {
+            "Pages": {
+              "title": "תאריך ושעת האינדוקס של מסמכי הדפים",
+              "description": "התאריך והשעה שבהם מתחילה משימת האינדוקס של מסמכי הדפים"
+            }
+          }
+        }
+      }
+    }
+  }
+}
