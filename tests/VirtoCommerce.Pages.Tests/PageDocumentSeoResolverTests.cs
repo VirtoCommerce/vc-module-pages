@@ -33,9 +33,40 @@ public class PageDocumentSeoResolverTests
 
         await resolver.FindSeoAsync(new SeoSearchCriteria { StoreId = StoreId, Permalink = "about" });
 
+        searched.Should().NotBeNull();
         searched.FilterByOrganization.Should().BeTrue();
         searched.OrganizationId.Should().BeNull();
         searched.Permalink.Should().Be("/about");
+    }
+
+    [Fact]
+    public async Task FindSeoAsync_AnonymousVisitor_AsksForPagesForEveryUserGroupOnly()
+    {
+        PageDocumentSearchCriteria searched = null;
+        var resolver = CreateResolver([], criteria => searched = criteria);
+
+        await resolver.FindSeoAsync(new SeoSearchCriteria { StoreId = StoreId, Permalink = "/about" });
+
+        searched.Should().NotBeNull();
+        searched.UserGroups.Should().BeEmpty();
+        searched.Visibility.Should().Be(PageDocumentVisibility.Public);
+    }
+
+    [Fact]
+    public async Task FindSeoAsync_OrdersByCreatedDateWhenNeverModifiedAndTreatsMissingUserGroupsAsEveryone()
+    {
+        var older = Page("older");
+        older.ModifiedDate = null;
+        older.CreatedDate = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        var newer = Page("newer");
+        newer.ModifiedDate = null;
+        newer.UserGroups = null;
+        newer.CreatedDate = new DateTime(2026, 6, 1, 0, 0, 0, DateTimeKind.Utc);
+        var resolver = CreateResolver([older, newer]);
+
+        var result = await resolver.FindSeoAsync(new SeoSearchCriteria { StoreId = StoreId, Permalink = "/about" });
+
+        result.Select(x => x.ObjectId).Should().Equal("newer", "older");
     }
 
     [Fact]
@@ -67,6 +98,14 @@ public class PageDocumentSeoResolverTests
     public async Task BuildRequestAsync_WithOrganization_KeepsPagesForThatOrAnyOrganization()
     {
         var values = await GetOrganizationFilterValues(new PageDocumentSearchCriteria { OrganizationId = "org" });
+
+        values.Should().Equal("__any", "org");
+    }
+
+    [Fact]
+    public async Task BuildRequestAsync_FilterByOrganizationWithOrganization_KeepsPagesForThatOrAnyOrganization()
+    {
+        var values = await GetOrganizationFilterValues(new PageDocumentSearchCriteria { FilterByOrganization = true, OrganizationId = "org" });
 
         values.Should().Equal("__any", "org");
     }

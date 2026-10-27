@@ -57,15 +57,14 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
         return [];
     }
 
-    // Several published pages can share a permalink, for different audiences or periods. The SEO module picks one
-    // by store, organization and language and keeps this order among equal candidates, so the more specific page
-    // goes first: one for the visitor's organization, then one for their user groups, then one for registered
-    // users only; on a tie, the most recently changed page.
+    // Several published pages can share a permalink, for different audiences or periods. The SEO module scores them
+    // by store, organization and language and keeps this order among equal scores, so the more specific page goes
+    // first: one for the visitor's organization, then one for their user groups, then one for registered users
+    // only; on a tie, the most recently changed page.
     protected virtual IEnumerable<PageDocument> OrderBySpecificity(IEnumerable<PageDocument> pages)
     {
         return pages
-            .OrderBy(x => x.CultureName)
-            .ThenByDescending(x => !x.OrganizationId.IsNullOrEmpty())
+            .OrderByDescending(x => !x.OrganizationId.IsNullOrEmpty())
             .ThenByDescending(x => x.UserGroups is { Length: > 0 })
             .ThenByDescending(x => x.Visibility == PageDocumentVisibility.Private)
             .ThenByDescending(x => x.ModifiedDate ?? x.CreatedDate)
@@ -89,6 +88,10 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
         searchCriteria.OrganizationId = criteria.OrganizationId;
         // A visitor without an organization must not get pages made for one.
         searchCriteria.FilterByOrganization = true;
+
+        // Like SearchCriteriaExtensions.EnrichAuth: a visitor without a member belongs to no user group, so they get
+        // only pages for every user group, not pages made for particular groups.
+        searchCriteria.UserGroups = [];
 
         var member = await FindMember(criteria.UserId);
 
