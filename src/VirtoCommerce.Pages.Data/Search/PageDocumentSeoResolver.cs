@@ -106,7 +106,7 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
         }
 
         var behavior = store.Settings.GetValue<string>(ModuleConstants.Settings.General.MissingTranslationBehavior);
-        if (behavior == ModuleConstants.MissingTranslationBehaviors.NotFound)
+        if (string.Equals(behavior, ModuleConstants.MissingTranslationBehaviors.NotFound, StringComparison.OrdinalIgnoreCase))
         {
             // The same page must not be served in another language.
             return files.Where(x => !groupIds.Contains(x.TranslationGroupId)).ToList();
@@ -193,7 +193,7 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
 
     // Same as the visibility and user group filters of CreateSearchCriteria: a private page only for a signed-in visitor,
     // a page with user groups only for a member of one of them.
-    private static bool IsAllowed(PageDocument document, Member member)
+    protected virtual bool IsAllowed(PageDocument document, Member member)
     {
         if (member == null && document.Visibility != PageDocumentVisibility.Public)
         {
@@ -206,7 +206,7 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
     }
 
     // Same as the language filter of the index: a document for any language, the requested one or the store default.
-    private static bool IsServedInLanguage(PageDocument document, string languageCode, string defaultLanguage)
+    protected virtual bool IsServedInLanguage(PageDocument document, string languageCode, string defaultLanguage)
     {
         return string.IsNullOrEmpty(languageCode) ||
                string.IsNullOrEmpty(document.CultureName) ||

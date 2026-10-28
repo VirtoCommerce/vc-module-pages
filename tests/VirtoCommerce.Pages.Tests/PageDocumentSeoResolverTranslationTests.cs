@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Moq;
+using VirtoCommerce.CustomerModule.Core.Model;
 using VirtoCommerce.CustomerModule.Core.Services;
 using VirtoCommerce.Pages.Core;
 using VirtoCommerce.Pages.Core.Models;
@@ -206,9 +207,48 @@ public class PageDocumentSeoResolverTranslationTests
         Assert.Empty(await CreateResolver(search: search).FindSeoAsync(Criteria("about-us", "en-US")));
     }
 
-    private static SeoSearchCriteria Criteria(string permalink, string languageCode)
+    [Fact]
+    public async Task FindSeoAsync_MemberOfTheGroup_ReturnsTranslationForTheGroup()
     {
-        return new SeoSearchCriteria { StoreId = StoreId, Permalink = permalink, LanguageCode = languageCode, Take = 20 };
+        var restricted = Page("nl", "nl-NL", "/veelgestelde-vragen", GroupId);
+        restricted.UserGroups = ["vip"];
+        var search = new FakePageDocumentSearchService([restricted, Page("en", "en-US", "/faq", GroupId)]);
+        var member = new Contact { Id = "member", Groups = ["vip"] };
+
+        var result = await CreateResolver(search: search, member: member).FindSeoAsync(Criteria("faq", "nl-NL", userId: "user"));
+
+        Assert.Equal(["en-US:/faq", "nl-NL:/veelgestelde-vragen"], result.Select(x => $"{x.LanguageCode}:{x.SemanticUrl}"));
+    }
+
+    [Fact]
+    public async Task FindSeoAsync_LanguageCodeInOtherCase_ReturnsRequestedLanguageVersion()
+    {
+        var result = await CreateResolver().FindSeoAsync(Criteria("veelgestelde-vragen", "en-us"));
+
+        var info = Assert.Single(result);
+        Assert.Equal(("en-US", "/faq"), (info.LanguageCode, info.SemanticUrl));
+    }
+
+    [Fact]
+    public async Task FindSeoAsync_NotFoundBehaviorAndSeveralGroups_KeepsOnlyPagesWithoutTranslations()
+    {
+        var search = new FakePageDocumentSearchService(
+        [
+            Page("info-a", "en-US", "/info", "a"),
+            Page("info-b", "nl-NL", "/info", "b"),
+            Page("info-any", null, "/info", null),
+        ]);
+
+        var result = await CreateResolver(ModuleConstants.MissingTranslationBehaviors.NotFound, search)
+            .FindSeoAsync(Criteria("info", "de-DE"));
+
+        var info = Assert.Single(result);
+        Assert.Equal("info-any", info.ObjectId);
+    }
+
+    private static SeoSearchCriteria Criteria(string permalink, string languageCode, string userId = null)
+    {
+        return new SeoSearchCriteria { StoreId = StoreId, Permalink = permalink, LanguageCode = languageCode, UserId = userId, Take = 20 };
     }
 
     private static PageDocument Page(string id, string cultureName, string permalink, string translationGroupId,
@@ -229,7 +269,8 @@ public class PageDocumentSeoResolverTranslationTests
 
     private static PageDocumentSeoResolver CreateResolver(
         string missingTranslationBehavior = ModuleConstants.MissingTranslationBehaviors.DefaultLanguage,
-        FakePageDocumentSearchService search = null)
+        FakePageDocumentSearchService search = null,
+        Member member = null)
     {
         var store = new Store
         {
@@ -251,13 +292,18 @@ public class PageDocumentSeoResolverTranslationTests
 
         var userManager = new Mock<UserManager<ApplicationUser>>(
             Mock.Of<IUserStore<ApplicationUser>>(), null, null, null, null, null, null, null, null);
-        userManager.Setup(x => x.Users).Returns(Enumerable.Empty<ApplicationUser>().AsQueryable());
+        ApplicationUser[] users = member == null ? [] : [new ApplicationUser { Id = "user", MemberId = member.Id }];
+        userManager.Setup(x => x.Users).Returns(users.AsQueryable());
+
+        var memberService = new Mock<IMemberService>();
+        memberService.Setup(x => x.GetByIdAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+            .ReturnsAsync(member);
 
         return new PageDocumentSeoResolver(
             search ?? new FakePageDocumentSearchService(Documents),
             () => userManager.Object,
             storeService.Object,
-            Mock.Of<IMemberService>());
+            memberService.Object);
     }
 
     /// <summary>

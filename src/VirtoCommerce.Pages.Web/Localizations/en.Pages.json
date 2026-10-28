@@ -24,7 +24,7 @@
       },
       "MissingTranslationBehavior": {
         "title": "Missing translation",
-        "description": "Page with translations but none in the visitor language: show the default language version (DefaultLanguage) or not found (NotFound)"
+        "description": "A Multilanguage Page has no version in the visitor language: show the default language version (DefaultLanguage) or not found (NotFound). Pages that are not Multilanguage Pages are not affected"
       }
     },
     "VirtoCommerce": {
