@@ -1,0 +1,18 @@
+{
+  "VIRTO_PAGES": {
+    "EMPTY": "אין דפים",
+    "FIELDS": {
+      "LANGUAGE": "שפה",
+      "PERMALINK": "קישור קבוע",
+      "STATUS": "סטטוס",
+      "TITLE": "כותרת"
+    },
+    "SOURCE": "מקור",
+    "TOOLBAR": {
+      "REFRESH": "רענון"
+    },
+    "WIDGETS": {
+      "STORE": "Virto Pages"
+    }
+  }
+}
