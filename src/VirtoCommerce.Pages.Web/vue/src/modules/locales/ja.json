@@ -1,0 +1,18 @@
+{
+  "VIRTO_PAGES": {
+    "EMPTY": "ページがありません",
+    "FIELDS": {
+      "LANGUAGE": "言語",
+      "PERMALINK": "パーマリンク",
+      "STATUS": "状態",
+      "TITLE": "タイトル"
+    },
+    "SOURCE": "ソース",
+    "TOOLBAR": {
+      "REFRESH": "更新"
+    },
+    "WIDGETS": {
+      "STORE": "Virto ページ"
+    }
+  }
+}

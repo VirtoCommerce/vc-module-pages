@@ -21,6 +21,10 @@
           "title": "Włącz zaplanowaną synchronizację",
           "description": "Włącz/wyłącz okresową synchronizację stron od dostawców treści"
         }
+      },
+      "MissingTranslationBehavior": {
+        "title": "Brak tłumaczenia",
+        "description": "Strona z tłumaczeniami, ale bez wersji w języku odwiedzającego: pokaż wersję w języku domyślnym (DefaultLanguage) lub „nie znaleziono” (NotFound)"
       }
     },
     "VirtoCommerce": {

@@ -21,6 +21,10 @@
           "title": "定期同期を有効化",
           "description": "コンテンツプロバイダーからのページの定期同期を有効/無効にする"
         }
+      },
+      "MissingTranslationBehavior": {
+        "title": "翻訳がない場合",
+        "description": "翻訳があるが訪問者の言語のバージョンがないページ: 既定の言語のバージョンを表示する (DefaultLanguage) か、「見つかりません」とする (NotFound)"
       }
     },
     "VirtoCommerce": {

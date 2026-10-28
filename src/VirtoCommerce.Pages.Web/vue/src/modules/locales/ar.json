@@ -1,0 +1,18 @@
+{
+  "VIRTO_PAGES": {
+    "EMPTY": "لا توجد صفحات",
+    "FIELDS": {
+      "LANGUAGE": "اللغة",
+      "PERMALINK": "الرابط الثابت",
+      "STATUS": "الحالة",
+      "TITLE": "العنوان"
+    },
+    "SOURCE": "المصدر",
+    "TOOLBAR": {
+      "REFRESH": "تحديث"
+    },
+    "WIDGETS": {
+      "STORE": "Virto Pages"
+    }
+  }
+}

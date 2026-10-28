@@ -41,45 +41,36 @@ public class PageDocumentSeoResolverTests
     }
 
     [Fact]
-    public async Task FindSeoAsync_AnonymousVisitor_AsksForPagesForEveryUserGroupOnly()
+    public async Task FindSeoAsync_AnonymousVisitor_GetsPublicPagesForEveryUserGroupOnly()
     {
-        PageDocumentSearchCriteria searched = null;
-        var resolver = CreateResolver([], criteria => searched = criteria);
+        var resolver = CreateResolver(AudiencePages());
 
-        await resolver.FindSeoAsync(new SeoSearchCriteria { StoreId = StoreId, Permalink = "/about" });
+        var result = await resolver.FindSeoAsync(new SeoSearchCriteria { StoreId = StoreId, Permalink = "/about" });
 
-        searched.Should().NotBeNull();
-        searched.UserGroups.Should().BeEmpty();
-        searched.Visibility.Should().Be(PageDocumentVisibility.Public);
+        result.Select(x => x.ObjectId).Should().Equal("everyone");
     }
 
     [Fact]
-    public async Task FindSeoAsync_SignedInContact_AsksForPagesForTheirUserGroupsAndRegisteredUsers()
+    public async Task FindSeoAsync_SignedInContact_GetsPagesForTheirUserGroupsAndRegisteredUsers()
     {
-        PageDocumentSearchCriteria searched = null;
         var user = new ApplicationUser { Id = "user", MemberId = "contact" };
         var contact = new Contact { Id = "contact", Groups = ["vip"] };
-        var resolver = CreateResolver([], criteria => searched = criteria, user, contact);
+        var resolver = CreateResolver(AudiencePages(), user: user, member: contact);
 
-        await resolver.FindSeoAsync(new SeoSearchCriteria { StoreId = StoreId, Permalink = "/about", UserId = "user" });
+        var result = await resolver.FindSeoAsync(new SeoSearchCriteria { StoreId = StoreId, Permalink = "/about", UserId = "user" });
 
-        searched.Should().NotBeNull();
-        searched.UserGroups.Should().Equal("vip");
-        searched.Visibility.Should().Be(PageDocumentVisibility.Private);
+        result.Select(x => x.ObjectId).Should().Equal("vip", "registered", "everyone");
     }
 
     [Fact]
     public async Task FindSeoAsync_SignedInUserWithoutContact_IsTreatedAsAnonymous()
     {
-        PageDocumentSearchCriteria searched = null;
         var user = new ApplicationUser { Id = "user", MemberId = "missing" };
-        var resolver = CreateResolver([], criteria => searched = criteria, user);
+        var resolver = CreateResolver(AudiencePages(), user: user);
 
-        await resolver.FindSeoAsync(new SeoSearchCriteria { StoreId = StoreId, Permalink = "/about", UserId = "user" });
+        var result = await resolver.FindSeoAsync(new SeoSearchCriteria { StoreId = StoreId, Permalink = "/about", UserId = "user" });
 
-        searched.Should().NotBeNull();
-        searched.UserGroups.Should().BeEmpty();
-        searched.Visibility.Should().Be(PageDocumentVisibility.Public);
+        result.Select(x => x.ObjectId).Should().Equal("everyone");
     }
 
     [Fact]
@@ -102,6 +93,8 @@ public class PageDocumentSeoResolverTests
     [Fact]
     public async Task FindSeoAsync_PutsTheMoreSpecificPageFirst()
     {
+        var user = new ApplicationUser { Id = "user", MemberId = "contact" };
+        var contact = new Contact { Id = "contact", Groups = ["vip"] };
         var resolver = CreateResolver(
         [
             Page("everyone-old", modified: 1),
@@ -109,9 +102,9 @@ public class PageDocumentSeoResolverTests
             Page("registered", visibility: PageDocumentVisibility.Private),
             Page("vip", userGroups: ["vip"]),
             Page("organization", organizationId: "org"),
-        ]);
+        ], user: user, member: contact);
 
-        var result = await resolver.FindSeoAsync(new SeoSearchCriteria { StoreId = StoreId, Permalink = "/about" });
+        var result = await resolver.FindSeoAsync(new SeoSearchCriteria { StoreId = StoreId, Permalink = "/about", UserId = "user", OrganizationId = "org" });
 
         result.Select(x => x.ObjectId).Should().Equal("organization", "vip", "registered", "everyone-new", "everyone-old");
     }
@@ -146,6 +139,17 @@ public class PageDocumentSeoResolverTests
         var values = await GetOrganizationFilterValues(new PageDocumentSearchCriteria());
 
         values.Should().BeNull();
+    }
+
+    private static PageDocument[] AudiencePages()
+    {
+        return
+        [
+            Page("everyone"),
+            Page("registered", visibility: PageDocumentVisibility.Private),
+            Page("vip", userGroups: ["vip"]),
+            Page("gold", userGroups: ["gold"]),
+        ];
     }
 
     private static PageDocument Page(
