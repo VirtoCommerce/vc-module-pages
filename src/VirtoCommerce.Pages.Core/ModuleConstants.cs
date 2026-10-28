@@ -53,6 +53,20 @@ public static class ModuleConstants
                 DefaultValue = false,
             };
 
+            /// <summary>
+            /// What a visitor gets when a page has translations but none in the requested language:
+            /// the default language version, or not found.
+            /// </summary>
+            public static SettingDescriptor MissingTranslationBehavior { get; } = new()
+            {
+                Name = "VirtoPages.MissingTranslationBehavior",
+                GroupName = "Pages",
+                ValueType = SettingValueType.ShortText,
+                IsPublic = true,
+                DefaultValue = MissingTranslationBehaviors.DefaultLanguage,
+                AllowedValues = [MissingTranslationBehaviors.DefaultLanguage, MissingTranslationBehaviors.NotFound],
+            };
+
             public static SettingDescriptor ScheduledSyncEnabled { get; } = new()
             {
                 Name = "VirtoPages.ScheduledSync.Enable",
@@ -68,6 +82,7 @@ public static class ModuleConstants
             {
                 yield return Search.IndexationDatePages;
                 yield return General.Enable;
+                yield return General.MissingTranslationBehavior;
                 yield return General.ScheduledSyncEnabled;
             }
         }
@@ -77,8 +92,15 @@ public static class ModuleConstants
             get
             {
                 yield return General.Enable;
+                yield return General.MissingTranslationBehavior;
             }
         }
+    }
+
+    public static class MissingTranslationBehaviors
+    {
+        public const string DefaultLanguage = "DefaultLanguage";
+        public const string NotFound = "NotFound";
     }
 
 
