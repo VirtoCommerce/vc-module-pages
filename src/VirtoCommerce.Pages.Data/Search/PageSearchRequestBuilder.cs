@@ -126,14 +126,16 @@ namespace VirtoCommerce.Pages.Data.Search
 
         private static void AddOrganizationFilter(PageDocumentSearchCriteria criteria, List<IFilter> result)
         {
-            if (criteria.OrganizationId.IsNullOrEmpty())
+            if (criteria.OrganizationId.IsNullOrEmpty() && !criteria.FilterByOrganization)
             {
                 return;
             }
             var anyFilter = new TermFilter
             {
                 FieldName = nameof(PageDocument.OrganizationId),
-                Values = [PageDocumentConverter.Any, criteria.OrganizationId],
+                Values = criteria.OrganizationId.IsNullOrEmpty()
+                    ? [PageDocumentConverter.Any]
+                    : [PageDocumentConverter.Any, criteria.OrganizationId],
             };
             result.Add(anyFilter);
         }
