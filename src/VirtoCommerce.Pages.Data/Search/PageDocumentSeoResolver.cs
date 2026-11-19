@@ -43,8 +43,7 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
                 .ToList();
             files = await AddTranslations(criteria, store, member, files, matched);
 
-            return files
-                .DistinctBy(x => x.Id)
+            return OrderBySpecificity(files.DistinctBy(x => x.Id))
                 .Select(x =>
                 {
                     var info = AbstractTypeFactory<SeoInfo>.TryCreateInstance();
@@ -69,6 +68,20 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
         }
 
         return [];
+    }
+
+    // Several published pages can share a permalink, for different audiences or periods. The SEO module scores them
+    // by store, organization and language and keeps this order among equal scores, so the more specific page goes
+    // first: one for the visitor's organization, then one for their user groups, then one for registered users
+    // only; on a tie, the most recently changed page.
+    protected virtual IEnumerable<PageDocument> OrderBySpecificity(IEnumerable<PageDocument> pages)
+    {
+        return pages
+            .OrderByDescending(x => !x.OrganizationId.IsNullOrEmpty())
+            .ThenByDescending(x => x.UserGroups is { Length: > 0 })
+            .ThenByDescending(x => x.Visibility == PageDocumentVisibility.Private)
+            .ThenByDescending(x => x.ModifiedDate ?? x.CreatedDate)
+            .ThenBy(x => x.Id, StringComparer.Ordinal);
     }
 
     /// <summary>
@@ -164,6 +177,8 @@ public class PageDocumentSeoResolver(IPageDocumentSearchService searchService,
         searchCriteria.CertainDate = DateTime.UtcNow;
         searchCriteria.Status = PageDocumentStatus.Published;
         searchCriteria.OrganizationId = criteria.OrganizationId;
+        // A visitor without an organization must not get pages made for one.
+        searchCriteria.FilterByOrganization = true;
 
         if (member != null)
         {
