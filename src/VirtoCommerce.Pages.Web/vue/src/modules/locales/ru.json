@@ -1,18 +1,35 @@
 {
   "VIRTO_PAGES": {
+    "ANY_LANGUAGE": "Все языки",
     "EMPTY": "Нет страниц",
     "FIELDS": {
+      "END_DATE": "Видна до",
       "LANGUAGE": "Язык",
+      "MODIFIED": "Изменено",
       "PERMALINK": "Постоянная ссылка",
+      "START_DATE": "Видна с",
       "STATUS": "Статус",
-      "TITLE": "Заголовок"
+      "TITLE": "Заголовок",
+      "VISIBILITY": "Видимость"
     },
     "SOURCE": "Источник",
+    "STATUSES": {
+      "ARCHIVED": "В архиве",
+      "DRAFT": "Черновик",
+      "NEWVERSION": "Новая версия",
+      "PUBLISHED": "Опубликована",
+      "UNPUBLISHED": "Снята с публикации"
+    },
     "TOOLBAR": {
       "REFRESH": "Обновить"
     },
+    "VISIBILITIES": {
+      "PRIVATE": "Приватная",
+      "PUBLIC": "Публичная"
+    },
     "WIDGETS": {
       "STORE": "Virto Pages"
-    }
+    },
+    "WITHIN_DATES": "В пределах дат видимости"
   }
 }

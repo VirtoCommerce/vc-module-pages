@@ -1,18 +1,35 @@
 {
   "VIRTO_PAGES": {
+    "ANY_LANGUAGE": "所有语言",
     "EMPTY": "暂无页面",
     "FIELDS": {
+      "END_DATE": "显示结束",
       "LANGUAGE": "语言",
+      "MODIFIED": "修改时间",
       "PERMALINK": "永久链接",
+      "START_DATE": "显示开始",
       "STATUS": "状态",
-      "TITLE": "标题"
+      "TITLE": "标题",
+      "VISIBILITY": "可见性"
     },
     "SOURCE": "来源",
+    "STATUSES": {
+      "ARCHIVED": "已归档",
+      "DRAFT": "草稿",
+      "NEWVERSION": "新版本",
+      "PUBLISHED": "已发布",
+      "UNPUBLISHED": "已取消发布"
+    },
     "TOOLBAR": {
       "REFRESH": "刷新"
     },
+    "VISIBILITIES": {
+      "PRIVATE": "私有",
+      "PUBLIC": "公开"
+    },
     "WIDGETS": {
       "STORE": "Virto 页面"
-    }
+    },
+    "WITHIN_DATES": "在显示日期范围内"
   }
 }

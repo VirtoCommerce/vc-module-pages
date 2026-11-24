@@ -1,18 +1,35 @@
 {
   "VIRTO_PAGES": {
+    "ANY_LANGUAGE": "Alle språk",
     "EMPTY": "Ingen sider",
     "FIELDS": {
+      "END_DATE": "Synlig til",
       "LANGUAGE": "Språk",
+      "MODIFIED": "Endret",
       "PERMALINK": "Permalenke",
+      "START_DATE": "Synlig fra",
       "STATUS": "Status",
-      "TITLE": "Tittel"
+      "TITLE": "Tittel",
+      "VISIBILITY": "Synlighet"
     },
     "SOURCE": "Kilde",
+    "STATUSES": {
+      "ARCHIVED": "Arkivert",
+      "DRAFT": "Utkast",
+      "NEWVERSION": "Ny versjon",
+      "PUBLISHED": "Publisert",
+      "UNPUBLISHED": "Upublisert"
+    },
     "TOOLBAR": {
       "REFRESH": "Oppdater"
     },
+    "VISIBILITIES": {
+      "PRIVATE": "Privat",
+      "PUBLIC": "Offentlig"
+    },
     "WIDGETS": {
       "STORE": "Virto Sider"
-    }
+    },
+    "WITHIN_DATES": "Innenfor synlighetsdatoer"
   }
 }

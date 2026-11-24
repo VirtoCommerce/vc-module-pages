@@ -1,18 +1,35 @@
 {
   "VIRTO_PAGES": {
+    "ANY_LANGUAGE": "All languages",
     "EMPTY": "No pages",
     "FIELDS": {
+      "END_DATE": "Visible to",
       "LANGUAGE": "Language",
+      "MODIFIED": "Modified",
       "PERMALINK": "Permalink",
+      "START_DATE": "Visible from",
       "STATUS": "Status",
-      "TITLE": "Title"
+      "TITLE": "Title",
+      "VISIBILITY": "Visibility"
     },
     "SOURCE": "Source",
+    "STATUSES": {
+      "ARCHIVED": "Archived",
+      "DRAFT": "Draft",
+      "NEWVERSION": "New version",
+      "PUBLISHED": "Published",
+      "UNPUBLISHED": "Unpublished"
+    },
     "TOOLBAR": {
       "REFRESH": "Refresh"
     },
+    "VISIBILITIES": {
+      "PRIVATE": "Private",
+      "PUBLIC": "Public"
+    },
     "WIDGETS": {
       "STORE": "Virto Pages"
-    }
+    },
+    "WITHIN_DATES": "Within visibility dates"
   }
 }

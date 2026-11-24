@@ -1,18 +1,35 @@
 {
   "VIRTO_PAGES": {
+    "ANY_LANGUAGE": "Alla språk",
     "EMPTY": "Inga sidor",
     "FIELDS": {
+      "END_DATE": "Synlig till",
       "LANGUAGE": "Språk",
+      "MODIFIED": "Ändrad",
       "PERMALINK": "Permalänk",
+      "START_DATE": "Synlig från",
       "STATUS": "Status",
-      "TITLE": "Titel"
+      "TITLE": "Titel",
+      "VISIBILITY": "Synlighet"
     },
     "SOURCE": "Källa",
+    "STATUSES": {
+      "ARCHIVED": "Arkiverad",
+      "DRAFT": "Utkast",
+      "NEWVERSION": "Ny version",
+      "PUBLISHED": "Publicerad",
+      "UNPUBLISHED": "Opublicerad"
+    },
     "TOOLBAR": {
       "REFRESH": "Uppdatera"
     },
+    "VISIBILITIES": {
+      "PRIVATE": "Privat",
+      "PUBLIC": "Offentlig"
+    },
     "WIDGETS": {
       "STORE": "Virto Sidor"
-    }
+    },
+    "WITHIN_DATES": "Inom synlighetsdatum"
   }
 }
