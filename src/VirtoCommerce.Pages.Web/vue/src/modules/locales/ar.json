@@ -1,18 +1,35 @@
 {
   "VIRTO_PAGES": {
+    "ANY_LANGUAGE": "كل اللغات",
     "EMPTY": "لا توجد صفحات",
     "FIELDS": {
+      "END_DATE": "مرئية حتى",
       "LANGUAGE": "اللغة",
+      "MODIFIED": "آخر تعديل",
       "PERMALINK": "الرابط الثابت",
+      "START_DATE": "مرئية من",
       "STATUS": "الحالة",
-      "TITLE": "العنوان"
+      "TITLE": "العنوان",
+      "VISIBILITY": "الظهور"
     },
     "SOURCE": "المصدر",
+    "STATUSES": {
+      "ARCHIVED": "مؤرشفة",
+      "DRAFT": "مسودة",
+      "NEWVERSION": "إصدار جديد",
+      "PUBLISHED": "منشورة",
+      "UNPUBLISHED": "غير منشورة"
+    },
     "TOOLBAR": {
       "REFRESH": "تحديث"
     },
+    "VISIBILITIES": {
+      "PRIVATE": "خاصة",
+      "PUBLIC": "عامة"
+    },
     "WIDGETS": {
       "STORE": "Virto Pages"
-    }
+    },
+    "WITHIN_DATES": "ضمن تواريخ الظهور"
   }
 }

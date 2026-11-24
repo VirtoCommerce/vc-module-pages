@@ -1,18 +1,35 @@
 {
   "VIRTO_PAGES": {
+    "ANY_LANGUAGE": "כל השפות",
     "EMPTY": "אין דפים",
     "FIELDS": {
+      "END_DATE": "גלוי עד",
       "LANGUAGE": "שפה",
+      "MODIFIED": "שונה",
       "PERMALINK": "קישור קבוע",
+      "START_DATE": "גלוי מ-",
       "STATUS": "סטטוס",
-      "TITLE": "כותרת"
+      "TITLE": "כותרת",
+      "VISIBILITY": "נראות"
     },
     "SOURCE": "מקור",
+    "STATUSES": {
+      "ARCHIVED": "בארכיון",
+      "DRAFT": "טיוטה",
+      "NEWVERSION": "גרסה חדשה",
+      "PUBLISHED": "פורסם",
+      "UNPUBLISHED": "הוסר מפרסום"
+    },
     "TOOLBAR": {
       "REFRESH": "רענון"
     },
+    "VISIBILITIES": {
+      "PRIVATE": "פרטי",
+      "PUBLIC": "ציבורי"
+    },
     "WIDGETS": {
       "STORE": "Virto Pages"
-    }
+    },
+    "WITHIN_DATES": "בטווח תאריכי הנראות"
   }
 }

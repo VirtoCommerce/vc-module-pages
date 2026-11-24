@@ -1,18 +1,35 @@
 {
   "VIRTO_PAGES": {
+    "ANY_LANGUAGE": "Kaikki kielet",
     "EMPTY": "Ei sivuja",
     "FIELDS": {
+      "END_DATE": "Näkyvissä asti",
       "LANGUAGE": "Kieli",
+      "MODIFIED": "Muokattu",
       "PERMALINK": "Pysyvä linkki",
+      "START_DATE": "Näkyvissä alkaen",
       "STATUS": "Tila",
-      "TITLE": "Otsikko"
+      "TITLE": "Otsikko",
+      "VISIBILITY": "Näkyvyys"
     },
     "SOURCE": "Lähde",
+    "STATUSES": {
+      "ARCHIVED": "Arkistoitu",
+      "DRAFT": "Luonnos",
+      "NEWVERSION": "Uusi versio",
+      "PUBLISHED": "Julkaistu",
+      "UNPUBLISHED": "Julkaisematon"
+    },
     "TOOLBAR": {
       "REFRESH": "Päivitä"
     },
+    "VISIBILITIES": {
+      "PRIVATE": "Yksityinen",
+      "PUBLIC": "Julkinen"
+    },
     "WIDGETS": {
       "STORE": "Virto-sivut"
-    }
+    },
+    "WITHIN_DATES": "Näkyvyyspäivien sisällä"
   }
 }

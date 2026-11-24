@@ -1,18 +1,35 @@
 {
   "VIRTO_PAGES": {
+    "ANY_LANGUAGE": "Tutte le lingue",
     "EMPTY": "Nessuna pagina",
     "FIELDS": {
+      "END_DATE": "Visibile fino al",
       "LANGUAGE": "Lingua",
+      "MODIFIED": "Modificato",
       "PERMALINK": "Permalink",
+      "START_DATE": "Visibile dal",
       "STATUS": "Stato",
-      "TITLE": "Titolo"
+      "TITLE": "Titolo",
+      "VISIBILITY": "Visibilità"
     },
     "SOURCE": "Fonte",
+    "STATUSES": {
+      "ARCHIVED": "Archiviato",
+      "DRAFT": "Bozza",
+      "NEWVERSION": "Nuova versione",
+      "PUBLISHED": "Pubblicato",
+      "UNPUBLISHED": "Non pubblicato"
+    },
     "TOOLBAR": {
       "REFRESH": "Aggiorna"
     },
+    "VISIBILITIES": {
+      "PRIVATE": "Privato",
+      "PUBLIC": "Pubblico"
+    },
     "WIDGETS": {
       "STORE": "Virto Pagine"
-    }
+    },
+    "WITHIN_DATES": "Entro le date di visibilità"
   }
 }

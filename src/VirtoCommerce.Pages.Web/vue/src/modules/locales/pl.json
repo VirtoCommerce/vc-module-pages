@@ -1,18 +1,35 @@
 {
   "VIRTO_PAGES": {
+    "ANY_LANGUAGE": "Wszystkie języki",
     "EMPTY": "Brak stron",
     "FIELDS": {
+      "END_DATE": "Widoczna do",
       "LANGUAGE": "Język",
+      "MODIFIED": "Zmodyfikowano",
       "PERMALINK": "Link stały",
+      "START_DATE": "Widoczna od",
       "STATUS": "Status",
-      "TITLE": "Tytuł"
+      "TITLE": "Tytuł",
+      "VISIBILITY": "Widoczność"
     },
     "SOURCE": "Źródło",
+    "STATUSES": {
+      "ARCHIVED": "Zarchiwizowana",
+      "DRAFT": "Wersja robocza",
+      "NEWVERSION": "Nowa wersja",
+      "PUBLISHED": "Opublikowana",
+      "UNPUBLISHED": "Nieopublikowana"
+    },
     "TOOLBAR": {
       "REFRESH": "Odśwież"
     },
+    "VISIBILITIES": {
+      "PRIVATE": "Prywatna",
+      "PUBLIC": "Publiczna"
+    },
     "WIDGETS": {
       "STORE": "Virto Strony"
-    }
+    },
+    "WITHIN_DATES": "W okresie widoczności"
   }
 }

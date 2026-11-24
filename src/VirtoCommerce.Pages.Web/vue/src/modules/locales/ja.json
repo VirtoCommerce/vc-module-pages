@@ -1,18 +1,35 @@
 {
   "VIRTO_PAGES": {
+    "ANY_LANGUAGE": "すべての言語",
     "EMPTY": "ページがありません",
     "FIELDS": {
+      "END_DATE": "表示終了日",
       "LANGUAGE": "言語",
+      "MODIFIED": "更新日時",
       "PERMALINK": "パーマリンク",
+      "START_DATE": "表示開始日",
       "STATUS": "状態",
-      "TITLE": "タイトル"
+      "TITLE": "タイトル",
+      "VISIBILITY": "公開範囲"
     },
     "SOURCE": "ソース",
+    "STATUSES": {
+      "ARCHIVED": "アーカイブ済み",
+      "DRAFT": "下書き",
+      "NEWVERSION": "新しいバージョン",
+      "PUBLISHED": "公開済み",
+      "UNPUBLISHED": "非公開化"
+    },
     "TOOLBAR": {
       "REFRESH": "更新"
     },
+    "VISIBILITIES": {
+      "PRIVATE": "非公開",
+      "PUBLIC": "公開"
+    },
     "WIDGETS": {
       "STORE": "Virto ページ"
-    }
+    },
+    "WITHIN_DATES": "表示期間内"
   }
 }
